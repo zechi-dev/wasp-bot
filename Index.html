@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>WASP Bot</title>
+<style>
+body{margin:0;font-family:Arial,sans-serif;background:#0a0a0a;color:white}
+.header{background:#ffcc00;color:black;padding:20px;text-align:center}
+.logo{width:70px;height:70px;background:black;border-radius:50%;margin:0 auto 10px;display:flex;align-items:center;justify-content:center;font-size:40px;border:3px solid black;box-shadow:0 0 0 3px #ffcc00}
+.header h1{margin:5px 0;letter-spacing:3px;font-size:28px}
+.header p{margin:0;font-size:12px;letter-spacing:1px}
+.watermark{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);font-size:200px;opacity:0.03;pointer-events:none;z-index:0}
+.page{display:none;padding:15px;padding-bottom:90px;position:relative;z-index:1}
+.page.active{display:block}
+.offer{background:#1a1a1a;padding:14px;margin:10px 0;border-radius:12px;display:flex;justify-content:space-between;align-items:center;border-left:4px solid #ffcc00}
+.btn{background:#ffcc00;color:black;padding:8px 18px;border-radius:20px;border:none;font-weight:bold;cursor:pointer}
+.tabs{display:flex;background:#1a1a1a;position:fixed;bottom:0;width:100%;border-top:1px solid #333;z-index:10}
+.tab{flex:1;padding:14px;text-align:center;cursor:pointer;color:#888;font-size:14px}
+.tab.active{color:#ffcc00;font-weight:bold;border-top:2px solid #ffcc00}
+.bal-card{background:#1a1a1a;padding:20px;border-radius:15px;text-align:center;margin-top:15px;border:1px solid #333}
+.green{color:#00ff88;font-weight:bold}
+</style>
+</head>
+<body>
+
+<div class="watermark">🐝</div>
+
+<div class="header">
+<div class="logo">🐝</div>
+<h1>WASP</h1>
+<p>STING THE OFFERS. EARN DAILY.</p>
+</div>
+
+<div id="offers" class="page active">
+<h3>🔥 Hot Offers</h3>
+<div id="offerList"></div>
+</div>
+
+<div id="balance" class="page">
+<div class="bal-card">
+<h3>Your Balance</h3>
+<h1 id="bal" style="color:#ffcc00">$0.00</h1>
+<p>You keep 60% per sting</p>
+</div>
+</div>
+
+<div id="wallet" class="page">
+<div class="bal-card">
+<h3>👛 WASP Wallet</h3>
+<p>Your ID: <b id="refCode" style="color:#ffcc00">LOADING</b></p>
+<p>Invite = 10% for 1 year</p>
+<button class="btn" onclick="copyLink()">Copy Invite Link</button>
+</div>
+</div>
+
+<div class="tabs">
+<div class="tab active" onclick="openTab(event,'offers')">Offers</div>
+<div class="tab" onclick="openTab(event,'balance')">Balance</div>
+<div class="tab" onclick="openTab(event,'wallet')">Wallet</div>
+</div>
+
+<script>
+var offers = [
+{name:"Install TikTok & Watch", reward:"$2.50", value:2.5},
+{name:"Play Ludo King Level 5", reward:"$3.00", value:3.0},
+{name:"Install Opay & Register", reward:"$1.50", value:1.5},
+{name:"Complete 2-min Survey", reward:"$0.80", value:0.8},
+{name:"Install PalmPay Verify", reward:"$1.20", value:1.2}
+];
+function loadOffers(){
+var html="";
+for(var i=0;i<offers.length;i++){
+var o=offers[i];
+html+='<div class="offer"><div><b>'+o.name+'</b><br><small class="green">Earn '+o.reward+'</small></div><button class="btn" onclick="doOffer('+o.value+')">Sting</button></div>';
+}
+document.getElementById('offerList').innerHTML=html;
+}
+function openTab(e,id){
+var pages=document.querySelectorAll('.page');
+for(var i=0;i<pages.length;i++) pages[i].classList.remove('active');
+var tabs=document.querySelectorAll('.tab');
+for(var j=0;j<tabs.length;j++) tabs[j].classList.remove('active');
+document.getElementById(id).classList.add('active');
+e.target.classList.add('active');
+}
+function doOffer(amount){
+var bal=parseFloat(localStorage.getItem('wasp_bal')||0);
+var add=amount*0.60;
+bal+=add;
+localStorage.setItem('wasp_bal',bal);
+document.getElementById('bal').innerText="$"+bal.toFixed(2);
+alert("WASP Sting! You earned $"+add.toFixed(2));
+}
+function copyLink(){
+var link=window.location.href;
+navigator.clipboard.writeText(link);
+alert("Copied: "+link);
+}
+loadOffers();
+var params=new URLSearchParams(window.location.search);
+var uid=params.get('user_id')||"WASP_USER";
+document.getElementById('refCode').innerText=uid;
+var saved=localStorage.getItem('wasp_bal')||0;
+document.getElementById('bal').innerText="$"+parseFloat(saved).toFixed(2);
+</script>
+</body>
+</html>
