@@ -1,105 +1,90 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<title>IWASP - Dashboard</title>
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>IWASP</title>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
 <style>
-body{background:#0a0a0a;color:#fff;font-family:sans-serif;margin:0;padding:0}
-.header{background:#111;padding:20px;text-align:center;border-bottom:2px solid #ffcc00}
-.card{background:#1a1a1a;margin:15px;padding:20px;border-radius:12px;border:1px solid #333}
-.balance{font-size:32px;color:#ffcc00;font-weight:bold}
-.btn{background:#ffcc00;color:#000;padding:12px 20px;border-radius:8px;display:block;text-align:center;margin:10px 0;font-weight:bold;text-decoration:none;border:none;width:100%;cursor:pointer}
-.btn2{background:#222;color:#fff;border:1px solid #444}
-small{opacity:0.6}
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@900&display=swap');
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Outfit',sans-serif}
+body{background:#0a0a0a;color:#fff;min-height:100vh;padding-bottom:90px}
+.top{padding:14px 16px 0;text-align:center;background:#111}
+.iwasp-title{font-size:56px;font-weight:900;letter-spacing:3px;color:#FFCC00;text-shadow:0 0 25px #FF7A00,0 3px 0 #000;position:relative}
+.iwasp-title:after{content:'🔥';position:absolute;right:-12px;top:-8px;font-size:32px}
+.uid{color:#8a7a3a;font-size:13px;margin-top:2px}
+.yellow-line{height:2px;background:linear-gradient(90deg,transparent,#FFC800,transparent);margin:12px 0 16px}
+.card{background:#151515;border:1.2px solid rgba(255,200,0,0.25);border-radius:18px;padding:18px;margin:0 14px 14px;position:relative}
+.card-title{font-weight:700;font-size:16px;color:#FFD23F}
+.balance-amount{font-size:52px;font-weight:900;color:#FFCC00;margin:8px 0 2px}
+.balance-sub{font-size:12px;color:#b8a85a}
+.daily-badge{position:absolute;top:14px;right:14px;background:#1e1e1e;border:1.2px solid #FFC800;border-radius:14px;padding:6px 12px;font-size:11px;text-align:center}
+.daily-badge b{background:#FFC800;color:#000;padding:2px 8px;border-radius:10px;font-size:10px;display:block;margin-bottom:3px}
+.earn-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin:14px 0}
+.earn-item{background:#222;border-radius:12px;padding:10px 6px;text-align:center;font-size:11px;color:#ddd}
+.earn-item span{display:block;font-weight:700;color:#fff;margin-top:2px}
+.btn-yellow{background:#FFCC00;color:#000;font-weight:800;border:none;width:100%;padding:16px;border-radius:14px;font-size:17px;cursor:pointer}
+.input-dark{width:100%;background:#1f1f1f;border:1.2px solid #333;border-radius:12px;padding:14px;color:#fff;font-size:14px;margin:10px 0}
+.tab{display:none}.tab.active{display:block}
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;background:#111;border-top:1px solid #222;display:flex;justify-content:space-around;padding:10px 0 18px;z-index:99;border-radius:28px 28px 0 0}
+.nav-item{display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;opacity:.4}
+.nav-item.active{opacity:1}
+.nav-icon{font-size:26px}
+.nav-label{font-size:11px}
 </style>
 </head>
 <body>
-<div class="header">
-<h1>🔥 IWASP</h1>
-<p id="uid">Loading...</p>
+<div class="top">
+  <div class="iwasp-title">IWASP</div>
+  <div class="uid">UID <span id="uidTxt">583826997</span></div>
+  <div class="yellow-line"></div>
 </div>
 
-<div class="card">
-<p>💰 Total Balance</p>
-<div class="balance" id="bal">$0.00</div>
-<small>Min withdraw $5 - Batch 6th & 20th USDT TRC20</small>
+<div id="tab-home" class="tab active">
+  <div class="card">
+    <div class="card-title">💼 Total Balance</div>
+    <div class="daily-badge"><b>📅 Daily Check-in</b>Daily $0.10 • 1/5 tasks</div>
+    <div class="balance-amount" id="bal">$0.18</div>
+    <div class="balance-sub">Min withdraw $5 • Batch 6th & 20th • USDT TRC20</div>
+  </div>
+  <div class="card">
+    <div class="card-title">⚡ Earn</div>
+    <div class="earn-grid">
+      <div class="earn-item">📋 Survey<span>$0.30</span></div>
+      <div class="earn-item">🎮 Game Level 5<span>$0.50</span></div>
+      <div class="earn-item">+ 2+2/day<span>= $1.60</span></div>
+    </div>
+    <button class="btn-yellow" onclick="switchTab('task')">Open Offerwall</button>
+  </div>
 </div>
 
-<div class="card">
-<h3>👛 Wallet</h3>
-<input id="wallet" placeholder="Paste TRC20 Address (TR...)" style="width:100%;padding:12px;border-radius:8px;background:#000;color:#fff;border:1px solid #444">
-<button class="btn" onclick="saveWallet()">Save Wallet</button>
-<p id="walletStatus"></p>
+<div id="tab-task" class="tab">
+  <div class="card" style="height:75vh;padding:0;overflow:hidden"><iframe id="offerFrame" src="https://wall.earnad.com/wall?pub=YOUR_PUB_ID&uid=583826997" style="width:100%;height:100%;border:none"></iframe></div>
 </div>
 
-<div class="card">
-<h3>🚀 Earn</h3>
-<p>Survey $0.30 | Game Level 5 $0.50 | 2+2/day = $1.60</p>
-<a class="btn" href="#" id="earnBtn">Open Offerwall</a>
-<small id="earnNote">Timewall loading... For now click to test +$0.30</small>
+<div id="tab-country" class="tab">
+  <div class="card"><div class="card-title">🐝 Wasp Country</div><p style="color:#888;font-size:12px;margin-top:6px">Choose country for best offers</p><div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px"><div style="background:#221f00;border:1px solid #FFCC00;border-radius:14px;padding:14px;text-align:center">🇳🇬 Nigeria</div><div style="background:#1a1a1a;border:1px solid #333;border-radius:14px;padding:14px;text-align:center">🇺🇸 USA</div><div style="background:#1a1a1a;border:1px solid #333;border-radius:14px;padding:14px;text-align:center">🇬🇧 UK</div><div style="background:#1a1a1a;border:1px solid #333;border-radius:14px;padding:14px;text-align:center">🇩🇪 Germany</div></div></div>
 </div>
 
-<div class="card">
-<h3>📅 Daily Check-in</h3>
-<p>Complete 5 tasks/day to claim $0.10</p>
-<button class="btn btn2" onclick="claimDaily()">Claim Daily $0.10</button>
-<p id="dailyStatus">0/5 tasks today</p>
+<div id="tab-refer" class="tab">
+  <div class="card"><div class="card-title">👥 Referral</div><p style="margin:10px 0;color:#aaa;font-size:13px">Get $0.50 per active friend</p><input class="input-dark" id="refLink" value="https://t.me/iwasp_bot?start=583826997" readonly><button class="btn-yellow" onclick="navigator.clipboard.writeText(document.getElementById('refLink').value);alert('Copied!')">Copy Link</button><p style="margin-top:12px;color:#666;font-size:12px">0 referrals • Referrer bonus daily</p></div>
 </div>
 
-<div class="card">
-<h3>👥 Referral</h3>
-<p>Get $0.50 per active friend</p>
-<div style="background:#000;padding:10px;border-radius:8px;word-break:break-all" id="refLink"></div>
-<button class="btn btn2" onclick="copyRef()">Copy Link</button>
-<p id="refCount">0 referrals</p>
+<div id="tab-withdraw" class="tab">
+  <div class="card"><div class="card-title">👛 Wallet</div><input class="input-dark" id="walletInput" placeholder="Paste TRC20 Address (TR...)"><button class="btn-yellow" onclick="let w=document.getElementById('walletInput').value;if(w.length>20){localStorage.setItem('iwasp_wallet',w);alert('Wallet saved!')}else alert('Invalid')">Save Wallet</button><div style="margin-top:16px"><div class="card-title">💸 Withdraw</div><p style="color:#888;font-size:12px;margin:8px 0">Balance: <b style="color:#FFCC00">$0.18</b> • Min $5 • USDT TRC20</p><button class="btn-yellow" style="background:#222;color:#FFCC00;border:1px solid #FFCC00" onclick="alert('Withdraw requested! Batch 6th & 20th')">Request Withdraw</button></div></div>
 </div>
 
-<div class="card">
-<h3>💸 Withdraw</h3>
-<button class="btn" onclick="withdraw()">Request Withdraw $5 Min</button>
-<p id="withdrawStatus"></p>
+<div class="bottom-nav">
+  <div class="nav-item active" onclick="switchTab('home')"><div class="nav-icon">🏠</div><div class="nav-label">Home</div></div>
+  <div class="nav-item" onclick="switchTab('task')"><div class="nav-icon">📋</div><div class="nav-label">Task</div></div>
+  <div class="nav-item" onclick="switchTab('country')"><div class="nav-icon">🐝</div></div>
+  <div class="nav-item" onclick="switchTab('refer')"><div class="nav-icon">👥</div><div class="nav-label">Refer</div></div>
+  <div class="nav-item" onclick="switchTab('withdraw')"><div class="nav-icon">⬇️</div><div class="nav-label">Withdraw</div></div>
 </div>
 
 <script>
-const params = new URLSearchParams(window.location.search);
-const uid = params.get('uid') || localStorage.getItem('iwasp_uid') || 'guest';
-localStorage.setItem('iwasp_uid', uid);
-document.getElementById('uid').innerText = 'UID: ' + uid;
-document.getElementById('refLink').innerText = 'https://t.me/iwasp_bot?start=' + uid;
-
-let data = JSON.parse(localStorage.getItem('iwasp_'+uid) || '{"bal":0,"tasks":0,"wallet":"","refs":0}');
-function render(){ 
- document.getElementById('bal').innerText = '$' + data.bal.toFixed(2);
- document.getElementById('dailyStatus').innerText = data.tasks + '/5 tasks today';
- document.getElementById('refCount').innerText = data.refs + ' referrals';
- document.getElementById('wallet').value = data.wallet;
- if(data.wallet) document.getElementById('walletStatus').innerText = '✅ Linked: ' + data.wallet.slice(0,6)+'...';
- // test earn link - tomorrow replace with real Timewall
- document.getElementById('earnBtn').onclick = () => {
-   data.bal += 0.18; // 60% of 0.30
-   data.tasks += 1;
-   save(); render();
-   alert('+$0.18 added! (Test) - Real Timewall tomorrow');
- };
-}
-function save(){ localStorage.setItem('iwasp_'+uid, JSON.stringify(data)); }
-function saveWallet(){
- const w = document.getElementById('wallet').value;
- if(w.length<20) return alert('Invalid TRC20');
- data.wallet = w; save(); render(); alert('Wallet saved!');
-}
-function claimDaily(){
- if(data.tasks>=5){ data.bal+=0.10; data.tasks=0; save(); render(); alert('Daily $0.10 claimed!'); }
- else alert('Need 5 tasks - Do Earn first - You have '+data.tasks+'/5');
-}
-function copyRef(){ navigator.clipboard.writeText(document.getElementById('refLink').innerText); alert('Copied!'); }
-function withdraw(){
- if(!data.wallet) return alert('Link wallet first');
- if(data.bal<5) return alert('Need $5 min - You have $'+data.bal.toFixed(2));
- alert('Withdraw Request $'+data.bal+' to '+data.wallet+' - Batch payout 6th & 20th - Request logged!'); 
- document.getElementById('withdrawStatus').innerText='✅ Requested $'+data.bal+' - Paid 6th & 20th';
-}
-render();
+function switchTab(n){document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));document.getElementById('tab-'+n).classList.add('active');document.querySelectorAll('.nav-item').forEach((el,i)=>{let names=['home','task','country','refer','withdraw'];el.classList.toggle('active',names[i]===n)})}
+let tg=window.Telegram?.WebApp;if(tg){tg.expand()}
 </script>
 </body>
 </html>
