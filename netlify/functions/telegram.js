@@ -1,90 +1,36 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>IWASP</title>
-<script src="https://telegram.org/js/telegram-web-app.js"></script>
-<style>
-@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@900&display=swap');
-*{margin:0;padding:0;box-sizing:border-box;font-family:'Outfit',sans-serif}
-body{background:#0a0a0a;color:#fff;min-height:100vh;padding-bottom:90px}
-.top{padding:14px 16px 0;text-align:center;background:#111}
-.iwasp-title{font-size:56px;font-weight:900;letter-spacing:3px;color:#FFCC00;text-shadow:0 0 25px #FF7A00,0 3px 0 #000;position:relative}
-.iwasp-title:after{content:'🔥';position:absolute;right:-12px;top:-8px;font-size:32px}
-.uid{color:#8a7a3a;font-size:13px;margin-top:2px}
-.yellow-line{height:2px;background:linear-gradient(90deg,transparent,#FFC800,transparent);margin:12px 0 16px}
-.card{background:#151515;border:1.2px solid rgba(255,200,0,0.25);border-radius:18px;padding:18px;margin:0 14px 14px;position:relative}
-.card-title{font-weight:700;font-size:16px;color:#FFD23F}
-.balance-amount{font-size:52px;font-weight:900;color:#FFCC00;margin:8px 0 2px}
-.balance-sub{font-size:12px;color:#b8a85a}
-.daily-badge{position:absolute;top:14px;right:14px;background:#1e1e1e;border:1.2px solid #FFC800;border-radius:14px;padding:6px 12px;font-size:11px;text-align:center}
-.daily-badge b{background:#FFC800;color:#000;padding:2px 8px;border-radius:10px;font-size:10px;display:block;margin-bottom:3px}
-.earn-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin:14px 0}
-.earn-item{background:#222;border-radius:12px;padding:10px 6px;text-align:center;font-size:11px;color:#ddd}
-.earn-item span{display:block;font-weight:700;color:#fff;margin-top:2px}
-.btn-yellow{background:#FFCC00;color:#000;font-weight:800;border:none;width:100%;padding:16px;border-radius:14px;font-size:17px;cursor:pointer}
-.input-dark{width:100%;background:#1f1f1f;border:1.2px solid #333;border-radius:12px;padding:14px;color:#fff;font-size:14px;margin:10px 0}
-.tab{display:none}.tab.active{display:block}
-.bottom-nav{position:fixed;bottom:0;left:0;right:0;background:#111;border-top:1px solid #222;display:flex;justify-content:space-around;padding:10px 0 18px;z-index:99;border-radius:28px 28px 0 0}
-.nav-item{display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;opacity:.4}
-.nav-item.active{opacity:1}
-.nav-icon{font-size:26px}
-.nav-label{font-size:11px}
-</style>
-</head>
-<body>
-<div class="top">
-  <div class="iwasp-title">IWASP</div>
-  <div class="uid">UID <span id="uidTxt">583826997</span></div>
-  <div class="yellow-line"></div>
-</div>
+const BOT_TOKEN = process.env.BOT_TOKEN;
+exports.handler = async (event) => {
+  const body = JSON.parse(event.body);
+  const msg = body.message;
+  if (!msg) return { statusCode: 200, body: "ok" };
+  
+  const chatId = msg.chat.id;
+  const userId = msg.from.id;
+  const text = msg.text || "";
+  const webAppUrl = `https://iwasp.netlify.app?uid=${userId}`;
 
-<div id="tab-home" class="tab active">
-  <div class="card">
-    <div class="card-title">💼 Total Balance</div>
-    <div class="daily-badge"><b>📅 Daily Check-in</b>Daily $0.10 • 1/5 tasks</div>
-    <div class="balance-amount" id="bal">$0.18</div>
-    <div class="balance-sub">Min withdraw $5 • Batch 6th & 20th • USDT TRC20</div>
-  </div>
-  <div class="card">
-    <div class="card-title">⚡ Earn</div>
-    <div class="earn-grid">
-      <div class="earn-item">📋 Survey<span>$0.30</span></div>
-      <div class="earn-item">🎮 Game Level 5<span>$0.50</span></div>
-      <div class="earn-item">+ 2+2/day<span>= $1.60</span></div>
-    </div>
-    <button class="btn-yellow" onclick="switchTab('task')">Open Offerwall</button>
-  </div>
-</div>
+  let replyText = "";
+  if (text.startsWith("/start")) {
+    replyText = `🔥 Welcome to IWASP!\n\n💰 Get Paid To Do Surveys & Games\n👇 Click below to open INSIDE Telegram`;
+  } else {
+    replyText = `👇 Open IWASP Dashboard inside Telegram:`;
+  }
 
-<div id="tab-task" class="tab">
-  <div class="card" style="height:75vh;padding:0;overflow:hidden"><iframe id="offerFrame" src="https://wall.earnad.com/wall?pub=YOUR_PUB_ID&uid=583826997" style="width:100%;height:100%;border:none"></iframe></div>
-</div>
-
-<div id="tab-country" class="tab">
-  <div class="card"><div class="card-title">🐝 Wasp Country</div><p style="color:#888;font-size:12px;margin-top:6px">Choose country for best offers</p><div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px"><div style="background:#221f00;border:1px solid #FFCC00;border-radius:14px;padding:14px;text-align:center">🇳🇬 Nigeria</div><div style="background:#1a1a1a;border:1px solid #333;border-radius:14px;padding:14px;text-align:center">🇺🇸 USA</div><div style="background:#1a1a1a;border:1px solid #333;border-radius:14px;padding:14px;text-align:center">🇬🇧 UK</div><div style="background:#1a1a1a;border:1px solid #333;border-radius:14px;padding:14px;text-align:center">🇩🇪 Germany</div></div></div>
-</div>
-
-<div id="tab-refer" class="tab">
-  <div class="card"><div class="card-title">👥 Referral</div><p style="margin:10px 0;color:#aaa;font-size:13px">Get $0.50 per active friend</p><input class="input-dark" id="refLink" value="https://t.me/iwasp_bot?start=583826997" readonly><button class="btn-yellow" onclick="navigator.clipboard.writeText(document.getElementById('refLink').value);alert('Copied!')">Copy Link</button><p style="margin-top:12px;color:#666;font-size:12px">0 referrals • Referrer bonus daily</p></div>
-</div>
-
-<div id="tab-withdraw" class="tab">
-  <div class="card"><div class="card-title">👛 Wallet</div><input class="input-dark" id="walletInput" placeholder="Paste TRC20 Address (TR...)"><button class="btn-yellow" onclick="let w=document.getElementById('walletInput').value;if(w.length>20){localStorage.setItem('iwasp_wallet',w);alert('Wallet saved!')}else alert('Invalid')">Save Wallet</button><div style="margin-top:16px"><div class="card-title">💸 Withdraw</div><p style="color:#888;font-size:12px;margin:8px 0">Balance: <b style="color:#FFCC00">$0.18</b> • Min $5 • USDT TRC20</p><button class="btn-yellow" style="background:#222;color:#FFCC00;border:1px solid #FFCC00" onclick="alert('Withdraw requested! Batch 6th & 20th')">Request Withdraw</button></div></div>
-</div>
-
-<div class="bottom-nav">
-  <div class="nav-item active" onclick="switchTab('home')"><div class="nav-icon">🏠</div><div class="nav-label">Home</div></div>
-  <div class="nav-item" onclick="switchTab('task')"><div class="nav-icon">📋</div><div class="nav-label">Task</div></div>
-  <div class="nav-item" onclick="switchTab('country')"><div class="nav-icon">🐝</div></div>
-  <div class="nav-item" onclick="switchTab('refer')"><div class="nav-icon">👥</div><div class="nav-label">Refer</div></div>
-  <div class="nav-item" onclick="switchTab('withdraw')"><div class="nav-icon">⬇️</div><div class="nav-label">Withdraw</div></div>
-</div>
-
-<script>
-function switchTab(n){document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));document.getElementById('tab-'+n).classList.add('active');document.querySelectorAll('.nav-item').forEach((el,i)=>{let names=['home','task','country','refer','withdraw'];el.classList.toggle('active',names[i]===n)})}
-let tg=window.Telegram?.WebApp;if(tg){tg.expand()}
-</script>
-</body>
-</html>
+  await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ 
+      chat_id: chatId, 
+      text: replyText,
+      reply_markup: {
+        inline_keyboard: [[
+          {
+            text: "🚀 Open IWASP App",
+            web_app: { url: webAppUrl }
+          }
+        ]]
+      }
+    })
+  });
+  return { statusCode: 200, body: "ok" };
+};
