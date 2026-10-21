@@ -6,31 +6,30 @@
 <title>IWASP</title>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@900&display=swap');
-*{margin:0;padding:0;box-sizing:border-box;font-family:'Outfit',sans-serif}
-body{background:#0a0a0a;color:#fff;min-height:100vh;padding-bottom:90px}
-.top{padding:14px 16px 0;text-align:center;background:#111}
-.iwasp-title{font-size:56px;font-weight:900;letter-spacing:3px;color:#FFCC00;text-shadow:0 0 25px #FF7A00,0 3px 0 #000;position:relative}
-.iwasp-title:after{content:'🔥';position:absolute;right:-12px;top:-8px;font-size:32px}
-.uid{color:#8a7a3a;font-size:13px;margin-top:2px}
-.yellow-line{height:2px;background:linear-gradient(90deg,transparent,#FFC800,transparent);margin:12px 0 16px}
-.card{background:#151515;border:1.2px solid rgba(255,200,0,0.25);border-radius:18px;padding:18px;margin:0 14px 14px;position:relative}
-.card-title{font-weight:700;font-size:16px;color:#FFD23F}
-.balance-amount{font-size:52px;font-weight:900;color:#FFCC00;margin:8px 0 2px}
-.balance-sub{font-size:12px;color:#b8a85a}
-.daily-badge{position:absolute;top:14px;right:14px;background:#1e1e1e;border:1.2px solid #FFC800;border-radius:14px;padding:6px 12px;font-size:11px;text-align:center}
-.daily-badge b{background:#FFC800;color:#000;padding:2px 8px;border-radius:10px;font-size:10px;display:block;margin-bottom:3px}
-.earn-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin:14px 0}
-.earn-item{background:#222;border-radius:12px;padding:10px 6px;text-align:center;font-size:11px;color:#ddd}
-.earn-item span{display:block;font-weight:700;color:#fff;margin-top:2px}
-.btn-yellow{background:#FFCC00;color:#000;font-weight:800;border:none;width:100%;padding:16px;border-radius:14px;font-size:17px;cursor:pointer}
-.input-dark{width:100%;background:#1f1f1f;border:1.2px solid #333;border-radius:12px;padding:14px;color:#fff;font-size:14px;margin:10px 0}
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@600;800;900&display=swap');
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Inter',sans-serif;-webkit-font-smoothing:antialiased}
+body{background:#080808;color:#fff;min-height:100vh;padding-bottom:90px}
+.top{padding:16px 16px 0;text-align:center;background:#0f0f0f;border-bottom:1px solid #1a1a1a}
+.iwasp-title{font-size:54px;font-weight:900;letter-spacing:4px;color:#FFCC00;line-height:1}
+.uid{color:#FFCC00;font-size:13px;font-weight:600;margin-top:6px;opacity:0.9;letter-spacing:1px}
+.yellow-line{height:2px;background:#FFCC00;margin:14px auto 16px;width:92%;opacity:0.8}
+.card{background:#121212;border:1px solid #262626;border-radius:20px;padding:18px;margin:0 14px 14px}
+.card-title{font-weight:800;font-size:15px;color:#FFCC00;letter-spacing:0.5px}
+.balance-amount{font-size:56px;font-weight:900;color:#FFCC00;margin:10px 0 4px;letter-spacing:-1px;line-height:1}
+.balance-sub{font-size:12px;color:#FFCC00;font-weight:600;opacity:0.85;letter-spacing:0.5px}
+.daily-badge{position:absolute;top:16px;right:16px;background:#1c1c1c;border:1px solid #FFCC00;border-radius:14px;padding:6px 10px;font-size:10px;text-align:center;color:#fff;font-weight:600}
+.daily-badge b{background:#FFCC00;color:#000;padding:3px 8px;border-radius:20px;font-size:9px;display:block;margin-bottom:4px;font-weight:900;letter-spacing:0.5px}
+.earn-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin:16px 0}
+.earn-item{background:#1A1A1A;border:1px solid #2E2E2E;border-radius:16px;padding:18px 6px;text-align:center;font-size:12px;color:#fff;font-weight:700;display:flex;flex-direction:column;align-items:center;gap:8px}
+.earn-icon{font-size:26px}
+.btn-yellow{background:#FFCC00;color:#000;font-weight:900;border:none;width:100%;padding:16px;border-radius:14px;font-size:16px;cursor:pointer;letter-spacing:0.3px}
+.input-dark{width:100%;background:#1A1A1A;border:1px solid #2E2E2E;border-radius:12px;padding:14px;color:#fff;font-size:14px;margin:10px 0}
 .tab{display:none}.tab.active{display:block}
-.bottom-nav{position:fixed;bottom:0;left:0;right:0;background:#111;border-top:1px solid #222;display:flex;justify-content:space-around;padding:10px 0 18px;z-index:99;border-radius:28px 28px 0 0}
-.nav-item{display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;opacity:.4}
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;background:#0f0f0f;border-top:1px solid #262626;display:flex;justify-content:space-around;padding:12px 0 20px;z-index:99;border-radius:24px 24px 0 0}
+.nav-item{display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;opacity:0.35}
 .nav-item.active{opacity:1}
-.nav-icon{font-size:26px}
-.nav-label{font-size:11px}
+.nav-icon{font-size:24px}
+.nav-label{font-size:10px;font-weight:600}
 </style>
 </head>
 <body>
@@ -41,39 +40,39 @@ body{background:#0a0a0a;color:#fff;min-height:100vh;padding-bottom:90px}
 </div>
 
 <div id="tab-home" class="tab active">
-  <div class="card">
+  <div class="card" style="position:relative">
     <div class="card-title">💼 Total Balance</div>
-    <div class="daily-badge"><b>📅 Daily Check-in</b>Daily $0.10 • 1/5 tasks</div>
-    <div class="balance-amount" id="bal">$0.18</div>
-    <div class="balance-sub">Min withdraw $25 • Instant 24h Payouts • USDT SOL</div>
+    <div class="daily-badge"><b>DAILY CHECK-IN</b>Daily $0.10 • 1/5 tasks</div>
+    <div class="balance-amount" id="bal">$0.00</div>
+    <div class="balance-sub">Min withdraw $5 • USDT SOL</div>
   </div>
   <div class="card">
     <div class="card-title">⚡ Earn</div>
     <div class="earn-grid">
-      <div class="earn-item">📋 Survey<span>$0.30</span></div>
-      <div class="earn-item">🎮 Game Level 5<span>$0.50</span></div>
-      <div class="earn-item">+ 2+2/day<span>= $1.60</span></div>
+      <div class="earn-item"><div class="earn-icon">📋</div>Survey</div>
+      <div class="earn-item"><div class="earn-icon">🎮</div>Game</div>
+      <div class="earn-item"><div class="earn-icon">✅</div>Daily</div>
     </div>
     <button class="btn-yellow" id="open-offerwall-btn" onclick="openOfferwall()">Open Offerwall</button>
   </div>
 </div>
 
 <div id="tab-task" class="tab">
-  <div class="card" style="height:75vh;padding:0;overflow:hidden">
-    <iframe id="offerFrame" src="about:blank" style="width:100%;height:100%;border:none"></iframe>
+  <div class="card" style="height:75vh;padding:0;overflow:hidden;border:none">
+    <iframe id="offerFrame" src="about:blank" style="width:100%;height:100%;border:none;background:#000"></iframe>
   </div>
 </div>
 
 <div id="tab-country" class="tab">
-  <div class="card"><div class="card-title">🐝 Wasp Country</div><p style="color:#888;font-size:12px;margin-top:6px">Choose country for best offers</p><div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px"><div style="background:#221f00;border:1px solid #FFCC00;border-radius:14px;padding:14px;text-align:center">🇳🇬 Nigeria</div><div style="background:#1a1a1a;border:1px solid #333;border-radius:14px;padding:14px;text-align:center">🇺🇸 USA</div><div style="background:#1a1a1a;border:1px solid #333;border-radius:14px;padding:14px;text-align:center">🇬🇧 UK</div><div style="background:#1a1a1a;border:1px solid #333;border-radius:14px;padding:14px;text-align:center">🇩🇪 Germany</div></div></div>
+  <div class="card"><div class="card-title">🐝 Wasp Country</div><p style="color:#888;font-size:12px;margin-top:8px">Choose country for best offers</p><div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px"><div style="background:#1A1A00;border:1.5px solid #FFCC00;border-radius:14px;padding:14px;text-align:center;font-weight:700">🇳🇬 Nigeria</div><div style="background:#1A1A1A;border:1px solid #2E2E2E;border-radius:14px;padding:14px;text-align:center">🇺🇸 USA</div><div style="background:#1A1A1A;border:1px solid #2E2E2E;border-radius:14px;padding:14px;text-align:center">🇬🇧 UK</div><div style="background:#1A1A1A;border:1px solid #2E2E2E;border-radius:14px;padding:14px;text-align:center">🇩🇪 Germany</div></div></div>
 </div>
 
 <div id="tab-refer" class="tab">
-  <div class="card"><div class="card-title">👥 Referral</div><p style="margin:10px 0;color:#aaa;font-size:13px">Get $0.50 per active friend</p><input class="input-dark" id="refLink" value="https://t.me/iwasp_bot?start=583826997" readonly><button class="btn-yellow" onclick="navigator.clipboard.writeText(document.getElementById('refLink').value);alert('Copied!')">Copy Link</button><p style="margin-top:12px;color:#666;font-size:12px">0 referrals • Referrer bonus daily</p></div>
+  <div class="card"><div class="card-title">👥 Referral</div><p style="margin:10px 0;color:#aaa;font-size:13px">Get bonus per active friend</p><input class="input-dark" id="refLink" value="https://t.me/iwasp_bot?start=583826997" readonly><button class="btn-yellow" onclick="navigator.clipboard.writeText(document.getElementById('refLink').value);alert('Copied!')">Copy Link</button></div>
 </div>
 
 <div id="tab-withdraw" class="tab">
-  <div class="card"><div class="card-title">👛 Wallet</div><input class="input-dark" id="walletInput" placeholder="Paste SOL Address (Solana - starts with... )"><button class="btn-yellow" onclick="let w=document.getElementById('walletInput').value;if(w.length>20){localStorage.setItem('iwasp_wallet',w);alert('Wallet saved!')}else alert('Invalid')">Save Wallet</button><div style="margin-top:16px"><div class="card-title">💸 Withdraw</div><p style="color:#888;font-size:12px;margin:8px 0">Balance: <b style="color:#FFCC00">$0.18</b> • Min $25 • USDT SOL • Instant 24h</p><button class="btn-yellow" style="background:#222;color:#FFCC00;border:1px solid #FFCC00" onclick="alert('Withdraw requested! Instant 24h via SOL')">Request Withdraw</button></div></div>
+  <div class="card"><div class="card-title">👛 Wallet</div><input class="input-dark" id="walletInput" placeholder="Paste SOL Address (Solana)"><button class="btn-yellow" onclick="let w=document.getElementById('walletInput').value;if(w.length>20){localStorage.setItem('iwasp_wallet',w);alert('Wallet saved!')}else alert('Invalid')">Save Wallet</button><div style="margin-top:18px"><div class="card-title">💸 Withdraw</div><p style="color:#888;font-size:12px;margin:8px 0">Balance: <b style="color:#FFCC00">$0.00</b> • Min $5 • USDT SOL</p><button class="btn-yellow" style="background:#1A1A1A;color:#FFCC00;border:1.5px solid #FFCC00" onclick="alert('Withdraw: Min $5 USDT SOL')">Request Withdraw</button></div></div>
 </div>
 
 <div class="bottom-nav">
@@ -93,22 +92,22 @@ function switchTab(n){
     el.classList.toggle('active',names[i]===n)
   })
 }
-
 function openOfferwall(){
   let tg = window.Telegram?.WebApp;
   let realUid = tg?.initDataUnsafe?.user?.id || document.getElementById('uidTxt').innerText || "583826997";
   const CPA_APP_ID = "YOUR_CPA_APP_ID_HERE";
   const wallUrl = `https://www.cpalead.com/appwall?app=${CPA_APP_ID}&subid=${realUid}&subid2=IWASP_NG`;
-  if(CPA_APP_ID === "YOUR_CPA_APP_ID_HERE"){
-    alert("Add your CPAlead App ID first! For now opening demo.");
-    document.getElementById('offerFrame').src = "https://wall.earnad.com/wall?pub=demo&uid=" + realUid;
-  } else {
-    document.getElementById('offerFrame').src = wallUrl;
-  }
+  document.getElementById('offerFrame').src = CPA_APP_ID === "YOUR_CPA_APP_ID_HERE" ? "about:blank" : wallUrl;
   switchTab('task');
 }
-
-let tg=window.Telegram?.WebApp;if(tg){tg.expand()}
+(function(){
+  localStorage.removeItem('balance');
+  localStorage.removeItem('iwasp_balance');
+  localStorage.setItem('iwasp_balance','0.00');
+  let tg=window.Telegram?.WebApp;
+  if(tg){tg.expand(); let uid=tg.initDataUnsafe?.user?.id; if(uid) document.getElementById('uidTxt').innerText=uid;}
+  document.getElementById('bal').innerText="$0.00";
+})();
 </script>
 </body>
 </html>
