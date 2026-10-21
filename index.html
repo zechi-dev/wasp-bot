@@ -6,23 +6,27 @@
 <title>IWASP</title>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@600;800;900&display=swap');
-*{margin:0;padding:0;box-sizing:border-box;font-family:'Inter',sans-serif;-webkit-font-smoothing:antialiased}
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@700;900&display=swap');
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Inter',sans-serif}
 body{background:#080808;color:#fff;min-height:100vh;padding-bottom:90px}
-.top{padding:16px 16px 0;text-align:center;background:#0f0f0f;border-bottom:1px solid #1a1a1a}
-.iwasp-title{font-size:54px;font-weight:900;letter-spacing:4px;color:#FFCC00;line-height:1}
-.uid{color:#FFCC00;font-size:13px;font-weight:600;margin-top:6px;opacity:0.9;letter-spacing:1px}
-.yellow-line{height:2px;background:#FFCC00;margin:14px auto 16px;width:92%;opacity:0.8}
+.top{padding:18px 16px 0;text-align:center;background:#0f0f0f;border-bottom:1px solid #1a1a1a}
+.logo-wrap{display:flex;align-items:center;justify-content:center;gap:10px}
+.wasp-badge{width:48px;height:48px;background:#FFCC00;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:28px;border:2px solid #000;box-shadow:0 0 0 2px #FFCC00,0 4px 16px rgba(255,204,0,0.4);transform:rotate(-6deg)}
+.iwasp-title{font-size:52px;font-weight:900;letter-spacing:3px;color:#FFCC00;line-height:1;display:flex;align-items:center;gap:2px}
+.iwasp-title span.w{position:relative;display:inline-block}
+.iwasp-title span.w:after{content:'🐝';position:absolute;top:-14px;right:-8px;font-size:14px;filter:drop-shadow(0 2px 0 #000)}
+.uid{color:#FFCC00;font-size:12px;font-weight:700;margin-top:8px;opacity:0.9;letter-spacing:1px}
+.yellow-line{height:2px;background:#FFCC00;margin:14px auto 16px;width:92%}
 .card{background:#121212;border:1px solid #262626;border-radius:20px;padding:18px;margin:0 14px 14px}
-.card-title{font-weight:800;font-size:15px;color:#FFCC00;letter-spacing:0.5px}
-.balance-amount{font-size:56px;font-weight:900;color:#FFCC00;margin:10px 0 4px;letter-spacing:-1px;line-height:1}
-.balance-sub{font-size:12px;color:#FFCC00;font-weight:600;opacity:0.85;letter-spacing:0.5px}
+.card-title{font-weight:800;font-size:15px;color:#FFCC00}
+.balance-amount{font-size:56px;font-weight:900;color:#FFCC00;margin:10px 0 4px;letter-spacing:-1px}
+.balance-sub{font-size:12px;color:#FFCC00;font-weight:600;opacity:0.85}
 .daily-badge{position:absolute;top:16px;right:16px;background:#1c1c1c;border:1px solid #FFCC00;border-radius:14px;padding:6px 10px;font-size:10px;text-align:center;color:#fff;font-weight:600}
-.daily-badge b{background:#FFCC00;color:#000;padding:3px 8px;border-radius:20px;font-size:9px;display:block;margin-bottom:4px;font-weight:900;letter-spacing:0.5px}
+.daily-badge b{background:#FFCC00;color:#000;padding:3px 8px;border-radius:20px;font-size:9px;display:block;margin-bottom:4px;font-weight:900}
 .earn-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin:16px 0}
 .earn-item{background:#1A1A1A;border:1px solid #2E2E2E;border-radius:16px;padding:18px 6px;text-align:center;font-size:12px;color:#fff;font-weight:700;display:flex;flex-direction:column;align-items:center;gap:8px}
 .earn-icon{font-size:26px}
-.btn-yellow{background:#FFCC00;color:#000;font-weight:900;border:none;width:100%;padding:16px;border-radius:14px;font-size:16px;cursor:pointer;letter-spacing:0.3px}
+.btn-yellow{background:#FFCC00;color:#000;font-weight:900;border:none;width:100%;padding:16px;border-radius:14px;font-size:16px;cursor:pointer}
 .input-dark{width:100%;background:#1A1A1A;border:1px solid #2E2E2E;border-radius:12px;padding:14px;color:#fff;font-size:14px;margin:10px 0}
 .tab{display:none}.tab.active{display:block}
 .bottom-nav{position:fixed;bottom:0;left:0;right:0;background:#0f0f0f;border-top:1px solid #262626;display:flex;justify-content:space-around;padding:12px 0 20px;z-index:99;border-radius:24px 24px 0 0}
@@ -34,7 +38,10 @@ body{background:#080808;color:#fff;min-height:100vh;padding-bottom:90px}
 </head>
 <body>
 <div class="top">
-  <div class="iwasp-title">IWASP</div>
+  <div class="logo-wrap">
+    <div class="wasp-badge">🐝</div>
+    <div class="iwasp-title">IWASP</div>
+  </div>
   <div class="uid">UID <span id="uidTxt">583826997</span></div>
   <div class="yellow-line"></div>
 </div>
@@ -55,59 +62,3 @@ body{background:#080808;color:#fff;min-height:100vh;padding-bottom:90px}
     </div>
     <button class="btn-yellow" id="open-offerwall-btn" onclick="openOfferwall()">Open Offerwall</button>
   </div>
-</div>
-
-<div id="tab-task" class="tab">
-  <div class="card" style="height:75vh;padding:0;overflow:hidden;border:none">
-    <iframe id="offerFrame" src="about:blank" style="width:100%;height:100%;border:none;background:#000"></iframe>
-  </div>
-</div>
-
-<div id="tab-country" class="tab">
-  <div class="card"><div class="card-title">🐝 Wasp Country</div><p style="color:#888;font-size:12px;margin-top:8px">Choose country for best offers</p><div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px"><div style="background:#1A1A00;border:1.5px solid #FFCC00;border-radius:14px;padding:14px;text-align:center;font-weight:700">🇳🇬 Nigeria</div><div style="background:#1A1A1A;border:1px solid #2E2E2E;border-radius:14px;padding:14px;text-align:center">🇺🇸 USA</div><div style="background:#1A1A1A;border:1px solid #2E2E2E;border-radius:14px;padding:14px;text-align:center">🇬🇧 UK</div><div style="background:#1A1A1A;border:1px solid #2E2E2E;border-radius:14px;padding:14px;text-align:center">🇩🇪 Germany</div></div></div>
-</div>
-
-<div id="tab-refer" class="tab">
-  <div class="card"><div class="card-title">👥 Referral</div><p style="margin:10px 0;color:#aaa;font-size:13px">Get bonus per active friend</p><input class="input-dark" id="refLink" value="https://t.me/iwasp_bot?start=583826997" readonly><button class="btn-yellow" onclick="navigator.clipboard.writeText(document.getElementById('refLink').value);alert('Copied!')">Copy Link</button></div>
-</div>
-
-<div id="tab-withdraw" class="tab">
-  <div class="card"><div class="card-title">👛 Wallet</div><input class="input-dark" id="walletInput" placeholder="Paste SOL Address (Solana)"><button class="btn-yellow" onclick="let w=document.getElementById('walletInput').value;if(w.length>20){localStorage.setItem('iwasp_wallet',w);alert('Wallet saved!')}else alert('Invalid')">Save Wallet</button><div style="margin-top:18px"><div class="card-title">💸 Withdraw</div><p style="color:#888;font-size:12px;margin:8px 0">Balance: <b style="color:#FFCC00">$0.00</b> • Min $5 • USDT SOL</p><button class="btn-yellow" style="background:#1A1A1A;color:#FFCC00;border:1.5px solid #FFCC00" onclick="alert('Withdraw: Min $5 USDT SOL')">Request Withdraw</button></div></div>
-</div>
-
-<div class="bottom-nav">
-  <div class="nav-item active" onclick="switchTab('home')"><div class="nav-icon">🏠</div><div class="nav-label">Home</div></div>
-  <div class="nav-item" onclick="switchTab('task')"><div class="nav-icon">📋</div><div class="nav-label">Task</div></div>
-  <div class="nav-item" onclick="switchTab('country')"><div class="nav-icon">🐝</div></div>
-  <div class="nav-item" onclick="switchTab('refer')"><div class="nav-icon">👥</div><div class="nav-label">Refer</div></div>
-  <div class="nav-item" onclick="switchTab('withdraw')"><div class="nav-icon">⬇️</div><div class="nav-label">Withdraw</div></div>
-</div>
-
-<script>
-function switchTab(n){
-  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
-  document.getElementById('tab-'+n).classList.add('active');
-  document.querySelectorAll('.nav-item').forEach((el,i)=>{
-    let names=['home','task','country','refer','withdraw'];
-    el.classList.toggle('active',names[i]===n)
-  })
-}
-function openOfferwall(){
-  let tg = window.Telegram?.WebApp;
-  let realUid = tg?.initDataUnsafe?.user?.id || document.getElementById('uidTxt').innerText || "583826997";
-  const CPA_APP_ID = "YOUR_CPA_APP_ID_HERE";
-  const wallUrl = `https://www.cpalead.com/appwall?app=${CPA_APP_ID}&subid=${realUid}&subid2=IWASP_NG`;
-  document.getElementById('offerFrame').src = CPA_APP_ID === "YOUR_CPA_APP_ID_HERE" ? "about:blank" : wallUrl;
-  switchTab('task');
-}
-(function(){
-  localStorage.removeItem('balance');
-  localStorage.removeItem('iwasp_balance');
-  localStorage.setItem('iwasp_balance','0.00');
-  let tg=window.Telegram?.WebApp;
-  if(tg){tg.expand(); let uid=tg.initDataUnsafe?.user?.id; if(uid) document.getElementById('uidTxt').innerText=uid;}
-  document.getElementById('bal').innerText="$0.00";
-})();
-</script>
-</body>
-</html>
