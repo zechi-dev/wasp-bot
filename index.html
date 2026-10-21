@@ -45,7 +45,7 @@ body{background:#0a0a0a;color:#fff;min-height:100vh;padding-bottom:90px}
     <div class="card-title">💼 Total Balance</div>
     <div class="daily-badge"><b>📅 Daily Check-in</b>Daily $0.10 • 1/5 tasks</div>
     <div class="balance-amount" id="bal">$0.18</div>
-    <div class="balance-sub">Min withdraw $5 • Batch 6th & 20th • USDT TRC20</div>
+    <div class="balance-sub">Min withdraw $25 • Instant 24h Payouts • USDT SOL</div>
   </div>
   <div class="card">
     <div class="card-title">⚡ Earn</div>
@@ -54,12 +54,14 @@ body{background:#0a0a0a;color:#fff;min-height:100vh;padding-bottom:90px}
       <div class="earn-item">🎮 Game Level 5<span>$0.50</span></div>
       <div class="earn-item">+ 2+2/day<span>= $1.60</span></div>
     </div>
-    <button class="btn-yellow" onclick="switchTab('task')">Open Offerwall</button>
+    <button class="btn-yellow" id="open-offerwall-btn" onclick="openOfferwall()">Open Offerwall</button>
   </div>
 </div>
 
 <div id="tab-task" class="tab">
-  <div class="card" style="height:75vh;padding:0;overflow:hidden"><iframe id="offerFrame" src="https://wall.earnad.com/wall?pub=YOUR_PUB_ID&uid=583826997" style="width:100%;height:100%;border:none"></iframe></div>
+  <div class="card" style="height:75vh;padding:0;overflow:hidden">
+    <iframe id="offerFrame" src="about:blank" style="width:100%;height:100%;border:none"></iframe>
+  </div>
 </div>
 
 <div id="tab-country" class="tab">
@@ -71,7 +73,7 @@ body{background:#0a0a0a;color:#fff;min-height:100vh;padding-bottom:90px}
 </div>
 
 <div id="tab-withdraw" class="tab">
-  <div class="card"><div class="card-title">👛 Wallet</div><input class="input-dark" id="walletInput" placeholder="Paste TRC20 Address (TR...)"><button class="btn-yellow" onclick="let w=document.getElementById('walletInput').value;if(w.length>20){localStorage.setItem('iwasp_wallet',w);alert('Wallet saved!')}else alert('Invalid')">Save Wallet</button><div style="margin-top:16px"><div class="card-title">💸 Withdraw</div><p style="color:#888;font-size:12px;margin:8px 0">Balance: <b style="color:#FFCC00">$0.18</b> • Min $5 • USDT TRC20</p><button class="btn-yellow" style="background:#222;color:#FFCC00;border:1px solid #FFCC00" onclick="alert('Withdraw requested! Batch 6th & 20th')">Request Withdraw</button></div></div>
+  <div class="card"><div class="card-title">👛 Wallet</div><input class="input-dark" id="walletInput" placeholder="Paste SOL Address (Solana - starts with... )"><button class="btn-yellow" onclick="let w=document.getElementById('walletInput').value;if(w.length>20){localStorage.setItem('iwasp_wallet',w);alert('Wallet saved!')}else alert('Invalid')">Save Wallet</button><div style="margin-top:16px"><div class="card-title">💸 Withdraw</div><p style="color:#888;font-size:12px;margin:8px 0">Balance: <b style="color:#FFCC00">$0.18</b> • Min $25 • USDT SOL • Instant 24h</p><button class="btn-yellow" style="background:#222;color:#FFCC00;border:1px solid #FFCC00" onclick="alert('Withdraw requested! Instant 24h via SOL')">Request Withdraw</button></div></div>
 </div>
 
 <div class="bottom-nav">
@@ -83,7 +85,29 @@ body{background:#0a0a0a;color:#fff;min-height:100vh;padding-bottom:90px}
 </div>
 
 <script>
-function switchTab(n){document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));document.getElementById('tab-'+n).classList.add('active');document.querySelectorAll('.nav-item').forEach((el,i)=>{let names=['home','task','country','refer','withdraw'];el.classList.toggle('active',names[i]===n)})}
+function switchTab(n){
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById('tab-'+n).classList.add('active');
+  document.querySelectorAll('.nav-item').forEach((el,i)=>{
+    let names=['home','task','country','refer','withdraw'];
+    el.classList.toggle('active',names[i]===n)
+  })
+}
+
+function openOfferwall(){
+  let tg = window.Telegram?.WebApp;
+  let realUid = tg?.initDataUnsafe?.user?.id || document.getElementById('uidTxt').innerText || "583826997";
+  const CPA_APP_ID = "YOUR_CPA_APP_ID_HERE";
+  const wallUrl = `https://www.cpalead.com/appwall?app=${CPA_APP_ID}&subid=${realUid}&subid2=IWASP_NG`;
+  if(CPA_APP_ID === "YOUR_CPA_APP_ID_HERE"){
+    alert("Add your CPAlead App ID first! For now opening demo.");
+    document.getElementById('offerFrame').src = "https://wall.earnad.com/wall?pub=demo&uid=" + realUid;
+  } else {
+    document.getElementById('offerFrame').src = wallUrl;
+  }
+  switchTab('task');
+}
+
 let tg=window.Telegram?.WebApp;if(tg){tg.expand()}
 </script>
 </body>
