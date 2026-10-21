@@ -7,29 +7,30 @@ exports.handler = async (event) => {
   const chatId = msg.chat.id;
   const userId = msg.from.id;
   const text = msg.text || "";
+  const webAppUrl = `https://iwasp.netlify.app?uid=${userId}`;
 
-  let reply = "";
+  let replyText = "";
   if (text.startsWith("/start")) {
-    reply = `🔥 Welcome to IWASP!
-
-Click to start earning:
-👉 https://iwasp.netlify.app?uid=${userId}
-
-$5 min payout via USDT TRC20`;
-  } else if (text.startsWith("/linkwallet")) {
-    reply = `Link wallet inside website:
-👉 https://iwasp.netlify.app?uid=${userId}
-
-Go to Wallet section`;
+    replyText = `🔥 Welcome to IWASP!\n\n💰 Get Paid To Do Surveys & Games\n👇 Click below to open INSIDE Telegram`;
   } else {
-    reply = `Open IWASP Dashboard:
-👉 https://iwasp.netlify.app?uid=${userId}`;
+    replyText = `👇 Open IWASP Dashboard inside Telegram:`;
   }
 
   await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ chat_id: chatId, text: reply })
+    body: JSON.stringify({ 
+      chat_id: chatId, 
+      text: replyText,
+      reply_markup: {
+        inline_keyboard: [[
+          {
+            text: "🚀 Open IWASP App",
+            web_app: { url: webAppUrl }
+          }
+        ]]
+      }
+    })
   });
   return { statusCode: 200, body: "ok" };
 };
