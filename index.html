@@ -5,18 +5,16 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>IWASP</title>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Bungee&family=Inter:wght@600;800&display=swap" rel="stylesheet">
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@700;900&display=swap');
 *{margin:0;padding:0;box-sizing:border-box;font-family:'Inter',sans-serif}
 body{background:#080808;color:#fff;min-height:100vh;padding-bottom:90px}
-.top{padding:18px 16px 0;text-align:center;background:#0f0f0f;border-bottom:1px solid #1a1a1a}
-.logo-wrap{display:flex;align-items:center;justify-content:center;gap:10px}
-.wasp-badge{width:48px;height:48px;background:#FFCC00;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:28px;border:2px solid #000;box-shadow:0 0 0 2px #FFCC00,0 4px 16px rgba(255,204,0,0.4);transform:rotate(-6deg)}
-.iwasp-title{font-size:52px;font-weight:900;letter-spacing:3px;color:#FFCC00;line-height:1;display:flex;align-items:center;gap:2px}
-.iwasp-title span.w{position:relative;display:inline-block}
-.iwasp-title span.w:after{content:'🐝';position:absolute;top:-14px;right:-8px;font-size:14px;filter:drop-shadow(0 2px 0 #000)}
-.uid{color:#FFCC00;font-size:12px;font-weight:700;margin-top:8px;opacity:0.9;letter-spacing:1px}
-.yellow-line{height:2px;background:#FFCC00;margin:14px auto 16px;width:92%}
+.top{padding:20px 16px 0;text-align:center;background:#0f0f0f;border-bottom:1px solid #1a1a1a}
+.logo-wrap{display:flex;align-items:center;justify-content:center;gap:12px}
+.wasp-badge{width:52px;height:52px;background:#FFCC00;border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:32px;border:2.5px solid #000;box-shadow:0 0 0 2.5px #FFCC00,0 6px 20px rgba(255,204,0,0.5);transform:rotate(-8deg);flex-shrink:0}
+.iwasp-title{font-family:'Bungee', cursive;font-size:48px;font-weight:400;letter-spacing:1px;color:#FFCC00;line-height:1;text-transform:uppercase;-webkit-text-stroke:1.5px #000;paint-order:stroke fill}
+.uid{color:#FFCC00;font-size:12px;font-weight:700;margin-top:10px;opacity:0.9;letter-spacing:1.5px;font-family:'Inter',sans-serif}
+.yellow-line{height:2px;background:#FFCC00;margin:16px auto;width:92%}
 .card{background:#121212;border:1px solid #262626;border-radius:20px;padding:18px;margin:0 14px 14px}
 .card-title{font-weight:800;font-size:15px;color:#FFCC00}
 .balance-amount{font-size:56px;font-weight:900;color:#FFCC00;margin:10px 0 4px;letter-spacing:-1px}
@@ -24,41 +22,4 @@ body{background:#080808;color:#fff;min-height:100vh;padding-bottom:90px}
 .daily-badge{position:absolute;top:16px;right:16px;background:#1c1c1c;border:1px solid #FFCC00;border-radius:14px;padding:6px 10px;font-size:10px;text-align:center;color:#fff;font-weight:600}
 .daily-badge b{background:#FFCC00;color:#000;padding:3px 8px;border-radius:20px;font-size:9px;display:block;margin-bottom:4px;font-weight:900}
 .earn-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin:16px 0}
-.earn-item{background:#1A1A1A;border:1px solid #2E2E2E;border-radius:16px;padding:18px 6px;text-align:center;font-size:12px;color:#fff;font-weight:700;display:flex;flex-direction:column;align-items:center;gap:8px}
-.earn-icon{font-size:26px}
-.btn-yellow{background:#FFCC00;color:#000;font-weight:900;border:none;width:100%;padding:16px;border-radius:14px;font-size:16px;cursor:pointer}
-.input-dark{width:100%;background:#1A1A1A;border:1px solid #2E2E2E;border-radius:12px;padding:14px;color:#fff;font-size:14px;margin:10px 0}
-.tab{display:none}.tab.active{display:block}
-.bottom-nav{position:fixed;bottom:0;left:0;right:0;background:#0f0f0f;border-top:1px solid #262626;display:flex;justify-content:space-around;padding:12px 0 20px;z-index:99;border-radius:24px 24px 0 0}
-.nav-item{display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;opacity:0.35}
-.nav-item.active{opacity:1}
-.nav-icon{font-size:24px}
-.nav-label{font-size:10px;font-weight:600}
-</style>
-</head>
-<body>
-<div class="top">
-  <div class="logo-wrap">
-    <div class="wasp-badge">🐝</div>
-    <div class="iwasp-title">IWASP</div>
-  </div>
-  <div class="uid">UID <span id="uidTxt">583826997</span></div>
-  <div class="yellow-line"></div>
-</div>
-
-<div id="tab-home" class="tab active">
-  <div class="card" style="position:relative">
-    <div class="card-title">💼 Total Balance</div>
-    <div class="daily-badge"><b>DAILY CHECK-IN</b>Daily $0.10 • 1/5 tasks</div>
-    <div class="balance-amount" id="bal">$0.00</div>
-    <div class="balance-sub">Min withdraw $5 • USDT SOL</div>
-  </div>
-  <div class="card">
-    <div class="card-title">⚡ Earn</div>
-    <div class="earn-grid">
-      <div class="earn-item"><div class="earn-icon">📋</div>Survey</div>
-      <div class="earn-item"><div class="earn-icon">🎮</div>Game</div>
-      <div class="earn-item"><div class="earn-icon">✅</div>Daily</div>
-    </div>
-    <button class="btn-yellow" id="open-offerwall-btn" onclick="openOfferwall()">Open Offerwall</button>
-  </div>
+.earn-item{background:#1A1A1A;border:1px solid #2E2E2E;border-radius:16px;padding:18px
