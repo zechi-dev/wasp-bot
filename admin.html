@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>IWASP Admin</title>
+<style>
+body{font-family:sans-serif;background:#0f0f0f;color:#fff;padding:20px}
+.card{background:#1a1a1a;border:1px solid #333;border-radius:12px;padding:16px;margin:10px 0}
+input,button{width:100%;padding:12px;border-radius:8px;border:none;margin:6px 0}
+button{background:#facc15;color:#000;font-weight:bold;cursor:pointer}
+table{width:100%;border-collapse:collapse;margin-top:12px}
+th,td{border-bottom:1px solid #333;padding:8px;text-align:left;font-size:13px}
+</style>
+</head>
+<body>
+<h2>🐝 IWASP Admin Panel</h2>
+<div id="loginBox" class="card">
+<h3>Admin Login</h3>
+<input id="adminEmail" placeholder="Admin Email">
+<input id="adminPass" type="password" placeholder="Admin Password">
+<button onclick="login()">Login</button>
+<p id="loginMsg"></p>
+</div>
+
+<div id="mainBox" style="display:none">
+<div class="card">
+<h3>Invite Super Affiliate (USA Channels)</h3>
+<input id="affEmail" placeholder="affiliate@gmail.com">
+<button onclick="invite()">Generate Invite Link</button>
+<p id="inviteLink" style="word-break:break-all;background:#111;padding:10px;border-radius:8px"></p>
+</div>
+<div class="card">
+<h3>Quick Stats</h3>
+<p>IWASP_DB Blobs hold all users. Check in Netlify > Blobs after deploy.</p>
+<p>Bot endpoint: <code>/.netlify/functions/bot</code></p>
+<p>Admin API: <code>/.netlify/functions/admin-api</code></p>
+</div>
+</div>
+
+<script>
+let ADMIN_EMAIL='';
+function login(){
+  ADMIN_EMAIL=document.getElementById('adminEmail').value.trim();
+  const pass=document.getElementById('adminPass').value;
+  if(!ADMIN_EMAIL||!pass){alert('Enter email & pass');return}
+  localStorage.setItem('iwasp_admin_email',ADMIN_EMAIL);
+  localStorage.setItem('iwasp_admin_pass',pass);
+  document.getElementById('loginBox').style.display='none';
+  document.getElementById('mainBox').style.display='block';
+}
+async function invite(){
+  const email=document.getElementById('affEmail').value.trim();
+  if(!email){alert('Enter email');return}
+  const res=await fetch('/.netlify/functions/affiliate-api',{
+    method:'POST',headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({action:'invite',email,adminEmail:localStorage.getItem('iwasp_admin_email')})
+  });
+  const data=await res.json();
+  if(data.link){
+    document.getElementById('inviteLink').innerHTML=`✅ Link generated:<br><b>${data.link}</b><br><br>Send this to affiliate. They will click and set password.`;
+  } else {
+    document.getElementById('inviteLink').textContent='Error: '+(data.error||'Failed');
+  }
+}
+// auto login if saved
+if(localStorage.getItem('iwasp_admin_email')){
+  document.getElementById('adminEmail').value=localStorage.getItem('iwasp_admin_email');
+}
+</script>
+</body>
+</html>
