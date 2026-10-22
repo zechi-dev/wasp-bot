@@ -2,125 +2,137 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>IWASP</title>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
-<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Instrument+Serif&display=swap" rel="stylesheet">
 <style>
-:root{--ink:#0B0A08;--panel:#14120E;--panel2:#1A1712;--line:rgba(212,167,44,.16);--hair:rgba(237,230,211,.07);--gold:#D4A72C;--gold2:#F0CB5A;--bone:#EDE6D3;--mute:#8A8374;--red:#D9776B;--green:#8FBF8A;--serif:'Instrument Serif',Georgia,serif}
-*{margin:0;padding:0;box-sizing:border-box;font-family:Inter,system-ui,-apple-system,Arial,sans-serif;-webkit-tap-highlight-color:transparent}
+:root{--ink:#0B0A08;--panel:#14120E;--panel2:#1A1712;--line:rgba(212,167,44,.16);--hair:rgba(237,230,211,.07);--gold:#D4A72C;--bone:#EDE6D3;--mute:#8A8374;--red:#D9776B;--green:#8FBF8A;--serif:'Instrument Serif',serif}
+*{margin:0;padding:0;box-sizing:border-box;font-family:Inter,sans-serif;-webkit-tap-highlight-color:transparent}
 body{background:#000;display:flex;justify-content:center;color:var(--bone)}
 .app{width:100%;max-width:430px;min-height:100vh;background:var(--ink);position:relative;padding-bottom:120px}
-.ic{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
-#loader{position:fixed;inset:0;background:var(--ink);z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;transition:opacity .9s,visibility .9s}
-#loader.hide{opacity:0;visibility:hidden;pointer-events:none}
-.wasp-wrap{position:relative;width:200px;height:270px;animation:bob 3.2s ease-in-out infinite}
-.wasp-wrap::before{content:"";position:absolute;inset:-70px;background:radial-gradient(circle,rgba(212,167,44,.22),transparent 62%);animation:breathe 3.2s ease-in-out infinite}
-.wasp{position:relative;width:100%;height:100%;filter:drop-shadow(0 14px 18px rgba(0,0,0,.7))}
-.wing{transform-origin:100px 95px;animation:flap .16s ease-in-out infinite alternate}
-@keyframes flap{from{transform:rotate(-2.5deg)}to{transform:rotate(2deg)}}
-@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
-@keyframes breathe{0%,100%{opacity:.7}50%{opacity:1}}
+#loader{position:fixed;inset:0;background:var(--ink);z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;transition:opacity .8s}
+#loader.hide{opacity:0;pointer-events:none}
+.wasp-wrap{position:relative;width:200px;height:270px}
+.wasp{width:100%;height:100%}
 .loader-title{margin-top:26px;font-family:var(--serif);color:var(--bone);font-size:38px;letter-spacing:14px;padding-left:14px}
 .loader-sub{color:var(--mute);font-size:12px;margin-top:10px}
 .bar{width:120px;height:1px;background:var(--hair);margin-top:30px;overflow:hidden}
-.bar-fill{height:100%;width:0;background:var(--gold);animation:fill 2.6s ease forwards}
+.bar-fill{height:100%;width:0;background:var(--gold);animation:fill 2.6s forwards}
 @keyframes fill{to{width:100%}}
-.header{padding:calc(14px + env(safe-area-inset-top,0px)) 20px 14px;display:flex;gap:12px;align-items:center;position:sticky;top:0;background:rgba(11,10,8,.94);backdrop-filter:blur(18px);z-index:10;border-bottom:1px solid var(--hair)}
-.logo-box{width:34px;height:44px;flex:none}
-.logo-box svg{width:100%;height:100%}
-.iwasp-text{font-family:var(--serif);font-size:24px;letter-spacing:6px;color:var(--bone);line-height:1}
-.uid-text{color:var(--mute);font-size:11px;margin-top:5px;cursor:pointer}
+.header{padding:20px;display:flex;gap:12px;align-items:center;position:sticky;top:0;background:rgba(11,10,8,.94);z-index:10;border-bottom:1px solid var(--hair)}
+.logo-box{width:34px;height:44px}
+.iwasp-text{font-family:var(--serif);font-size:24px;letter-spacing:6px;color:var(--bone)}
+.uid-text{color:var(--mute);font-size:11px;margin-top:5px}
 .screen{display:none;padding:0 20px}.screen.active{display:block}
 .card{border:1px solid var(--line);background:linear-gradient(180deg,var(--panel2),var(--panel));border-radius:16px;padding:22px 20px;margin-top:18px}
-.label{color:var(--mute);font-size:12px;font-weight:500}
-.daily{border:1px solid var(--line);color:var(--gold);padding:5px 11px;border-radius:20px;font-weight:600;font-size:11px}
-.amount{font-family:var(--serif);color:var(--bone);font-size:58px;line-height:1;margin:16px 0 10px;letter-spacing:-1px}
+.label{color:var(--mute);font-size:12px}
+.amount{font-family:var(--serif);color:var(--bone);font-size:58px;margin:16px 0 10px}
 .meta{color:var(--mute);font-size:11px;line-height:1.5}
 .grid2{display:grid;grid-template-columns:1fr 1fr;margin-top:20px;border-top:1px solid var(--hair);padding-top:16px}
 .stat+.stat{border-left:1px solid var(--hair);padding-left:18px}
 .stat-label{color:var(--mute);font-size:11px}
 .stat-value{font-family:var(--serif);color:var(--bone);font-size:28px;margin-top:2px}
 .payday{margin-top:12px;display:flex;gap:10px;align-items:center;color:var(--mute);font-size:12px;padding:12px 4px}
-.payday .ic{width:18px;height:18px;color:var(--gold);flex:none}
 .trending{display:flex;gap:14px;align-items:center;padding:14px 16px;border:1px solid var(--hair);border-left:2px solid var(--gold);border-radius:12px;background:var(--panel);cursor:pointer}
-.trending b{color:var(--bone);font-size:14px;font-weight:600}
-.trending p{color:var(--mute);font-size:12px;margin-top:2px}
 .earn-title{font-family:var(--serif);color:var(--bone);margin:30px 0 14px;font-size:22px}
 .tasks-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
-.task-item{text-align:center;cursor:pointer;background:var(--panel);border:1px solid var(--hair);border-radius:14px;padding:18px 6px 14px;transition:border-color .2s}
-.task-item:active{border-color:var(--line)}
-.task-icon{color:var(--gold);display:flex;justify-content:center}
-.task-icon .ic{width:26px;height:26px}
+.task-item{text-align:center;cursor:pointer;background:var(--panel);border:1px solid var(--hair);border-radius:14px;padding:18px 6px 14px}
 .task-name{margin-top:10px;color:var(--bone);font-size:12px;font-weight:600}
 .task-sub{color:var(--mute);font-size:10px;margin-top:2px}
 .row{margin-top:10px;background:var(--panel);border:1px solid var(--hair);border-radius:12px;padding:14px;display:flex;justify-content:space-between;align-items:center}
-.row .ti{width:40px;height:40px;border:1px solid var(--line);border-radius:10px;display:flex;align-items:center;justify-content:center;color:var(--gold);flex:none}
 .input{width:100%;margin-top:12px;background:var(--ink);border:1px solid var(--hair);padding:14px;border-radius:10px;color:var(--bone);font-size:14px}
 .input:focus{outline:none;border-color:var(--gold)}
 .btn{width:100%;margin-top:16px;background:var(--gold);color:#16110A;border:none;padding:15px;border-radius:12px;font-weight:700;font-size:14px;cursor:pointer}
 .btn.ghost{background:transparent;color:var(--gold);border:1px solid var(--line)}
-.btn:disabled{background:var(--panel2);color:var(--mute);border-color:var(--hair);cursor:default}
-.warn{margin-top:14px;background:rgba(217,119,107,.07);border:1px solid rgba(217,119,107,.18);color:var(--red);padding:11px 12px;border-radius:10px;font-size:11px;line-height:1.5}
-.warn.note{background:rgba(212,167,44,.06);border-color:var(--line);color:var(--gold)}
+.btn:disabled{background:var(--panel2);color:var(--mute)}
+.warn{margin-top:14px;background:rgba(217,119,107,.07);border:1px solid rgba(217,119,107,.18);color:var(--red);padding:11px 12px;border-radius:10px;font-size:11px}
 .badge{padding:5px 11px;border-radius:20px;font-size:11px;font-weight:600}
-.badge-pending{border:1px solid var(--line);background:transparent;color:var(--gold)}
+.badge-pending{border:1px solid var(--line);color:var(--gold)}
 .badge-approved{color:var(--green);border:1px solid rgba(143,191,138,.25)}
 .h{font-family:var(--serif);color:var(--bone);font-size:30px;margin:26px 0 4px}
 .sub{color:var(--mute);font-size:12px;margin-bottom:6px}
 .ref-link{margin-top:14px;background:var(--ink);border:1px solid var(--hair);border-radius:10px;padding:12px;font-size:12px;color:var(--mute);word-break:break-all}
-.bottom-nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:430px;background:rgba(14,12,9,.96);backdrop-filter:blur(18px);border-top:1px solid var(--hair);display:grid;grid-template-columns:repeat(4,1fr);padding:10px 0 calc(14px + env(safe-area-inset-bottom,0px));z-index:20}
-.nav-item{text-align:center;color:#6A6458;font-size:10px;font-weight:500;cursor:pointer;position:relative;transition:color .2s}
-.nav-item .ic{display:block;margin:0 auto 4px}
+.bottom-nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:430px;background:rgba(14,12,9,.96);border-top:1px solid var(--hair);display:grid;grid-template-columns:repeat(4,1fr);padding:10px 0 14px;z-index:20}
+.nav-item{text-align:center;color:#6A6458;font-size:10px;cursor:pointer}
 .nav-item.active{color:var(--gold)}
-.nav-item.active::before{content:"";position:absolute;top:-11px;left:50%;width:22px;height:2px;margin-left:-11px;background:var(--gold)}
-.toast{position:fixed;left:50%;bottom:104px;transform:translateX(-50%);background:var(--bone);color:#16110A;font-weight:600;font-size:12px;padding:10px 16px;border-radius:10px;z-index:50;opacity:0;pointer-events:none;transition:opacity .25s;white-space:nowrap}
+.toast{position:fixed;left:50%;bottom:104px;transform:translateX(-50%);background:var(--bone);color:#16110A;font-weight:600;font-size:12px;padding:10px 16px;border-radius:10px;z-index:50;opacity:0;pointer-events:none;transition:opacity .25s}
 .toast.show{opacity:1}
 .dots{display:flex;gap:6px;margin:14px 0 2px}.dot{flex:1;height:6px;border-radius:3px;background:var(--hair)}.dot.on{background:var(--gold)}
-.wall{width:100%;height:calc(100vh - 250px);min-height:420px;border:1px solid var(--hair);border-radius:12px;background:var(--panel);margin-top:12px}
+.wall{width:100%;height:420px;border:1px solid var(--hair);border-radius:12px;background:var(--panel);margin-top:12px}
 .progress{height:4px;background:var(--hair);border-radius:2px;margin-top:14px;overflow:hidden}.progress i{display:block;height:100%;width:0;background:var(--gold);transition:width .6s}
 </style>
 </head>
 <body>
-<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
-<symbol id="i-home" viewBox="0 0 24 24"><path d="M4 11l8-7 8 7v9a1 1 0 0 1-1 1h-4v-6h-6v6H5a1 1 0 0 1-1-1z"/></symbol>
-<symbol id="i-list" viewBox="0 0 24 24"><path d="M9 6h11M9 12h11M9 18h11M4.5 6h.01M4.5 12h.01M4.5 18h.01"/></symbol>
-<symbol id="i-users" viewBox="0 0 24 24"><path d="M16 20v-1a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v1M10 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM20 20v-1a4 4 0 0 0-3-3.9M16 3.1a4 4 0 0 1 0 7.8"/></symbol>
-<symbol id="i-wallet" viewBox="0 0 24 24"><path d="M3 7a2 2 0 0 1 2-2h13v4M3 7v11a2 2 0 0 0 2 2h15a1 1 0 0 0 1-1v-9a1 1 0 0 0-1-1H5a2 2 0 0 1-2-2zM16 14h2"/></symbol>
-<symbol id="i-cal" viewBox="0 0 24 24"><path d="M4 6h16v14H4zM4 10h16M8 3v4M16 3v4"/></symbol>
-<symbol id="i-flame" viewBox="0 0 24 24"><path d="M12 3c1 4 5 5 5 10a5 5 0 0 1-10 0c0-2 1-3 2-4 0 2 1 3 2 3 0-3-1-6 1-9z"/></symbol>
-</defs></svg>
-
 <div class="app">
-<div id="loader">
-<div class="wasp-wrap">
-<svg id="waspSvg" class="wasp" viewBox="0 0 200 270" aria-hidden="true">
-<defs>
-<radialGradient id="gY" cx="40%" cy="30%" r="80%"><stop offset="0" stop-color="#F6D75A"/><stop offset=".55" stop-color="#D9A514"/><stop offset="1" stop-color="#7A5307"/></radialGradient>
-<radialGradient id="gK" cx="40%" cy="28%" r="80%"><stop offset="0" stop-color="#40382A"/><stop offset="1" stop-color="#0A0907"/></radialGradient>
-<radialGradient id="gE" cx="35%" cy="30%" r="75%"><stop offset="0" stop-color="#6A5630"/><stop offset=".5" stop-color="#17110A"/><stop offset="1" stop-color="#000"/></radialGradient>
-<linearGradient id="gW" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#F3E7C4" stop-opacity=".6"/><stop offset="1" stop-color="#9C8F6A" stop-opacity=".12"/></linearGradient>
-<clipPath id="ab"><path d="M100 140C78 152 70 192 100 248C130 192 122 152 100 140Z"/></clipPath>
-<g id="wingL" class="wing"><ellipse cx="58" cy="116" rx="46" ry="13" transform="rotate(-12 58 116)" fill="url(#gW)" opacity=".7" stroke="#CDBB86" stroke-opacity=".4" stroke-width=".8"/><ellipse cx="54" cy="106" rx="52" ry="17" transform="rotate(-24 54 106)" fill="url(#gW)" stroke="#CDBB86" stroke-opacity=".55" stroke-width=".8"/><path d="M99 90L10 126M96 92L40 106M92 96L24 112" fill="none" stroke="#CDBB86" stroke-opacity=".35" stroke-width=".7"/></g>
-<g id="legL" fill="none" stroke="#1B160C" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M88 96L68 86L50 100"/><path d="M86 106L58 112L44 136"/><path d="M90 116L72 134L64 162"/></g>
-</defs>
-<use href="#wingL"/><use href="#wingL" transform="matrix(-1 0 0 1 200 0)"/><use href="#legL"/><use href="#legL" transform="matrix(-1 0 0 1 200 0)"/><ellipse cx="100" cy="136" rx="4.5" ry="7" fill="url(#gK)"/><g clip-path="url(#ab)"><rect x="60" y="130" width="80" height="130" fill="url(#gY)"/><path d="M60 160Q100 172 140 160V174Q100 186 60 174Z" fill="#0C0A07"/><path d="M60 188Q100 200 140 188V202Q100 214 60 202Z" fill="#0C0A07"/><path d="M60 216Q100 228 140 216V232Q100 244 60 232Z" fill="#0C0A07"/><path d="M60 240Q100 252 140 240V260H60Z" fill="#0C0A07"/><path d="M84 150C80 190 88 225 100 245" stroke="#fff" stroke-opacity=".16" stroke-width="6" fill="none" stroke-linecap="round"/></g><path d="M100 140C78 152 70 192 100 248C130 192 122 152 100 140Z" fill="none" stroke="#000" stroke-opacity=".5"/><path d="M100 248L100 262" stroke="#1B160C" stroke-width="2.4" stroke-linecap="round"/><ellipse cx="100" cy="106" rx="21" ry="26" fill="url(#gK)"/><path d="M82 98Q86 91 93 94M118 98Q114 91 107 94" stroke="#E7B923" stroke-width="3" fill="none" stroke-linecap="round"/><ellipse cx="100" cy="126" rx="9" ry="4" fill="url(#gY)"/><ellipse cx="100" cy="77" rx="12" ry="6" fill="#0C0A07"/><path d="M94 45Q86 29 74 20M106 45Q114 29 126 20" stroke="#0C0A07" stroke-width="2.4" fill="none" stroke-linecap="round"/><ellipse cx="100" cy="60" rx="21" ry="18" fill="url(#gY)"/><ellipse cx="84" cy="56" rx="7.5" ry="11" transform="rotate(12 84 56)" fill="url(#gE)"/><ellipse cx="116" cy="56" rx="7.5" ry="11" transform="rotate(-12 116 56)" fill="url(#gE)"/><circle cx="82" cy="51" r="1.7" fill="#fff" opacity=".55"/><circle cx="114" cy="51" r="1.7" fill="#fff" opacity=".55"/><path d="M95 52L100 64L105 52" stroke="#0C0A07" stroke-width="2.2" fill="none" stroke-linejoin="round"/><path d="M92 72Q100 80 108 72" fill="none" stroke="#0C0A07" stroke-width="3" stroke-linecap="round"/></svg>
+<div id="loader"><div class="wasp-wrap"><svg viewBox="0 0 200 270"><defs><radialGradient id="gY" cx="40%" cy="30%" r="80%"><stop offset="0" stop-color="#F6D75A"/><stop offset=".55" stop-color="#D9A514"/><stop offset="1" stop-color="#7A5307"/></radialGradient><radialGradient id="gK" cx="40%" cy="28%" r="80%"><stop offset="0" stop-color="#40382A"/><stop offset="1" stop-color="#0A0907"/></radialGradient><radialGradient id="gE" cx="35%" cy="30%" r="75%"><stop offset="0" stop-color="#6A5630"/><stop offset=".5" stop-color="#17110A"/><stop offset="1" stop-color="#000"/></radialGradient><linearGradient id="gW" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#F3E7C4" stop-opacity=".6"/><stop offset="1" stop-color="#9C8F6A" stop-opacity=".12"/></linearGradient><clipPath id="ab"><path d="M100 140C78 152 70 192 100 248C130 192 122 152 100 140Z"/></clipPath><g id="wingL"><ellipse cx="58" cy="116" rx="46" ry="13" transform="rotate(-12 58 116)" fill="url(#gW)" opacity=".7" stroke="#CDBB86" stroke-opacity=".4" stroke-width=".8"/><ellipse cx="54" cy="106" rx="52" ry="17" transform="rotate(-24 54 106)" fill="url(#gW)" stroke="#CDBB86" stroke-opacity=".55" stroke-width=".8"/></g><g id="legL" fill="none" stroke="#1B160C" stroke-width="2.2" stroke-linecap="round"><path d="M88 96L68 86L50 100"/><path d="M86 106L58 112L44 136"/><path d="M90 116L72 134L64 162"/></g></defs><use href="#wingL"/><use href="#wingL" transform="matrix(-1 0 0 1 200 0)"/><use href="#legL"/><use href="#legL" transform="matrix(-1 0 0 1 200 0)"/><g clip-path="url(#ab)"><rect x="60" y="130" width="80" height="130" fill="url(#gY)"/><path d="M60 160Q100 172 140 160V174Q100 186 60 174Z" fill="#0C0A07"/><path d="M60 188Q100 200 140 188V202Q100 214 60 202Z" fill="#0C0A07"/><path d="M60 216Q100 228 140 216V232Q100 244 60 232Z" fill="#0C0A07"/></g><ellipse cx="100" cy="106" rx="21" ry="26" fill="url(#gK)"/><ellipse cx="100" cy="60" rx="21" ry="18" fill="url(#gY)"/><ellipse cx="84" cy="56" rx="7.5" ry="11" fill="url(#gE)"/><ellipse cx="116" cy="56" rx="7.5" ry="11" fill="url(#gE)"/></svg></div><div class="loader-title">IWASP</div><div class="loader-sub">Earn on your own time</div><div class="bar"><div class="bar-fill"></div></div></div>
+<div class="header"><div class="logo-box"><svg viewBox="0 0 200 270" style="width:100%;height:100%"><use href="#wingL"/><use href="#wingL" transform="matrix(-1 0 0 1 200 0)"/><g clip-path="url(#ab)"><rect x="60" y="130" width="80" height="130" fill="url(#gY)"/></g></svg></div><div><div class="iwasp-text">IWASP</div><div class="uid-text" id="uidText">UID — • Profile</div></div></div>
+<div id="home" class="screen active"><div class="card"><div style="display:flex;justify-content:space-between;align-items:center"><div class="label">Total balance</div><div class="label" style="border:1px solid var(--line);color:var(--gold);padding:5px 11px;border-radius:20px">7-day streak +$0.10</div></div><div class="amount" id="balHome">$0.00</div><div class="meta" id="payHint">Loading…</div><div class="grid2"><div class="stat"><div class="stat-label">Offers completed</div><div class="stat-value" id="tasksHome">0</div></div><div class="stat"><div class="stat-label">Check-in streak</div><div class="stat-value" id="streakHome">0/7</div></div></div></div><div class="payday"><span id="paydayHome">Calculating payday…</span></div><div class="card"><div class="label">Daily check-in</div><div class="dots" id="dots"></div><p class="meta" style="margin-top:10px">Check in 7 days in a row to earn $0.10.</p><button class="btn" id="checkBtn">Check in</button></div><div class="trending" data-go="offers" style="margin-top:14px"><div><b>Play games and finish surveys</b><p style="color:var(--mute);font-size:12px">Rewards arrive after advertiser confirms</p></div></div></div>
+<div id="offers" class="screen"><div class="h">Offers</div><div class="sub">Play games and complete surveys without leaving the app.</div><div id="offerList"></div></div>
+<div id="referral" class="screen"><div class="h">Invite friends</div><div class="sub">Earn 10% extra on everything your friends earn.</div><div class="card"><div class="label">Your link</div><div class="ref-link" id="refLink">…</div><button class="btn" id="copyBtn">Copy link</button><div class="grid2"><div class="stat"><div class="stat-label">Invited</div><div class="stat-value" id="refCount">0</div></div><div class="stat"><div class="stat-label">Earned</div><div class="stat-value" id="refEarn">$0.00</div></div></div></div></div>
+<div id="wallet" class="screen"><div class="h">Wallet</div><div class="sub">Paid every Saturday 12 PM WAT in USDT on Solana, once you reach $5. Under $5 rolls over.</div><div class="card"><div class="label">Balance</div><div class="amount" id="balWallet" style="font-size:44px">$0.00</div><div class="progress"><i id="bar"></i></div><input class="input" id="wAddr" placeholder="Solana wallet address"><button class="btn" id="walletBtn">Save wallet</button><div class="warn">Double-check your address. Payments sent to wrong address can't be recovered.</div></div><div class="h" style="font-size:22px;margin-top:28px">Payout history</div><div id="hist"></div></div>
+<div id="profile" class="screen"><div class="h">Profile</div><div class="card"><div class="row" style="margin:0"><span class="meta">User</span><b id="pName">—</b></div><div class="row"><span class="meta">UID</span><b id="pUid">—</b></div><div class="row"><span class="meta">Offers completed</span><b id="pTasks">0</b></div></div></div>
 </div>
-<div class="loader-title">IWASP</div>
-<div class="loader-sub">Earn on your own time</div>
-<div class="bar"><div class="bar-fill"></div></div>
-</div>
-
-<div class="header"><div class="logo-box"><svg viewBox="0 0 200 270"><use href="#waspSvg"/></svg></div><div><div class="iwasp-text">IWASP</div><div class="uid-text" id="uidText" data-go="profile">UID — • Profile</div></div></div>
-
-<div id="home" class="screen active">
-<div class="card"><div style="display:flex;justify-content:space-between;align-items:center"><div class="label">Total balance</div><div class="daily">7-day streak +$0.10</div></div><div class="amount" id="balHome">$0.00</div><div class="meta" id="payHint">Loading your account…</div><div class="grid2"><div class="stat"><div class="stat-label">Offers completed</div><div class="stat-value" id="tasksHome">0</div></div><div class="stat"><div class="stat-label">Check-in streak</div><div class="stat-value" id="streakHome">0/7</div></div></div></div>
-<div class="payday"><svg class="ic"><use href="#i-cal"/></svg><span id="paydayHome">Calculating payday…</span></div>
-<div class="card" style="margin-top:12px"><div class="label">Daily check-in</div><div class="dots" id="dots"></div><p class="meta" style="margin-top:10px">Check in 7 days in a row to earn $0.10. Miss a day and your streak starts over.</p><button class="btn" id="checkBtn" data-act="checkin">Check in</button></div>
-<div class="trending" tabindex="0" data-go="offers" style="margin-top:14px"><svg class="ic" style="color:var(--gold);width:26px;height:26px"><use href="#i-flame"/></svg><div><b>Play games and finish surveys</b><p>Rewards arrive after the advertiser confirms</p></div></div>
-</div>
-
-<div id="offers" class="screen"><div class="h">Offers</div><div class="sub">Play games and complete surveys without leaving the app.</div><iframe id="wall" class="wall" title="Offers" sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox"></iframe><button class="btn ghost" data-act="outside">Offers not loading? Open in browser</button></div>
-
-<div id="referral" class="screen"><div class="h">Invite friends</div><div class="sub">Earn 10% extra on everything your friends earn. It never reduces their rewards.</div><div class="card"><div class="label">Your link</div><div class="ref-link" id="refLink">…</div><button class="btn" data-act="copy">Copy
+<div class="bottom-nav"><div class="nav-item active" data-go="home">🏠<br>Home</div><div class="nav-item" data-go="offers">📋<br>Offers</div><div class="nav-item" data-go="referral">👥<br>Invite</div><div class="nav-item" data-go="wallet">👛<br>Wallet</div></div>
+<div class="toast" id="toast"></div>
+<script>
+const tg=window.Telegram&&Telegram.WebApp; if(tg){try{tg.ready();tg.expand();}catch(e){}}
+const $=id=>document.getElementById(id);
+let UID="583826997"; if(tg&&tg.initDataUnsafe&&tg.initDataUnsafe.user&&tg.initDataUnsafe.user.id){UID=String(tg.initDataUnsafe.user.id);}
+const WALLET_KEY="iwasp_wallet_"+UID, STATS_KEY="iwasp_stats_"+UID, HIST_KEY="iwasp_hist_"+UID;
+function getStats(){try{return JSON.parse(localStorage.getItem(STATS_KEY)||'{"earned":0,"tasks":0,"streak":0,"checked":false}')}catch(e){return{earned:0,tasks:0,streak:0,checked:false}}}
+function saveStats(s){localStorage.setItem(STATS_KEY,JSON.stringify(s));}
+function toast(m){const t=$('toast');t.textContent=m;t.classList.add('show');clearTimeout(toast.h);toast.h=setTimeout(()=>t.classList.remove('show'),2200);}
+function showScreen(id){document.querySelectorAll('.screen').forEach(e=>e.classList.toggle('active',e.id===id)); document.querySelectorAll('.nav-item').forEach(e=>e.classList.toggle('active',e.dataset.go===id)); window.scrollTo(0,0);}
+function isValidSol(a){if(!a) return false; if(a.length<32||a.length>44) return false; return /^[1-9A-HJ-NP-Za-km-z]+$/.test(a);}
+function render(){
+ const s=getStats();
+ const bal=s.earned;
+ $('balHome').textContent="$"+bal.toFixed(2); $('balWallet').textContent="$"+bal.toFixed(2);
+ $('bar').style.width=Math.min(100,bal/5*100)+"%";
+ $('tasksHome').textContent=s.tasks; $('pTasks').textContent=s.tasks; $('streakHome').textContent=s.streak+"/7";
+ $('dots').innerHTML=Array.from({length:7},(_,i)=>'<i class="dot'+(i<s.streak?' on':'')+'"></i>').join('');
+ const c=$('checkBtn'); c.disabled=s.checked; c.textContent=s.checked?"Checked in today":"Check in";
+ $('uidText').textContent="UID "+UID+" • Profile"; $('pName').textContent="User "+UID; $('pUid').textContent=UID;
+ $('refLink').textContent="https://t.me/Iwasp_bot?start="+UID;
+ const w=localStorage.getItem(WALLET_KEY)||""; $('wAddr').value=w;
+ const need=Math.max(0,5-bal);
+ if(need>0){$('payHint').textContent="$"+need.toFixed(2)+" more to qualify for Saturday. Under $5 rolls over."} else {$('payHint').textContent=w?"You qualify for Saturday's payout.":"You qualify. Add your wallet to get paid."}
+ const now=new Date(); let day=now.getDay(); let daysToSat=(6-day+7)%7; if(daysToSat==0) daysToSat=7; const nextSat=new Date(now); nextSat.setDate(now.getDate()+daysToSat); nextSat.setHours(12,0,0,0); const diff=Math.ceil((nextSat-now)/(1000*60*60*24));
+ let txt="Next payday Saturday 12 PM WAT • "+diff+" days left"; if(bal<5) txt+=" • Under $5 rolls over"; $('paydayHome').textContent=txt;
+ const hist=JSON.parse(localStorage.getItem(HIST_KEY)||"[]");
+ const histEl=$('hist'); if(hist.length==0){histEl.innerHTML='<div class="card"><div class="meta">No payouts yet. Paid every Saturday 12 PM WAT once you reach $5.</div></div>'} else {histEl.innerHTML=hist.map(h=>'<div class="card" style="margin-top:10px"><div style="display:flex;justify-content:space-between"><span class="meta">'+h.text+'</span><span class="badge '+(h.status=='PENDING'?'badge-pending':'badge-approved')+'">'+h.status+'</span></div></div>').join('')}
+ const offers=[
+  {name:"Survey Time",desc:"412 users earning"},
+  {name:"Watch & Earn",desc:"Watch ads"},
+  {name:"Play Game",desc:"Play to earn"}
+ ];
+ $('offerList').innerHTML=offers.map(o=>'<div class="row" onclick="doTask(\''+o.name+'\')"><span><b style="color:var(--bone)">'+o.name+'</b><br><span style="color:var(--mute);font-size:11px">'+o.desc+'</span></span><span class="badge badge-pending">START</span></div>').join('');
+}
+function doTask(name){
+ const s=getStats(); const r=name.includes("Survey")?0.5:0.2; s.tasks+=1; s.earned+=r; saveStats(s);
+ const hist=JSON.parse(localStorage.getItem(HIST_KEY)||"[]"); hist.unshift({text:name+" $"+r.toFixed(2),status:"APPROVED"}); localStorage.setItem(HIST_KEY,JSON.stringify(hist));
+ toast(name+" started +$"+r.toFixed(2)); render();
+}
+$('checkBtn').onclick=()=>{
+ const s=getStats(); const todayKey='daily_'+new Date().toDateString();
+ if(localStorage.getItem(todayKey)){toast("Already checked in today");return;}
+ if(s.checked){toast("Already checked in");return;}
+ s.streak=Math.min(7,s.streak+1); s.earned+=0.1; s.tasks+=1; s.checked=true; saveStats(s); localStorage.setItem(todayKey,"1");
+ const hist=JSON.parse(localStorage.getItem(HIST_KEY)||"[]"); hist.unshift({text:"Daily check-in $0.10",status:"APPROVED"}); localStorage.setItem(HIST_KEY,JSON.stringify(hist));
+ toast("Checked in +$0.10"); render();
+};
+$('walletBtn').onclick=()=>{
+ const addr=$('wAddr').value.trim(); if(!isValidSol(addr)){toast("Invalid Solana address");return;}
+ localStorage.setItem(WALLET_KEY,addr); toast("Wallet saved ✅"); render();
+};
+$('copyBtn').onclick=async()=>{
+ const link=$('refLink').textContent; try{await navigator.clipboard.writeText(link);}catch(e){} toast("Link copied");
+};
+document.addEventListener('click',e=>{const go=e.target.closest('[data-go]'); if(go){showScreen(go.dataset.go);}});
+setTimeout(()=>{const l=$('loader'); if(l){l.classList.add('hide'); setTimeout(()=>{l.style.display='none';},800);}},2800);
+setTimeout(()=>{const l=$('loader'); if(l) l.style.display='none';},4500);
+render();
+</script>
+</body>
+</html>
