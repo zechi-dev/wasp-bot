@@ -3,151 +3,217 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>IWASP</title>
+<meta http-equiv="Content-Security-Policy" content="default-src 'self' https://telegram.org https://www.cpalead.com https://fonts.googleapis.com https://fonts.gstatic.com; script-src 'self' 'unsafe-inline' https://telegram.org; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; frame-src https://www.cpalead.com; connect-src 'self' https://*.netlify.app https://*.netlify/functions/; img-src 'self' data: https:">
+<title>IWASP - Secure Mature</title>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
-<link href="https://fonts.googleapis.com/css2?family=Bungee&family=Inter:wght@600;800;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Bungee&family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box;font-family:'Inter',sans-serif}
-body{background:#080808;color:#fff;min-height:100vh;padding-bottom:90px}
-.top{padding:18px 16px 0;text-align:center;background:#0f0f0f;border-bottom:1px solid #1a1a1a}
+body{background:#060606;color:#fff;min-height:100vh;padding-bottom:100px;-webkit-font-smoothing:antialiased}
+.top{padding:16px 16px 0;text-align:center;background:linear-gradient(180deg,#121212 0%,#080808 100%);border-bottom:1px solid #1e1e1e;position:sticky;top:0;z-index:10}
 .logo-wrap{display:flex;align-items:center;justify-content:center;gap:12px}
-.wasp-badge{width:52px;height:52px;background:#FFCC00;border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:30px;border:2.5px solid #000;box-shadow:0 0 0 2.5px #FFCC00,0 6px 20px rgba(255,204,0,0.5);transform:rotate(-8deg)}
-.iwasp-title{font-family:'Bungee',cursive;font-size:48px;color:#FFCC00;line-height:1;-webkit-text-stroke:1.5px #000}
-.uid{color:#FFCC00;font-size:12px;font-weight:700;margin-top:10px;letter-spacing:1.5px}
-.yellow-line{height:2px;background:#FFCC00;margin:14px auto 0;width:92%}
-.card{background:#121212;border:1px solid #262626;border-radius:20px;padding:18px;margin:14px;position:relative}
-.card-title{font-weight:800;font-size:15px;color:#FFCC00}
-.balance-amount{font-size:56px;font-weight:900;color:#FFCC00;margin:10px 0 4px}
-.balance-sub{font-size:12px;color:#FFCC00;font-weight:600;opacity:0.85}
-.daily-badge{position:absolute;top:14px;right:14px;background:#1c1c1c;border:1px solid #FFCC00;border-radius:12px;padding:6px 10px;font-size:10px;text-align:center;color:#fff;font-weight:700;line-height:1.2;cursor:pointer;transition:0.2s}
-.daily-badge:active{transform:scale(0.93)}
-.daily-badge.done{opacity:0.45;pointer-events:none;border-color:#444}
-.daily-badge b{background:#FFCC00;color:#000;padding:2px 7px;border-radius:20px;font-size:9px;display:block;margin-bottom:3px;font-weight:900}
+.wasp-badge{width:52px;height:52px;background:linear-gradient(145deg,#FFD60A,#FFAA00);border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:30px;border:2.5px solid #000;box-shadow:0 0 0 2.5px #FFD60A,0 8px 28px rgba(255,214,10,0.45);transform:rotate(-6deg)}
+.iwasp-title{font-family:'Bungee',cursive;font-size:44px;color:#FFD60A;line-height:1;-webkit-text-stroke:1.5px #000;letter-spacing:1px}
+.uid{color:#FFD60A;font-size:11px;font-weight:800;margin-top:8px;letter-spacing:2px;cursor:pointer}
+.uid span{border-bottom:1px dashed rgba(255,214,10,0.4)}
+.yellow-line{height:1px;background:linear-gradient(90deg,transparent,#FFD60A,transparent);margin:12px auto 0;width:92%;opacity:0.6}
+.card{background:linear-gradient(145deg,#151515 0%,#0e0e0e 100%);border:1px solid #252525;border-radius:22px;padding:18px;margin:14px;position:relative;overflow:hidden}
+.card::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(255,214,10,0.3),transparent)}
+.card-premium{background:radial-gradient(120% 120% at 0% 0%,rgba(255,214,10,0.12) 0%,transparent 50%),linear-gradient(145deg,#1a1a1a 0%,#101010 100%);border:1px solid rgba(255,214,10,0.22);box-shadow:0 0 0 1px rgba(0,0,0,0.8),0 10px 40px rgba(0,0,0,0.6),0 0 30px rgba(255,214,10,0.08);border-radius:24px}
+.card-title{font-weight:800;font-size:13px;color:#FFD60A;letter-spacing:0.8px;text-transform:uppercase;opacity:0.95}
+.balance-amount{font-size:52px;font-weight:900;color:#FFD60A;margin:10px 0 2px;letter-spacing:-1.5px;text-shadow:0 2px 20px rgba(255,214,10,0.25)}
+.balance-sub{font-size:11px;color:#888;font-weight:600;letter-spacing:0.5px}
+.balance-sub b{color:#FFD60A}
+.stats-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
+.stat-mini{background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:14px;padding:10px 12px}
+.stat-mini-label{font-size:9px;color:#666;font-weight:700;letter-spacing:1px;text-transform:uppercase}
+.stat-mini-val{font-size:14px;font-weight:800;color:#fff;margin-top:2px}
+.trending{margin-top:14px;background:linear-gradient(90deg,rgba(255,214,10,0.08),rgba(255,214,10,0.02));border:1px dashed rgba(255,214,10,0.2);border-radius:12px;padding:10px 12px;display:flex;align-items:center;gap:8px;font-size:12px;color:#FFD60A;font-weight:700}
+.daily-badge{position:absolute;top:14px;right:14px;background:#1c1c1c;border:1px solid #FFD60A;border-radius:12px;padding:6px 10px;font-size:10px;text-align:center;color:#fff;font-weight:700;line-height:1.2;cursor:pointer}
+.daily-badge b{background:#FFD60A;color:#000;padding:2px 7px;border-radius:20px;font-size:9px;display:block;margin-bottom:3px;font-weight:900}
 .earn-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin:16px 0}
-.earn-item{background:#1A1A1A;border:1px solid #2E2E2E;border-radius:16px;padding:18px 6px;text-align:center;font-size:12px;color:#fff;font-weight:700}
-.btn-yellow{background:#FFCC00;color:#000;font-weight:900;border:none;width:100%;padding:16px;border-radius:14px;font-size:16px;cursor:pointer}
-.btn-yellow:active{transform:scale(0.98)}
-.btn-outline{background:#1A1A1A;color:#FFCC00;border:1.5px solid #FFCC00;width:100%;padding:16px;border-radius:14px;font-weight:900;margin-top:10px}
-.input-dark{width:100%;background:#1A1A1A;border:1px solid #2E2E2E;border-radius:12px;padding:14px;color:#fff;font-size:14px;margin:10px 0}
-.tab{display:none}.tab.active{display:block}
-.bottom-nav{position:fixed;bottom:0;left:0;right:0;background:#0f0f0f;border-top:1px solid #262626;display:flex;justify-content:space-around;padding:10px 0 20px;z-index:99;border-radius:24px 24px 0 0}
-.nav-item{display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;opacity:0.35;padding:4px 16px}
-.nav-item.active{opacity:1}
-@keyframes bounce{0%,100%{transform:translateY(0) rotate(-8deg)}50%{transform:translateY(-14px) rotate(8deg)}}
-@keyframes pulse{0%,100%{opacity:0.8}50%{opacity:1}}
-@keyframes shimmer{0%{transform:translateX(-100%)}100%{transform:translateX(200%)}}
+.earn-item{background:#151515;border:1px solid #252525;border-radius:16px;padding:16px 6px;text-align:center;font-size:11px;color:#fff;font-weight:700;line-height:1.4;cursor:pointer}
+.earn-item span{font-size:22px;display:block;margin-bottom:4px}
+.btn-yellow{background:linear-gradient(180deg,#FFD60A 0%,#FFAA00 100%);color:#000;font-weight:900;border:none;width:100%;padding:16px;border-radius:14px;font-size:15px;cursor:pointer;box-shadow:0 6px 20px rgba(255,214,10,0.3)}
+.btn-outline{background:#151515;color:#FFD60A;border:1.5px solid #FFD60A;width:100%;padding:14px;border-radius:14px;font-weight:800;margin-top:10px;font-size:14px;cursor:pointer}
+.input-dark{width:100%;background:#121212;border:1px solid #2A2A2A;border-radius:12px;padding:14px;color:#fff;font-size:13px;margin:10px 0;outline:none}
+.input-dark:focus{border-color:#FFD60A;box-shadow:0 0 0 3px rgba(255,214,10,0.12)}
+.payday-timer{background:linear-gradient(135deg,#1a1a00 0%,#111 100%);border:1px solid rgba(255,214,10,0.25);border-radius:14px;padding:12px 14px;margin:12px 0;display:flex;justify-content:space-between;align-items:center}
+.payday-timer-left{font-size:11px;color:#888;font-weight:600}
+.payday-timer-left b{color:#FFD60A;display:block;font-size:12px;margin-top:2px}
+.payday-timer-right{font-size:11px;background:#FFD60A;color:#000;font-weight:900;padding:6px 10px;border-radius:20px}
+.wallet-status{display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:700;padding:6px 10px;border-radius:20px;margin:8px 0}
+.status-notsaved{background:rgba(255,60,60,0.12);border:1px solid rgba(255,60,60,0.25);color:#FF6B6B}
+.status-saved{background:rgba(60,255,120,0.12);border:1px solid rgba(60,255,120,0.25);color:#5CFF88}
+.trust-row{display:flex;gap:8px;margin-top:12px}
+.trust-badge{flex:1;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:10px;padding:8px;text-align:center;font-size:9px;color:#666;font-weight:700}
+.trust-badge b{display:block;color:#FFD60A;font-size:11px;margin-top:2px}
+.history-item{display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid #1A1A1A;font-size:12px}
+.badge-pending{background:#1a1a00;color:#FFD60A;border:1px solid rgba(255,214,10,0.2);padding:3px 8px;border-radius:20px;font-size:10px;font-weight:800}
+.badge-approved{background:rgba(60,255,120,0.1);color:#5CFF88;border:1px solid rgba(60,255,120,0.2);padding:3px 8px;border-radius:20px;font-size:10px;font-weight:800}
+.tab{display:none}.tab.active{display:block;animation:fadeIn 0.25s ease}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;background:rgba(15,15,15,0.98);backdrop-filter:blur(20px);border-top:1px solid #222;display:flex;justify-content:space-around;padding:10px 0 22px;z-index:99;border-radius:24px 24px 0 0}
+.nav-item{display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;opacity:0.35;padding:6px 18px;transition:0.2s}
+.nav-item.active{opacity:1;transform:translateY(-2px)}
+.profile-avatar{width:96px;height:96px;background:radial-gradient(100% 100% at 30% 20%,#2a2a00,#101000);border:3px solid #FFD60A;border-radius:50%;margin:20px auto 12px;display:flex;align-items:center;justify-content:center;font-size:44px;box-shadow:0 0 0 6px rgba(255,214,10,0.15),0 10px 30px rgba(255,214,10,0.25)}
+.profile-stats{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:14px}
+.profile-stat{background:#121212;border:1px solid #252525;border-radius:16px;padding:14px;text-align:center}
+.profile-stat-label{font-size:10px;color:#666;font-weight:700;letter-spacing:1px;text-transform:uppercase}
+.profile-stat-val{font-size:18px;font-weight:900;color:#FFD60A;margin-top:4px}
+.location-locked{background:#111;border:1px solid rgba(255,214,10,0.2);border-radius:14px;padding:14px;margin:14px;display:flex;align-items:center;gap:12px}
 </style>
 </head>
 <body>
-
-<!-- COOL LOADER -->
-<div id="iwasp-loader" style="position:fixed;inset:0;background:radial-gradient(ellipse at center,#1a1a00 0%,#080808 70%);z-index:99999;display:flex;flex-direction:column;align-items:center;justify-content:center;transition:opacity 0.6s ease">
-  <div style="position:relative">
-    <div style="width:84px;height:84px;background:#FFCC00;border-radius:22px;display:flex;align-items:center;justify-content:center;font-size:48px;animation:bounce 1s infinite ease-in-out;box-shadow:0 0 0 4px #000,0 0 0 7px #FFCC00,0 12px 40px rgba(255,204,0,0.7)">🐝</div>
-    <div style="position:absolute;inset:-8px;border-radius:26px;border:2px solid #FFCC00;opacity:0.3;animation:pulse 1.5s infinite"></div>
-  </div>
-  <div style="font-family:'Bungee',cursive;font-size:50px;color:#FFCC00;margin-top:20px;letter-spacing:2px;-webkit-text-stroke:1.5px #000;text-shadow:0 4px 0 #000,0 8px 20px rgba(255,204,0,0.6)">IWASP</div>
-  <div style="color:#FFCC00;font-size:12px;font-weight:900;margin-top:4px;letter-spacing:3px;opacity:0.9;animation:pulse 1s infinite">EARN • PLAY • WIN</div>
-  <div style="width:140px;height:4px;background:#1A1A1A;border-radius:10px;margin-top:28px;overflow:hidden;position:relative;border:1px solid #262626">
-    <div id="loadBar" style="height:100%;width:0%;background:linear-gradient(90deg,#FFCC00,#FFAA00);border-radius:10px;position:relative;overflow:hidden;transition:width 0.25s ease">
-      <div style="position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.4),transparent);animation:shimmer 1s infinite"></div>
-    </div>
-  </div>
-  <div id="loadPercent" style="color:#666;font-size:10px;margin-top:10px;font-weight:700">0%</div>
+<div id="iwasp-loader" style="position:fixed;inset:0;background:radial-gradient(ellipse at center,#151500 0%,#060606 70%);z-index:99999;display:flex;flex-direction:column;align-items:center;justify-content:center;transition:opacity 0.7s ease">
+  <div style="position:relative"><div style="width:120px;height:120px;background:radial-gradient(120% 120% at 30% 20%,#FFD60A,#FFAA00);border-radius:32px;display:flex;align-items:center;justify-content:center;font-size:68px;box-shadow:0 0 0 4px #000,0 0 0 8px #FFD60A,0 20px 60px rgba(255,214,10,0.6);transform:rotate(-8deg)">🐝</div></div>
+  <div style="font-family:'Bungee',cursive;font-size:56px;color:#FFD60A;margin-top:28px;letter-spacing:3px;-webkit-text-stroke:1.8px #000;text-shadow:0 4px 0 #000,0 12px 30px rgba(255,214,10,0.5)">IWASP</div>
+  <div style="color:#FFD60A;font-size:11px;font-weight:900;margin-top:6px;letter-spacing:4px;opacity:0.9">MATURE EDITION</div>
+  <div style="width:160px;height:4px;background:#1A1A1A;border-radius:10px;margin-top:32px;overflow:hidden;border:1px solid #262626"><div id="loadBar" style="height:100%;width:0%;background:linear-gradient(90deg,#FFD60A,#FFAA00);border-radius:10px;transition:width 0.2s ease"></div></div>
+  <div id="loadPercent" style="color:#555;font-size:10px;margin-top:10px;font-weight:800;letter-spacing:2px">0%</div>
 </div>
-
-<div class="top">
-  <div class="logo-wrap"><div class="wasp-badge">🐝</div><div class="iwasp-title">IWASP</div></div>
-  <div class="uid">UID <span id="uidTxt">583826997</span></div>
-  <div class="yellow-line"></div>
-</div>
-
+<div class="top"><div class="logo-wrap"><div class="wasp-badge">🐝</div><div class="iwasp-title">IWASP</div></div><div class="uid" onclick="switchTab('profile')">UID <span id="uidTxt">---</span> • Profile</div><div class="yellow-line"></div></div>
 <div id="tab-home" class="tab active">
-  <div class="card">
+  <div class="card card-premium">
     <div class="card-title">💼 Total Balance</div>
     <div class="daily-badge" id="dailyBtn" onclick="dailyCheckIn()"><b id="dailyLabel">DAILY</b><span id="dailyAmt">$0.10</span><br><span id="streakTxt" style="font-size:9px;color:#aaa">0 day streak</span></div>
     <div class="balance-amount" id="bal">$0.00</div>
-    <div class="balance-sub">Min withdraw $5 • USDT SOL</div>
+    <div class="balance-sub">≈ <span id="coinBal">0</span> Coin • Min withdraw <b>$5</b> • USDT SOL • Server Verified</div>
+    <div class="stats-row"><div class="stat-mini"><div class="stat-mini-label">Today Earned</div><div class="stat-mini-val" id="todayEarned">$0.00</div></div><div class="stat-mini"><div class="stat-mini-label">Tasks Done</div><div class="stat-mini-val" id="tasksDone">0</div></div></div>
+    <div class="payday-timer"><div class="payday-timer-left">Next Payday<b id="paydayDate">Saturday 12 PM WAT</b></div><div class="payday-timer-right" id="paydayCountdown">...</div></div>
+    <div class="trending">🔥 Trending Task: Survey Up to $3.50 - 412 users earning</div>
   </div>
-  <div class="card">
-    <div class="card-title">⚡ Earn</div>
-    <div class="earn-grid">
-      <div class="earn-item">📋<br>Survey</div>
-      <div class="earn-item">🎮<br>Game</div>
-      <div class="earn-item">✅<br>Daily</div>
-    </div>
-    <button class="btn-yellow" onclick="openOfferwall()">Open Offerwall</button>
-  </div>
+  <div class="card"><div class="card-title">⚡ Earn - Up to $20 per task</div><div class="earn-grid"><div class="earn-item" onclick="openOfferwall()"><span>📋</span>Survey<br><b style="color:#FFD60A;font-size:10px">Up to $3.5</b></div><div class="earn-item" onclick="openOfferwall()"><span>🎮</span>Game<br><b style="color:#FFD60A;font-size:10px">Up to $5</b></div><div class="earn-item" onclick="dailyCheckIn()"><span>✅</span>Daily<br><b style="color:#FFD60A;font-size:10px" id="dailyCardTxt">Day 0/7</b></div></div><button class="btn-yellow" onclick="openOfferwall()">Open Offerwall →</button></div>
 </div>
-
-<div id="tab-task" class="tab"><div class="card" style="height:78vh;padding:0;overflow:hidden"><iframe id="offerFrame" src="about:blank" style="width:100%;height:100%;border:none;background:#000"></iframe></div></div>
-
+<div id="tab-task" class="tab"><div class="card" style="height:78vh;padding:0;overflow:hidden"><iframe id="offerFrame" src="about:blank" sandbox="allow-scripts allow-same-origin allow-forms allow-popups" style="width:100%;height:100%;border:none;background:#000"></iframe></div></div>
 <div id="tab-refer" class="tab">
-  <div class="card">
-    <div class="card-title">👥 Referral Program</div>
-    <p style="color:#aaa;font-size:13px;margin:10px 0">Share link - Get $0.20 per friend</p>
-    <input class="input-dark" id="refLink" value="https://t.me/iwasp_bot?start=583826997" readonly>
-    <button class="btn-yellow" onclick="copyRef()">Copy Referral Link</button>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px">
-      <div style="background:#1A1A1A;border-radius:12px;padding:14px;text-align:center"><div style="font-size:22px;font-weight:900;color:#FFCC00">0</div><div style="font-size:11px;color:#888">Friends</div></div>
-      <div style="background:#1A1A1A;border-radius:12px;padding:14px;text-align:center"><div style="font-size:22px;font-weight:900;color:#FFCC00">$0.00</div><div style="font-size:11px;color:#888">Bonus</div></div>
-    </div>
-  </div>
+  <div class="card card-premium"><div class="card-title">👥 Referral Program</div><p style="color:#888;font-size:12px;margin:10px 0">Share link - $0.25 pending → Paid when friend earns $5.</p><input class="input-dark" id="refLink" value="" readonly autocomplete="off"><button class="btn-yellow" onclick="copyRef()">Copy Referral Link</button><div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px"><div style="background:rgba(255,255,255,0.03);border-radius:14px;padding:14px;text-align:center;border:1px solid rgba(255,255,255,0.06)"><div style="font-size:22px;font-weight:900;color:#FFD60A" id="refCount">0</div><div style="font-size:11px;color:#666">Friends</div></div><div style="background:rgba(255,255,255,0.03);border-radius:14px;padding:14px;text-align:center;border:1px solid rgba(255,255,255,0.06)"><div style="font-size:22px;font-weight:900;color:#FFD60A" id="refBonus">$0.00</div><div style="font-size:11px;color:#666">Bonus</div></div></div></div>
 </div>
-
 <div id="tab-withdraw" class="tab">
-  <div class="card">
-    <div class="card-title">👛 Wallet - USDT SOL</div>
-    <input class="input-dark" id="walletInput" placeholder="Paste SOL address">
-    <button class="btn-yellow" onclick="saveWallet()">Save Wallet Address</button>
-    <div style="margin-top:20px;border-top:1px solid #262626;padding-top:18px">
-      <div class="card-title">💸 Request Withdrawal</div>
-      <p style="color:#888;font-size:12px;margin:8px 0">Balance: <b style="color:#FFCC00" id="bal2">$0.00</b> • Min $5</p>
-      <div id="walletShow" style="background:#1A1A1A;border:1px dashed #FFCC00;border-radius:10px;padding:10px;font-size:11px;color:#888;margin:10px 0;word-break:break-all">No wallet saved yet</div>
-      <button class="btn-outline" onclick="requestWithdraw()">Request Withdraw $5+</button>
-    </div>
-  </div>
+  <div class="card card-premium"><div class="card-title">👛 Wallet - SECURED</div><div style="display:flex;justify-content:space-between;align-items:center;margin:8px 0"><div class="wallet-status status-notsaved" id="walletStatus">❌ Not Saved</div><div style="font-size:11px;color:#888">Min $5 • Sat 12 PM WAT</div></div><input class="input-dark" id="walletInput" placeholder="Paste USDT SOL Address" autocomplete="off" spellcheck="false" maxlength="44"><button class="btn-yellow" onclick="saveWallet()">Save Wallet Address</button><div id="walletShow" style="background:#0f0f0f;border:1px dashed rgba(255,214,10,0.25);border-radius:10px;padding:10px;font-size:11px;color:#666;margin:10px 0;word-break:break-all">No wallet saved yet</div><div class="trust-row"><div class="trust-badge">⚡<b>USDT SOL</b>Low Fee</div><div class="trust-badge">🔒<b>AES-256</b>Encrypted</div><div class="trust-badge">⏰<b>Payday</b>Sat 12PM</div></div><div style="margin-top:18px;border-top:1px solid #222;padding-top:16px"><div class="card-title">💸 Request Withdrawal</div><p style="color:#888;font-size:11px;margin:8px 0">Balance: <b style="color:#FFD60A" id="bal2">$0.00</b> • Min $5 • Server Verified</p><button class="btn-outline" onclick="requestWithdraw()">Request Withdraw $5+ →</button></div><div style="margin-top:18px"><div class="card-title">📜 Transaction History</div><div id="historyList"><div class="history-item"><span style="color:#666">Loading from server...</span><span class="badge-pending">Secure</span></div></div></div></div>
 </div>
-
+<div id="tab-profile" class="tab">
+  <div class="card card-premium" style="text-align:center"><div style="display:flex;align-items:center;gap:10px;margin-bottom:10px"><div style="font-size:22px;cursor:pointer" onclick="switchTab('home')">‹</div><div class="card-title" style="flex:1">Profile - Secure</div><div style="width:22px"></div></div><div class="profile-avatar">🐝</div><div style="font-size:28px;font-weight:900;color:#FFD60A">UID <span id="uidTxt2">---</span></div><div style="font-size:12px;color:#666;margin-top:6px;font-weight:600">Member Since <span style="color:#FFD60A" id="memberSince">Verifying...</span></div><div class="profile-stats"><div class="profile-stat"><div style="font-size:10px;color:#666;font-weight:700">💰 Total Earned</div><div style="font-size:18px;font-weight:900;color:#FFD60A;margin-top:4px" id="profEarned">$0.00</div></div><div class="profile-stat"><div style="font-size:10px;color:#666;font-weight:700">📋 Tasks</div><div style="font-size:18px;font-weight:900;color:#FFD60A;margin-top:4px" id="profTasks">0</div></div><div class="profile-stat"><div style="font-size:10px;color:#666;font-weight:700">👥 Referrals</div><div style="font-size:18px;font-weight:900;color:#FFD60A;margin-top:4px" id="profRefs">0</div></div><div class="profile-stat"><div style="font-size:10px;color:#666;font-weight:700">🛡️ Level</div><div style="font-size:14px;font-weight:900;color:#FFD60A;margin-top:4px">Beginner Wasp</div></div></div><div class="location-locked"><div style="font-size:24px">📍🔒</div><div style="text-align:left"><div style="font-size:13px;font-weight:800;color:#fff" id="locText">Nigeria • Auto-detected • Locked</div><div style="font-size:11px;color:#666;margin-top:2px">Verified via Telegram • Can't change</div></div></div></div>
+</div>
 <div class="bottom-nav">
-  <div class="nav-item active" onclick="switchTab('home')"><div style="font-size:22px">🏠</div><div style="font-size:10px">Home</div></div>
-  <div class="nav-item" onclick="switchTab('task')"><div style="font-size:22px">📋</div><div style="font-size:10px">Task</div></div>
-  <div class="nav-item" onclick="switchTab('refer')"><div style="font-size:22px">👥</div><div style="font-size:10px">Refer</div></div>
-  <div class="nav-item" onclick="switchTab('withdraw')"><div style="font-size:22px">⬇️</div><div style="font-size:10px">Withdraw</div></div>
+  <div class="nav-item active" onclick="switchTab('home')"><div style="font-size:22px">🏠</div><div style="font-size:10px;font-weight:800">Home</div></div>
+  <div class="nav-item" onclick="switchTab('task')"><div style="font-size:22px">📋</div><div style="font-size:10px;font-weight:800">Tasks</div></div>
+  <div class="nav-item" onclick="switchTab('refer')"><div style="font-size:22px">👥</div><div style="font-size:10px;font-weight:800">Referral</div></div>
+  <div class="nav-item" onclick="switchTab('withdraw')"><div style="font-size:22px">👛</div><div style="font-size:10px;font-weight:800">Wallet</div></div>
 </div>
-
 <script>
-// LOADER - FIXED
+const tg=window.Telegram?.WebApp; if(tg){tg.ready(); tg.expand();}
+let currentUID=null;
+function getSecureUID(){
+  try{
+    if(tg?.initDataUnsafe?.user?.id && tg?.initData){
+      let id=String(tg.initDataUnsafe.user.id);
+      if(/^\d{6,15}$/.test(id)) return id;
+    }
+    let urlParams=new URLSearchParams(window.location.search);
+    let subid=urlParams.get('uid')||urlParams.get('subid');
+    if(subid && /^\d{6,15}$/.test(subid)) return subid;
+  }catch(e){}
+  return "583826997";
+}
+currentUID=getSecureUID();
+function safeSetText(id,text){let el=document.getElementById(id); if(el) el.textContent=String(text).slice(0,100);}
+safeSetText('uidTxt',currentUID); safeSetText('uidTxt2',currentUID);
+document.getElementById('refLink').value='https://t.me/iwasp_bot?start='+encodeURIComponent(currentUID);
 (function(){
   let bar=document.getElementById('loadBar'), txt=document.getElementById('loadPercent');
-  let p=0;
-  let iv=setInterval(()=>{p+=Math.random()*15+5; if(p>92) p=88+Math.random()*8; if(bar) bar.style.width=p+'%'; if(txt) txt.innerText=Math.floor(p)+'%';},100);
-  function hide(){
-    clearInterval(iv); if(bar) bar.style.width='100%'; if(txt) txt.innerText='100%';
-    setTimeout(()=>{let l=document.getElementById('iwasp-loader'); if(l){l.style.opacity='0'; setTimeout(()=>l.remove(),600)}},300);
-  }
-  window.addEventListener('load', hide);
-  setTimeout(hide, 2200);
+  let p=0; let iv=setInterval(()=>{p+=Math.random()*12+6; if(p>92) p=88+Math.random()*8; if(bar) bar.style.width=p+'%'; if(txt) txt.textContent=Math.floor(p)+'%';},90);
+  function hide(){clearInterval(iv); if(bar) bar.style.width='100%'; if(txt) txt.textContent='100%'; setTimeout(()=>{let l=document.getElementById('iwasp-loader'); if(l){l.style.opacity='0'; setTimeout(()=>l.remove(),700)}},300);}
+  window.addEventListener('load',hide); setTimeout(hide,2400);
 })();
-
-function haptic(t='light'){try{let tg=window.Telegram?.WebApp; if(tg?.HapticFeedback){if(t==='success')tg.HapticFeedback.notificationOccurred('success');else if(t==='error')tg.HapticFeedback.notificationOccurred('error');else tg.HapticFeedback.impactOccurred(t);}}catch(e){}}
+function haptic(t='light'){try{if(tg?.HapticFeedback){if(t==='success')tg.HapticFeedback.notificationOccurred('success');else if(t==='error')tg.HapticFeedback.notificationOccurred('error');else tg.HapticFeedback.impactOccurred(t);}}catch(e){}}
 function switchTab(n){
   haptic('light');
   document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
-  document.getElementById('tab-'+n).classList.add('active');
-  document.querySelectorAll('.nav-item').forEach((el,i)=>{
-    let names=['home','task','refer','withdraw'];
-    el.classList.toggle('active',names[i]===n)
-  })
+  let target=document.getElementById('tab-'+n); if(!target) return; target.classList.add('active');
+  document.querySelectorAll('.nav-item').forEach((el,i)=>{let names=['home','task','refer','withdraw']; el.classList.toggle('active',names[i]===n)});
+  if(n==='profile'){document.querySelectorAll('.nav-item').forEach(e=>e.classList.remove('active'))}
 }
 function openOfferwall(){
   haptic('medium');
-  let uid=document.getElementById('uidTxt').innerText||"583826997";
   const APP="YOUR_CPA_APP_ID_HERE";
-  document.getElementById('offerFrame').src=APP==="YOUR_CPA_APP_ID_HERE"?"about:blank":`https://www.cpalead.com/appwall?app=${APP}&subid=${uid}`;
+  let frame=document.getElementById('offerFrame');
+  if(APP==="YOUR_CPA_APP_ID_HERE" || !/^\d+$/.test(APP)){frame.src="about:blank"; alert('Offerwall not configured yet. Contact admin.'); switchTab('home'); return;}
+  let safeUID=encodeURIComponent(currentUID.replace(/[^0-9]/g,'').slice(0,15));
+  frame.src=`https://www.cpalead.com/appwall?app=${APP}&subid=${safeUID}`;
   switchTab('task');
 }
-function isValidSOL(a){return /^[1-9A-HJ-NP-Za-km-z]{32,44}$/.test(a.trim());}
+function updatePayday(){
+  const now=new Date(); const day=now.getDay(); const hour=now.getHours();
+  let daysToSat=(6-day+7)%7; if(daysToSat===0 && hour>=12) daysToSat=7;
+  let txt=daysToSat===0?`${12-hour}h left`: (daysToSat===1?'Tomorrow':`${daysToSat} days left`);
+  safeSetText('paydayCountdown',txt);
+}
+updatePayday(); setInterval(updatePayday,60000);
+function isValidSOL(a){
+  if(!a||typeof a!=='string') return false; a=a.trim();
+  if(a.length<32||a.length>44) return false;
+  if(!/^[1-9A-HJ-NP-Za-km-z]{32,44}$/.test(a)) return false;
+  if(/[<>"'`]/.test(a)) return false; return true;
+}
+let lastWalletSave=0;
 function saveWallet(){
-  let w=document.getElementById('walletInput').value.trim();
-  if(!isValidSOL(w)){
+  let now=Date.now(); if(now-lastWalletSave<3000){alert('Slow down! Wait 3 seconds.'); return;} lastWalletSave=now;
+  let input=document.getElementById('walletInput'); let w=input.value.trim();
+  if(!isValidSOL(w)){haptic('error'); alert('Invalid SOL address. Must be 32-44 base58 chars.'); return;}
+  haptic('success'); safeSetText('walletShow',w); input.value=w;
+  let status=document.getElementById('walletStatus'); status.className='wallet-status status-saved'; status.textContent='✅ Saved & Locked';
+  let payload={action:'saveWallet',uid:currentUID,wallet:w,initData:tg?.initData||'',ts:Date.now()};
+  fetch('/.netlify/functions/admin-api',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)}).then(r=>r.json()).then(d=>{if(d.error){alert('Server error: '+d.error); status.textContent='❌ Server Error'; status.className='wallet-status status-notsaved';}}).catch(()=>{});
+  try{localStorage.setItem('iwasp_wallet_'+currentUID,w);}catch(e){}
+}
+let lastWithdraw=0;
+function requestWithdraw(){
+  let now=Date.now(); if(now-lastWithdraw<5000){alert('Slow down! Wait 5 sec.'); return;} lastWithdraw=now;
+  fetch('/.netlify/functions/admin-api?action=getBalance&uid='+encodeURIComponent(currentUID)+'&initData='+encodeURIComponent(tg?.initData||'')).then(r=>r.json()).then(data=>{
+    let bal=parseFloat(data.balance||0);
+    if(isNaN(bal)||bal<5){haptic('error'); alert('Min $5 required. Server balance $'+bal.toFixed(2)+'. Will rollover to next Saturday 12 PM WAT.'); return;}
+    haptic('success');
+    fetch('/.netlify/functions/admin-api',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'requestWithdraw',uid:currentUID,amount:bal,initData:tg?.initData||''})}).then(()=>{alert('Withdrawal $'+bal.toFixed(2)+' requested! Payday Saturday 12 PM WAT.'); addHistory('Withdraw $'+bal.toFixed(2),'pending');});
+  }).catch(()=>{alert('Could not verify balance with server. Try again.');});
+}
+function addHistory(txt,status){
+  let list=document.getElementById('historyList');
+  let item=document.createElement('div'); item.className='history-item';
+  let span1=document.createElement('span'); span1.textContent=String(txt).slice(0,80)+' • '+new Date().toLocaleDateString();
+  let badge=document.createElement('span'); badge.className=status==='pending'?'badge-pending':'badge-approved'; badge.textContent=status==='pending'?'Pending':'Approved';
+  item.appendChild(span1); item.appendChild(badge);
+  if(list.textContent.includes('Loading')||list.textContent.includes('No transactions')) list.innerHTML='';
+  list.prepend(item);
+}
+function copyRef(){
+  haptic('medium'); let l=document.getElementById('refLink'); if(!l.value) return;
+  navigator.clipboard.writeText(l.value).then(()=>{alert('Copied!')}).catch(()=>{l.select(); document.execCommand('copy'); alert('Copied!');});
+}
+let lastDaily=0;
+function dailyCheckIn(){
+  let now=Date.now(); if(now-lastDaily<3000) return; lastDaily=now;
+  fetch('/.netlify/functions/admin-api',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'dailyCheck',uid:currentUID,initData:tg?.initData||''})}).then(r=>r.json()).then(d=>{
+    if(d.error){alert(d.error); return;} haptic('success'); alert(d.message||'Checked!');
+    if(d.streak!==undefined){safeSetText('streakTxt',d.streak+' day streak'); safeSetText('dailyCardTxt','Day '+d.streak+'/7');}
+    if(d.newBalance!==undefined){safeSetText('bal','$'+parseFloat(d.newBalance).toFixed(2)); safeSetText('bal2','$'+parseFloat(d.newBalance).toFixed(2));}
+  }).catch(()=>{alert('Server error. Try again.');});
+}
+function loadServerData(){
+  let qs='action=getUser&uid='+encodeURIComponent(currentUID)+'&initData='+encodeURIComponent(tg?.initData||'');
+  fetch('/.netlify/functions/admin-api?'+qs).then(r=>r.json()).then(d=>{
+    if(d.balance!==undefined){safeSetText('bal','$'+parseFloat(d.balance).toFixed(2)); safeSetText('bal2','$'+parseFloat(d.balance).toFixed(2)); safeSetText('coinBal',Math.floor((d.balance||0)*100)); safeSetText('profEarned','$'+parseFloat(d.balance).toFixed(2));}
+    if(d.tasks!==undefined) safeSetText('profTasks',d.tasks);
+    if(d.refs!==undefined) safeSetText('profRefs',d.refs);
+    if(d.tasksDone!==undefined) safeSetText('tasksDone',d.tasksDone);
+    if(d.todayEarned!==undefined) safeSetText('todayEarned','$'+parseFloat(d.todayEarned).toFixed(2));
+    if(d.streak!==undefined){safeSetText('streakTxt',d.streak+' day streak'); safeSetText('dailyCardTxt','Day '+d.streak+'/7');}
+    if(d.memberSince) safeSetText('memberSince',d.memberSince);
+    if(d.wallet){safeSetText('walletShow',d.wallet); document.getElementById('walletInput').value=d.wallet; let s=document.getElementById('walletStatus'); s.className='wallet-status status-saved'; s.textContent='✅ Saved & Locked';}
+    if(d.history && Array.isArray(d.history)){let list=document.getElementById('historyList'); list.innerHTML=''; d.history.slice(0,10).forEach(h=>{addHistory(h.text||'Transaction',h.status||'pending')});}
+  }).catch(()=>{});
+}
+loadServerData();
+</script>
+</body>
+</html>
