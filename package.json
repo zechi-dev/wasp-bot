@@ -1,9 +1,7 @@
 {
-  "name": "wasp-bot",
-  "version": "1.0.0",
-  "main": "server.js",
+  "name": "iwasp",
+  "type": "module",
   "dependencies": {
-    "express": "^4.18.2",
-    "node-telegram-bot-api": "^0.64.0"
+    "@netlify/blobs": "^8.2.0"
   }
 }
