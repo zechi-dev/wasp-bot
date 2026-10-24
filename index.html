@@ -5,6 +5,8 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>IWASP</title>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
+<!-- Supabase JS SDK -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Instrument+Serif&display=swap" rel="stylesheet">
 <style>
 :root{--ink:#0B0A08;--panel:#14120E;--panel2:#1A1712;--line:rgba(212,167,44,.16);--hair:rgba(237,230,211,.07);--gold:#D4A72C;--bone:#EDE6D3;--mute:#8A8374;--red:#D9776B;--green:#8FBF8A;--serif:'Instrument Serif',serif}
@@ -59,7 +61,7 @@ body{background:#000;display:flex;justify-content:center;color:var(--bone)}
 .toast{position:fixed;left:50%;bottom:104px;transform:translateX(-50%);background:var(--bone);color:#16110A;font-weight:600;font-size:12px;padding:10px 16px;border-radius:10px;z-index:50;opacity:0;pointer-events:none;transition:opacity .25s}
 .toast.show{opacity:1}
 .dots{display:flex;gap:6px;margin:14px 0 2px}.dot{flex:1;height:6px;border-radius:3px;background:var(--hair)}.dot.on{background:var(--gold)}
-.wall{width:100%;height:420px;border:1px solid var(--hair);border-radius:12px;background:var(--panel);margin-top:12px}
+.wall{width:100%;height:520px;border:1px solid var(--hair);border-radius:12px;background:var(--panel);margin-top:12px}
 .progress{height:4px;background:var(--hair);border-radius:2px;margin-top:14px;overflow:hidden}.progress i{display:block;height:100%;width:0;background:var(--gold);transition:width .6s}
 </style>
 </head>
@@ -68,7 +70,14 @@ body{background:#000;display:flex;justify-content:center;color:var(--bone)}
 <div id="loader"><div class="wasp-wrap"><svg viewBox="0 0 200 270"><defs><radialGradient id="gY" cx="40%" cy="30%" r="80%"><stop offset="0" stop-color="#F6D75A"/><stop offset=".55" stop-color="#D9A514"/><stop offset="1" stop-color="#7A5307"/></radialGradient><radialGradient id="gK" cx="40%" cy="28%" r="80%"><stop offset="0" stop-color="#40382A"/><stop offset="1" stop-color="#0A0907"/></radialGradient><radialGradient id="gE" cx="35%" cy="30%" r="75%"><stop offset="0" stop-color="#6A5630"/><stop offset=".5" stop-color="#17110A"/><stop offset="1" stop-color="#000"/></radialGradient><linearGradient id="gW" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#F3E7C4" stop-opacity=".6"/><stop offset="1" stop-color="#9C8F6A" stop-opacity=".12"/></linearGradient><clipPath id="ab"><path d="M100 140C78 152 70 192 100 248C130 192 122 152 100 140Z"/></clipPath><g id="wingL"><ellipse cx="58" cy="116" rx="46" ry="13" transform="rotate(-12 58 116)" fill="url(#gW)" opacity=".7" stroke="#CDBB86" stroke-opacity=".4" stroke-width=".8"/><ellipse cx="54" cy="106" rx="52" ry="17" transform="rotate(-24 54 106)" fill="url(#gW)" stroke="#CDBB86" stroke-opacity=".55" stroke-width=".8"/></g><g id="legL" fill="none" stroke="#1B160C" stroke-width="2.2" stroke-linecap="round"><path d="M88 96L68 86L50 100"/><path d="M86 106L58 112L44 136"/><path d="M90 116L72 134L64 162"/></g></defs><use href="#wingL"/><use href="#wingL" transform="matrix(-1 0 0 1 200 0)"/><use href="#legL"/><use href="#legL" transform="matrix(-1 0 0 1 200 0)"/><g clip-path="url(#ab)"><rect x="60" y="130" width="80" height="130" fill="url(#gY)"/><path d="M60 160Q100 172 140 160V174Q100 186 60 174Z" fill="#0C0A07"/><path d="M60 188Q100 200 140 188V202Q100 214 60 202Z" fill="#0C0A07"/><path d="M60 216Q100 228 140 216V232Q100 244 60 232Z" fill="#0C0A07"/></g><ellipse cx="100" cy="106" rx="21" ry="26" fill="url(#gK)"/><ellipse cx="100" cy="60" rx="21" ry="18" fill="url(#gY)"/><ellipse cx="84" cy="56" rx="7.5" ry="11" fill="url(#gE)"/><ellipse cx="116" cy="56" rx="7.5" ry="11" fill="url(#gE)"/></svg></div><div class="loader-title">IWASP</div><div class="loader-sub">Earn on your own time</div><div class="bar"><div class="bar-fill"></div></div></div>
 <div class="header"><div class="logo-box"><svg viewBox="0 0 200 270" style="width:100%;height:100%"><use href="#wingL"/><use href="#wingL" transform="matrix(-1 0 0 1 200 0)"/><g clip-path="url(#ab)"><rect x="60" y="130" width="80" height="130" fill="url(#gY)"/></g></svg></div><div><div class="iwasp-text">IWASP</div><div class="uid-text" id="uidText">UID — • Profile</div></div></div>
 <div id="home" class="screen active"><div class="card"><div style="display:flex;justify-content:space-between;align-items:center"><div class="label">Total balance</div><div class="label" style="border:1px solid var(--line);color:var(--gold);padding:5px 11px;border-radius:20px">7-day streak +$0.10</div></div><div class="amount" id="balHome">$0.00</div><div class="meta" id="payHint">Loading…</div><div class="grid2"><div class="stat"><div class="stat-label">Offers completed</div><div class="stat-value" id="tasksHome">0</div></div><div class="stat"><div class="stat-label">Check-in streak</div><div class="stat-value" id="streakHome">0/7</div></div></div></div><div class="payday"><span id="paydayHome">Calculating payday…</span></div><div class="card"><div class="label">Daily check-in</div><div class="dots" id="dots"></div><p class="meta" style="margin-top:10px">Check in 7 days in a row to earn $0.10.</p><button class="btn" id="checkBtn">Check in</button></div><div class="trending" data-go="offers" style="margin-top:14px"><div><b>Play games and finish surveys</b><p style="color:var(--mute);font-size:12px">Rewards arrive after advertiser confirms</p></div></div></div>
-<div id="offers" class="screen"><div class="h">Offers</div><div class="sub">Play games and complete surveys without leaving the app.</div><div id="offerList"></div></div>
+
+<!-- OFFERS TAB WITH CPAlead EMBED -->
+<div id="offers" class="screen">
+  <div class="h">Offers</div>
+  <div class="sub">Play games and complete surveys without leaving the app.</div>
+  <iframe class="wall" id="cpaleadFrame" src="" frameborder="0" allow="geolocation"></iframe>
+</div>
+
 <div id="referral" class="screen"><div class="h">Invite friends</div><div class="sub">Earn 10% extra on everything your friends earn.</div><div class="card"><div class="label">Your link</div><div class="ref-link" id="refLink">…</div><button class="btn" id="copyBtn">Copy link</button><div class="grid2"><div class="stat"><div class="stat-label">Invited</div><div class="stat-value" id="refCount">0</div></div><div class="stat"><div class="stat-label">Earned</div><div class="stat-value" id="refEarn">$0.00</div></div></div></div></div>
 <div id="wallet" class="screen"><div class="h">Wallet</div><div class="sub">Paid every Saturday 12 PM WAT in USDT on Solana, once you reach $5. Under $5 rolls over.</div><div class="card"><div class="label">Balance</div><div class="amount" id="balWallet" style="font-size:44px">$0.00</div><div class="progress"><i id="bar"></i></div><input class="input" id="wAddr" placeholder="Solana wallet address"><button class="btn" id="walletBtn">Save wallet</button><div class="warn">Double-check your address. Payments sent to wrong address can't be recovered.</div></div><div class="h" style="font-size:22px;margin-top:28px">Payout history</div><div id="hist"></div></div>
 <div id="profile" class="screen"><div class="h">Profile</div><div class="card"><div class="row" style="margin:0"><span class="meta">User</span><b id="pName">—</b></div><div class="row"><span class="meta">UID</span><b id="pUid">—</b></div><div class="row"><span class="meta">Offers completed</span><b id="pTasks">0</b></div></div></div>
@@ -79,6 +88,14 @@ body{background:#000;display:flex;justify-content:center;color:var(--bone)}
 const tg=window.Telegram&&Telegram.WebApp; if(tg){try{tg.ready();tg.expand();}catch(e){}}
 const $=id=>document.getElementById(id);
 let UID="583826997"; if(tg&&tg.initDataUnsafe&&tg.initDataUnsafe.user&&tg.initDataUnsafe.user.id){UID=String(tg.initDataUnsafe.user.id);}
+
+// Load CPAlead Offerwall dynamically with user's Telegram UID as subid
+const cpaleadUrl = `https://www.cdnflyer.com/wall/i07LGTum?subid=${UID}`;
+const frame = $('cpaleadFrame');
+if (frame) {
+  frame.src = cpaleadUrl;
+}
+
 const WALLET_KEY="iwasp_wallet_"+UID, STATS_KEY="iwasp_stats_"+UID, HIST_KEY="iwasp_hist_"+UID;
 function getStats(){try{return JSON.parse(localStorage.getItem(STATS_KEY)||'{"earned":0,"tasks":0,"streak":0,"checked":false}')}catch(e){return{earned:0,tasks:0,streak:0,checked:false}}}
 function saveStats(s){localStorage.setItem(STATS_KEY,JSON.stringify(s));}
@@ -102,17 +119,6 @@ function render(){
  let txt="Next payday Saturday 12 PM WAT • "+diff+" days left"; if(bal<5) txt+=" • Under $5 rolls over"; $('paydayHome').textContent=txt;
  const hist=JSON.parse(localStorage.getItem(HIST_KEY)||"[]");
  const histEl=$('hist'); if(hist.length==0){histEl.innerHTML='<div class="card"><div class="meta">No payouts yet. Paid every Saturday 12 PM WAT once you reach $5.</div></div>'} else {histEl.innerHTML=hist.map(h=>'<div class="card" style="margin-top:10px"><div style="display:flex;justify-content:space-between"><span class="meta">'+h.text+'</span><span class="badge '+(h.status=='PENDING'?'badge-pending':'badge-approved')+'">'+h.status+'</span></div></div>').join('')}
- const offers=[
-  {name:"Survey Time",desc:"412 users earning"},
-  {name:"Watch & Earn",desc:"Watch ads"},
-  {name:"Play Game",desc:"Play to earn"}
- ];
- $('offerList').innerHTML=offers.map(o=>'<div class="row" onclick="doTask(\''+o.name+'\')"><span><b style="color:var(--bone)">'+o.name+'</b><br><span style="color:var(--mute);font-size:11px">'+o.desc+'</span></span><span class="badge badge-pending">START</span></div>').join('');
-}
-function doTask(name){
- const s=getStats(); const r=name.includes("Survey")?0.5:0.2; s.tasks+=1; s.earned+=r; saveStats(s);
- const hist=JSON.parse(localStorage.getItem(HIST_KEY)||"[]"); hist.unshift({text:name+" $"+r.toFixed(2),status:"APPROVED"}); localStorage.setItem(HIST_KEY,JSON.stringify(hist));
- toast(name+" started +$"+r.toFixed(2)); render();
 }
 $('checkBtn').onclick=()=>{
  const s=getStats(); const todayKey='daily_'+new Date().toDateString();
@@ -135,4 +141,5 @@ setTimeout(()=>{const l=$('loader'); if(l) l.style.display='none';},4500);
 render();
 </script>
 </body>
-</html>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         </html>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            
