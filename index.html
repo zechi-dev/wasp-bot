@@ -1,283 +1,88 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>IWASP Telegram Mini App</title>
-    <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <style>
-        :root {
-            --bg-color: #0f172a;
-            --card-bg: #1e293b;
-            --accent-yellow: #f59e0b;
-            --text-main: #f8fafc;
-            --text-sub: #94a3b8;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>IWASP</title>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<!-- Supabase JS SDK -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Instrument+Serif&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#0B0A08;--panel:#14120E;--panel2:#1A1712;--line:rgba(212,167,44,.16);--hair:rgba(237,230,211,.07);--gold:#D4A72C;--bone:#EDE6D3;--mute:#8A8374;--red:#D9776B;--green:#8FBF8A;--serif:'Instrument Serif',serif}
+*{margin:0;padding:0;box-sizing:border-box;font-family:Inter,sans-serif;-webkit-tap-highlight-color:transparent}
+body{background:#000;display:flex;justify-content:center;color:var(--bone)}
+.app{width:100%;max-width:430px;min-height:100vh;background:var(--ink);position:relative;padding-bottom:120px}
+#loader{position:fixed;inset:0;background:var(--ink);z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;transition:opacity .8s}
+#loader.hide{opacity:0;pointer-events:none}
+.wasp-wrap{position:relative;width:200px;height:270px}
+.wasp{width:100%;height:100%}
+.loader-title{margin-top:26px;font-family:var(--serif);color:var(--bone);font-size:38px;letter-spacing:14px;padding-left:14px}
+.loader-sub{color:var(--mute);font-size:12px;margin-top:10px}
+.bar{width:120px;height:1px;background:var(--hair);margin-top:30px;overflow:hidden}
+.bar-fill{height:100%;width:0;background:var(--gold);animation:fill 2.6s forwards}
+@keyframes fill{to{width:100%}}
+.header{padding:20px;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;background:rgba(11,10,8,.94);z-index:10;border-bottom:1px solid var(--hair)}
+.logo-box{width:34px;height:44px}
+.iwasp-text{font-family:var(--serif);font-size:24px;letter-spacing:6px;color:var(--bone)}
+.uid-text{color:var(--mute);font-size:11px;margin-top:5px}
 
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-main);
-            margin: 0;
-            padding: 16px;
-            box-sizing: border-box;
-        }
+/* Notification Bell */
+.notif-btn { position: relative; background: var(--panel2); border: 1px solid var(--line); color: var(--bone); font-size: 18px; padding: 8px 12px; border-radius: 12px; cursor: pointer; }
+.badge-count { position: absolute; top: -4px; right: -4px; background: var(--red); color: white; font-size: 10px; font-weight: bold; border-radius: 50%; padding: 2px 6px; display: none; }
 
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-        }
+.screen{display:none;padding:0 20px}.screen.active{display:block}
+.card{border:1px solid var(--line);background:linear-gradient(180deg,var(--panel2),var(--panel));border-radius:16px;padding:22px 20px;margin-top:18px}
+.label{color:var(--mute);font-size:12px}
+.amount{font-family:var(--serif);color:var(--bone);font-size:58px;margin:16px 0 10px}
+.meta{color:var(--mute);font-size:11px;line-height:1.5}
+.grid2{display:grid;grid-template-columns:1fr 1fr;margin-top:20px;border-top:1px solid var(--hair);padding-top:16px}
+.stat+.stat{border-left:1px solid var(--hair);padding-left:18px}
+.stat-label{color:var(--mute);font-size:11px}
+.stat-value{font-family:var(--serif);color:var(--bone);font-size:28px;margin-top:2px}
+.payday{margin-top:12px;display:flex;gap:10px;align-items:center;color:var(--mute);font-size:12px;padding:12px 4px}
+.trending{display:flex;gap:14px;align-items:center;padding:14px 16px;border:1px solid var(--hair);border-left:2px solid var(--gold);border-radius:12px;background:var(--panel);cursor:pointer}
+.earn-title{font-family:var(--serif);color:var(--bone);margin:30px 0 14px;font-size:22px}
+.row{margin-top:10px;background:var(--panel);border:1px solid var(--hair);border-radius:12px;padding:14px;display:flex;justify-content:space-between;align-items:center}
+.input{width:100%;margin-top:12px;background:var(--ink);border:1px solid var(--hair);padding:14px;border-radius:10px;color:var(--bone);font-size:14px}
+.input:focus{outline:none;border-color:var(--gold)}
+.btn{width:100%;margin-top:16px;background:var(--gold);color:#16110A;border:none;padding:15px;border-radius:12px;font-weight:700;font-size:14px;cursor:pointer}
+.btn.ghost{background:transparent;color:var(--gold);border:1px solid var(--line)}
+.btn:disabled{background:var(--panel2);color:var(--mute)}
+.warn{margin-top:14px;background:rgba(217,119,107,.07);border:1px solid rgba(217,119,107,.18);color:var(--red);padding:11px 12px;border-radius:10px;font-size:11px}
+.badge{padding:5px 11px;border-radius:20px;font-size:11px;font-weight:600}
+.badge-pending{border:1px solid var(--line);color:var(--gold)}
+.badge-approved{color:var(--green);border:1px solid rgba(143,191,138,.25)}
+.h{font-family:var(--serif);color:var(--bone);font-size:30px;margin:26px 0 4px}
+.sub{color:var(--mute);font-size:12px;margin-bottom:6px}
+.ref-link{margin-top:14px;background:var(--ink);border:1px solid var(--hair);border-radius:10px;padding:12px;font-size:12px;color:var(--mute);word-break:break-all}
+.bottom-nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:430px;background:rgba(14,12,9,.96);border-top:1px solid var(--hair);display:grid;grid-template-columns:repeat(4,1fr);padding:10px 0 14px;z-index:20}
+.nav-item{text-align:center;color:#6A6458;font-size:10px;cursor:pointer}
+.nav-item.active{color:var(--gold)}
+.toast{position:fixed;left:50%;bottom:104px;transform:translateX(-50%);background:var(--bone);color:#16110A;font-weight:600;font-size:12px;padding:10px 16px;border-radius:10px;z-index:50;opacity:0;pointer-events:none;transition:opacity .25s}
+.toast.show{opacity:1}
+.dots{display:flex;gap:6px;margin:14px 0 2px}.dot{flex:1;height:6px;border-radius:3px;background:var(--hair)}.dot.on{background:var(--gold)}
+.wall{width:100%;height:520px;border:1px solid var(--hair);border-radius:12px;background:var(--panel);margin-top:12px}
+.progress{height:4px;background:var(--hair);border-radius:2px;margin-top:14px;overflow:hidden}.progress i{display:block;height:100%;width:0;background:var(--gold);transition:width .6s}
 
-        .user-info {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .avatar {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background: var(--accent-yellow);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-            color: #000;
-        }
-
-        .notif-btn {
-            position: relative;
-            background: var(--card-bg);
-            border: 1px solid #334155;
-            color: var(--text-main);
-            font-size: 20px;
-            padding: 8px 12px;
-            border-radius: 12px;
-            cursor: pointer;
-        }
-
-        .badge {
-            position: absolute;
-            top: -4px;
-            right: -4px;
-            background: #ef4444;
-            color: white;
-            font-size: 10px;
-            font-weight: bold;
-            border-radius: 50%;
-            padding: 2px 6px;
-            display: none;
-        }
-
-        .balance-card {
-            background: var(--card-bg);
-            border: 1px solid #334155;
-            border-radius: 16px;
-            padding: 20px;
-            text-align: center;
-            margin-bottom: 20px;
-        }
-
-        .wasp-amount {
-            font-size: 32px;
-            font-weight: 800;
-            color: var(--accent-yellow);
-            margin: 8px 0;
-        }
-
-        .usd-amount {
-            font-size: 14px;
-            color: var(--text-sub);
-        }
-
-        .grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 12px;
-            margin-bottom: 20px;
-        }
-
-        .card {
-            background: var(--card-bg);
-            border: 1px solid #334155;
-            border-radius: 12px;
-            padding: 16px;
-        }
-
-        .btn {
-            background: var(--accent-yellow);
-            color: #000;
-            font-weight: 700;
-            border: none;
-            padding: 12px 20px;
-            border-radius: 10px;
-            width: 100%;
-            cursor: pointer;
-            font-size: 15px;
-        }
-
-        /* Announcement Modal */
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(0,0,0,0.8);
-            z-index: 999;
-            padding: 20px;
-            box-sizing: border-box;
-        }
-
-        .modal-content {
-            background: var(--card-bg);
-            border-radius: 16px;
-            padding: 20px;
-            max-height: 80vh;
-            overflow-y: auto;
-        }
-
-        .notif-item {
-            border-bottom: 1px solid #334155;
-            padding: 12px 0;
-        }
-
-        .notif-title { font-weight: bold; color: var(--accent-yellow); }
-        .notif-date { font-size: 11px; color: var(--text-sub); }
-
-        #browser-warning {
-            display: none;
-            text-align: center;
-            padding: 40px 20px;
-        }
-    </style>
+/* Announcement Modal */
+.modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:999;padding:20px;box-sizing:border-box}
+.modal-content{background:var(--panel2);border:1px solid var(--line);border-radius:16px;padding:20px;max-height:80vh;overflow-y:auto;margin-top:60px}
+.notif-item{border-bottom:1px solid var(--hair);padding:12px 0}
+.notif-title{font-weight:bold;color:var(--gold);font-size:15px}
+.notif-date{font-size:11px;color:var(--mute);margin-top:2px}
+</style>
 </head>
 <body>
+<div class="app" id="app-root">
+<div id="loader"><div class="wasp-wrap"><svg viewBox="0 0 200 270"><defs><radialGradient id="gY" cx="40%" cy="30%" r="80%"><stop offset="0" stop-color="#F6D75A"/><stop offset=".55" stop-color="#D9A514"/><stop offset="1" stop-color="#7A5307"/></radialGradient><radialGradient id="gK" cx="40%" cy="28%" r="80%"><stop offset="0" stop-color="#40382A"/><stop offset="1" stop-color="#0A0907"/></radialGradient><radialGradient id="gE" cx="35%" cy="30%" r="75%"><stop offset="0" stop-color="#6A5630"/><stop offset=".5" stop-color="#17110A"/><stop offset="1" stop-color="#000"/></radialGradient><linearGradient id="gW" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#F3E7C4" stop-opacity=".6"/><stop offset="1" stop-color="#9C8F6A" stop-opacity=".12"/></linearGradient><clipPath id="ab"><path d="M100 140C78 152 70 192 100 248C130 192 122 152 100 140Z"/></clipPath><g id="wingL"><ellipse cx="58" cy="116" rx="46" ry="13" transform="rotate(-12 58 116)" fill="url(#gW)" opacity=".7" stroke="#CDBB86" stroke-opacity=".4" stroke-width=".8"/><ellipse cx="54" cy="106" rx="52" ry="17" transform="rotate(-24 54 106)" fill="url(#gW)" stroke="#CDBB86" stroke-opacity=".55" stroke-width=".8"/></g><g id="legL" fill="none" stroke="#1B160C" stroke-width="2.2" stroke-linecap="round"><path d="M88 96L68 86L50 100"/><path d="M86 106L58 112L44 136"/><path d="M90 116L72 134L64 162"/></g></defs><use href="#wingL"/><use href="#wingL" transform="matrix(-1 0 0 1 200 0)"/><use href="#legL"/><use href="#legL" transform="matrix(-1 0 0 1 200 0)"/><g clip-path="url(#ab)"><rect x="60" y="130" width="80" height="130" fill="url(#gY)"/><path d="M60 160Q100 172 140 160V174Q100 186 60 174Z" fill="#0C0A07"/><path d="M60 188Q100 200 140 188V202Q100 214 60 202Z" fill="#0C0A07"/><path d="M60 216Q100 228 140 216V232Q100 244 60 232Z" fill="#0C0A07"/></g><ellipse cx="100" cy="106" rx="21" ry="26" fill="url(#gK)"/><ellipse cx="100" cy="60" rx="21" ry="18" fill="url(#gY)"/><ellipse cx="84" cy="56" rx="7.5" ry="11" fill="url(#gE)"/><ellipse cx="116" cy="56" rx="7.5" ry="11" fill="url(#gE)"/></svg></div><div class="loader-title">IWASP</div><div class="loader-sub">Earn on your own time</div><div class="bar"><div class="bar-fill"></div></div></div>
+<div class="header">
+  <div style="display:flex; gap:12px; align-items:center;">
+    <div class="logo-box"><svg viewBox="0 0 200 270" style="width:100%;height:100%"><use href="#wingL"/><use href="#wingL" transform="matrix(-1 0 0 1 200 0)"/><g clip-path="url(#ab)"><rect x="60" y="130" width="80" height="130" fill="url(#gY)"/></g></svg></div>
+    <div><div class="iwasp-text">IWASP</div><div class="uid-text" id="uidText">UID — • Profile</div></div>
+  </div>
+  <button class="notif-btn" onclick="openAnnouncements()">🔔 <span class="badge-count" id="notif-badge">0</span></button>
+</div>
 
-    <div id="app-container">
-        <div class="header">
-            <div class="user-info">
-                <div class="avatar" id="user-avatar">U</div>
-                <div>
-                    <div id="user-name" style="font-weight: bold;">Loading...</div>
-                    <div id="user-uid" style="font-size: 12px; color: var(--text-sub);">ID: ---</div>
-                </div>
-            </div>
-            <button class="notif-btn" onclick="openAnnouncements()">
-                🔔 <span class="badge" id="notif-badge">0</span>
-            </button>
-        </div>
-
-        <div class="balance-card">
-            <div style="font-size: 14px; color: var(--text-sub);">Approved Balance</div>
-            <div class="wasp-amount"><span id="balance-wasp">0</span> WASP</div>
-            <div class="usd-amount">≈ $<span id="balance-usd">0.00</span> USD</div>
-            <div style="margin-top: 10px; font-size: 12px; color: var(--accent-yellow);">
-                Pending Bonus: <span id="pending-wasp">0</span> WASP ($<span id="pending-usd">0.00</span>)
-            </div>
-        </div>
-
-        <div class="grid">
-            <div class="card">
-                <h3>Earn Coins</h3>
-                <p style="font-size: 12px; color: var(--text-sub);">Complete CPA offers to earn Wasp Coins.</p>
-                <button class="btn" onclick="openOfferwall()">Offers</button>
-            </div>
-            <div class="card">
-                <h3>Referrals</h3>
-                <p style="font-size: 12px; color: var(--text-sub);">Earn $2.00 per qualified friend!</p>
-                <button class="btn" onclick="copyReferralLink()">Copy Link</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Announcement Modal -->
-    <div class="modal" id="notif-modal">
-        <div class="modal-content">
-            <div style="display: flex; justify-content: space-between; align-items: center;">
-                <h2>Announcements</h2>
-                <button onclick="closeAnnouncements()" style="background:none; border:none; color:white; font-size:20px;">✕</button>
-            </div>
-            <div id="announcement-list">
-                <p style="color: var(--text-sub);">No announcements yet.</p>
-            </div>
-        </div>
-    </div>
-
-    <script>
-        const SUPABASE_URL = "YOUR_SUPABASE_PROJECT_URL";
-        const SUPABASE_ANON_KEY = "YOUR_SUPABASE_ANON_KEY";
-        const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
-        const tg = window.Telegram ? window.Telegram.WebApp : null;
-        let UID = "";
-
-        // Telegram Launch Lock
-        if (tg && tg.initDataUnsafe && tg.initDataUnsafe.user) {
-            tg.ready();
-            tg.expand();
-            UID = String(tg.initDataUnsafe.user.id);
-            document.getElementById("user-name").innerText = tg.initDataUnsafe.user.first_name || "User";
-            document.getElementById("user-avatar").innerText = (tg.initDataUnsafe.user.first_name || "U")[0].toUpperCase();
-            document.getElementById("user-uid").innerText = "ID: " + UID;
-            initUser();
-            fetchAnnouncements();
-        } else {
-            document.getElementById("app-container").innerHTML = `
-                <div style="text-align: center; padding: 50px 20px;">
-                    <h2>🛑 Telegram Access Only</h2>
-                    <p style="color: #94a3b8;">IWASP App can only be launched directly inside Telegram.</p>
-                </div>
-            `;
-        }
-
-        async function initUser() {
-            const { data, error } = await supabaseClient.from('users').select('*').eq('telegram_id', UID).single();
-            if (data) {
-                updateBalances(data.balance || 0, data.pending_balance || 0);
-            }
-        }
-
-        function updateBalances(balance, pending) {
-            document.getElementById("balance-wasp").innerText = balance;
-            document.getElementById("balance-usd").innerText = (balance / 100).toFixed(2);
-            document.getElementById("pending-wasp").innerText = pending;
-            document.getElementById("pending-usd").innerText = (pending / 100).toFixed(2);
-        }
-
-        async function fetchAnnouncements() {
-            const { data, error } = await supabaseClient.from('announcements').select('*').order('created_at', { ascending: false });
-            if (data && data.length > 0) {
-                document.getElementById("notif-badge").style.display = "inline";
-                document.getElementById("notif-badge").innerText = data.length;
-                let html = "";
-                data.forEach(item => {
-                    html += `
-                        <div class="notif-item">
-                            <div class="notif-title">${item.title}</div>
-                            <div class="notif-date">${new Date(item.created_at).toLocaleString()}</div>
-                            <p style="margin: 6px 0 0 0; font-size: 14px;">${item.message}</p>
-                        </div>
-                    `;
-                });
-                document.getElementById("announcement-list").innerHTML = html;
-            }
-        }
-
-        function openAnnouncements() { document.getElementById("notif-modal").style.display = "block"; }
-        function closeAnnouncements() { document.getElementById("notif-modal").style.display = "none"; }
-
-        function copyReferralLink() {
-            const link = `https://t.me/Iwasp_bot?start=${UID}`;
-            navigator.clipboard.writeText(link);
-            alert("Referral link copied!");
-        }
-
-        function openOfferwall() {
-            window.location.href = `https://www.cpalead.com/dashboard/get-offers.php?id=YOUR_OFFERWALL_ID&subid=${UID}`;
-        }
-    </script>
-</body>
-</html>
+<div id="home" class="screen active"><div class="card"><div style="display:flex;justify-content:space-between;align-items:center"><div class="label">Total balance</div><div class="label" style="border:1px solid var(--line);color:var(--gold);padding:5px 11px;border-radius:20px">7-day streak +$0.10</div></div><div class="amount" id="balHome">$0.00</div><div class="meta" id="payHint">Loading…</div><div class="grid2"><div class="stat"><div class="stat-label">Offers completed</div><div class="stat-value" id="tasksHome">0</div></div><div class="stat"><div class="stat-label">Check-in streak</div><div class="stat-value" id="streakHome">0/7</div></div></div></div><div class="payday"><span id="paydayHome">Calculating payday…</span></div><div class="card"><div class="label">Daily check-in</div><div class="
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              
