@@ -119,6 +119,8 @@ const SUPABASE_URL = "YOUR_SUPABASE_PROJECT_URL";
 const SUPABASE_ANON_KEY = "YOUR_SUPABASE_ANON_KEY";
 const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
+const $=id=>document.getElementById(id);
+
 const tg = window.Telegram && Telegram.WebApp; 
 let UID = "";
 
@@ -127,13 +129,16 @@ if (tg && tg.initDataUnsafe && tg.initDataUnsafe.user && tg.initDataUnsafe.user.
     try { tg.ready(); tg.expand(); } catch(e) {}
     UID = String(tg.initDataUnsafe.user.id);
 } else {
-    // Block web browser access
-    document.getElementById('app-root').innerHTML = `
+    // Block web browser access and show warning
+    $('app-root').innerHTML = `
         <div style="text-align: center; padding: 80px 24px;">
             <h2 style="font-family:var(--serif); font-size:32px; color:var(--bone); margin-bottom:12px;">🛑 Telegram Access Only</h2>
             <p style="color:var(--mute); font-size:14px; line-height:1.6;">IWASP Mini App can only be launched directly inside the official Telegram Mobile App.</p>
         </div>
     `;
+    // Instantly hide the loader so the warning is visible in browser tests
+    const l = $('loader'); 
+    if(l) { l.style.display = 'none'; }
 }
 
 // Load CPAlead Offerwall dynamically with user's Telegram UID as subid
@@ -141,7 +146,6 @@ const cpaleadUrl = `https://www.cdnflyer.com/wall/i07LGTum?subid=${UID}`;
 const frame = $('cpaleadFrame');
 if (frame) { frame.src = cpaleadUrl; }
 
-const $=id=>document.getElementById(id);
 const WALLET_KEY="iwasp_wallet_"+UID, STATS_KEY="iwasp_stats_"+UID, HIST_KEY="iwasp_hist_"+UID;
 
 function getStats(){try{return JSON.parse(localStorage.getItem(STATS_KEY)||'{"earned":0,"tasks":0,"streak":0,"checked":false}')}catch(e){return{earned:0,tasks:0,streak:0,checked:false}}}
