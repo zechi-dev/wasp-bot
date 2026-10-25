@@ -16,7 +16,6 @@ body{background:#000;display:flex;justify-content:center;color:var(--bone)}
 #loader{position:fixed;inset:0;background:var(--ink);z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;transition:opacity .8s}
 #loader.hide{opacity:0;pointer-events:none}
 .wasp-wrap{position:relative;width:200px;height:270px}
-.wasp{width:100%;height:100%}
 .loader-title{margin-top:26px;font-family:var(--serif);color:var(--bone);font-size:38px;letter-spacing:14px;padding-left:14px}
 .loader-sub{color:var(--mute);font-size:12px;margin-top:10px}
 .bar{width:120px;height:1px;background:var(--hair);margin-top:30px;overflow:hidden}
@@ -29,27 +28,21 @@ body{background:#000;display:flex;justify-content:center;color:var(--bone)}
 .screen{display:none;padding:0 20px}.screen.active{display:block}
 .card{border:1px solid var(--line);background:linear-gradient(180deg,var(--panel2),var(--panel));border-radius:16px;padding:22px 20px;margin-top:18px}
 .label{color:var(--mute);font-size:12px}
-.amount{font-family:var(--serif);color:var(--bone);font-size:58px;margin:16px 0 10px}
+.amount{font-family:var(--serif);color:var(--bone);font-size:48px;margin:12px 0 4px}
+.sub-amount{color:var(--gold);font-size:14px;font-weight:600;margin-bottom:12px}
 .meta{color:var(--mute);font-size:11px;line-height:1.5}
 .grid2{display:grid;grid-template-columns:1fr 1fr;margin-top:20px;border-top:1px solid var(--hair);padding-top:16px}
 .stat+.stat{border-left:1px solid var(--hair);padding-left:18px}
 .stat-label{color:var(--mute);font-size:11px}
-.stat-value{font-family:var(--serif);color:var(--bone);font-size:28px;margin-top:2px}
+.stat-value{font-family:var(--serif);color:var(--bone);font-size:24px;margin-top:2px}
 .payday{margin-top:12px;display:flex;gap:10px;align-items:center;color:var(--mute);font-size:12px;padding:12px 4px}
 .trending{display:flex;gap:14px;align-items:center;padding:14px 16px;border:1px solid var(--hair);border-left:2px solid var(--gold);border-radius:12px;background:var(--panel);cursor:pointer}
-.earn-title{font-family:var(--serif);color:var(--bone);margin:30px 0 14px;font-size:22px}
-.tasks-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
-.task-item{text-align:center;cursor:pointer;background:var(--panel);border:1px solid var(--hair);border-radius:14px;padding:18px 6px 14px}
-.task-name{margin-top:10px;color:var(--bone);font-size:12px;font-weight:600}
-.task-sub{color:var(--mute);font-size:10px;margin-top:2px}
-.row{margin-top:10px;background:var(--panel);border:1px solid var(--hair);border-radius:12px;padding:14px;display:flex;justify-content:space-between;align-items:center}
 .input{width:100%;margin-top:12px;background:var(--ink);border:1px solid var(--hair);padding:14px;border-radius:10px;color:var(--bone);font-size:14px}
 .input:focus{outline:none;border-color:var(--gold)}
 .btn{width:100%;margin-top:16px;background:var(--gold);color:#16110A;border:none;padding:15px;border-radius:12px;font-weight:700;font-size:14px;cursor:pointer}
-.btn.ghost{background:transparent;color:var(--gold);border:1px solid var(--line)}
-.btn:disabled{background:var(--panel2);color:var(--mute)}
+.btn:disabled{background:var(--panel2);color:var(--mute);cursor:not-allowed;}
 .warn{margin-top:14px;background:rgba(217,119,107,.07);border:1px solid rgba(217,119,107,.18);color:var(--red);padding:11px 12px;border-radius:10px;font-size:11px}
-.badge{padding:5px 11px;border-radius:20px;font-size:11px;font-weight:600}
+.badge{padding:4px 8px;border-radius:20px;font-size:10px;font-weight:600}
 .badge-pending{border:1px solid var(--line);color:var(--gold)}
 .badge-approved{color:var(--green);border:1px solid rgba(143,191,138,.25)}
 .h{font-family:var(--serif);color:var(--bone);font-size:30px;margin:26px 0 4px}
@@ -60,86 +53,271 @@ body{background:#000;display:flex;justify-content:center;color:var(--bone)}
 .nav-item.active{color:var(--gold)}
 .toast{position:fixed;left:50%;bottom:104px;transform:translateX(-50%);background:var(--bone);color:#16110A;font-weight:600;font-size:12px;padding:10px 16px;border-radius:10px;z-index:50;opacity:0;pointer-events:none;transition:opacity .25s}
 .toast.show{opacity:1}
-.dots{display:flex;gap:6px;margin:14px 0 2px}.dot{flex:1;height:6px;border-radius:3px;background:var(--hair)}.dot.on{background:var(--gold)}
 .wall{width:100%;height:520px;border:1px solid var(--hair);border-radius:12px;background:var(--panel);margin-top:12px}
 .progress{height:4px;background:var(--hair);border-radius:2px;margin-top:14px;overflow:hidden}.progress i{display:block;height:100%;width:0;background:var(--gold);transition:width .6s}
+.ref-item{display:flex;justify-content:space-between;align-items:center;padding:12px;border-bottom:1px solid var(--hair);font-size:12px}
 </style>
 </head>
 <body>
 <div class="app">
 <div id="loader"><div class="wasp-wrap"><svg viewBox="0 0 200 270"><defs><radialGradient id="gY" cx="40%" cy="30%" r="80%"><stop offset="0" stop-color="#F6D75A"/><stop offset=".55" stop-color="#D9A514"/><stop offset="1" stop-color="#7A5307"/></radialGradient><radialGradient id="gK" cx="40%" cy="28%" r="80%"><stop offset="0" stop-color="#40382A"/><stop offset="1" stop-color="#0A0907"/></radialGradient><radialGradient id="gE" cx="35%" cy="30%" r="75%"><stop offset="0" stop-color="#6A5630"/><stop offset=".5" stop-color="#17110A"/><stop offset="1" stop-color="#000"/></radialGradient><linearGradient id="gW" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#F3E7C4" stop-opacity=".6"/><stop offset="1" stop-color="#9C8F6A" stop-opacity=".12"/></linearGradient><clipPath id="ab"><path d="M100 140C78 152 70 192 100 248C130 192 122 152 100 140Z"/></clipPath><g id="wingL"><ellipse cx="58" cy="116" rx="46" ry="13" transform="rotate(-12 58 116)" fill="url(#gW)" opacity=".7" stroke="#CDBB86" stroke-opacity=".4" stroke-width=".8"/><ellipse cx="54" cy="106" rx="52" ry="17" transform="rotate(-24 54 106)" fill="url(#gW)" stroke="#CDBB86" stroke-opacity=".55" stroke-width=".8"/></g><g id="legL" fill="none" stroke="#1B160C" stroke-width="2.2" stroke-linecap="round"><path d="M88 96L68 86L50 100"/><path d="M86 106L58 112L44 136"/><path d="M90 116L72 134L64 162"/></g></defs><use href="#wingL"/><use href="#wingL" transform="matrix(-1 0 0 1 200 0)"/><use href="#legL"/><use href="#legL" transform="matrix(-1 0 0 1 200 0)"/><g clip-path="url(#ab)"><rect x="60" y="130" width="80" height="130" fill="url(#gY)"/><path d="M60 160Q100 172 140 160V174Q100 186 60 174Z" fill="#0C0A07"/><path d="M60 188Q100 200 140 188V202Q100 214 60 202Z" fill="#0C0A07"/><path d="M60 216Q100 228 140 216V232Q100 244 60 232Z" fill="#0C0A07"/></g><ellipse cx="100" cy="106" rx="21" ry="26" fill="url(#gK)"/><ellipse cx="100" cy="60" rx="21" ry="18" fill="url(#gY)"/><ellipse cx="84" cy="56" rx="7.5" ry="11" fill="url(#gE)"/><ellipse cx="116" cy="56" rx="7.5" ry="11" fill="url(#gE)"/></svg></div><div class="loader-title">IWASP</div><div class="loader-sub">Earn on your own time</div><div class="bar"><div class="bar-fill"></div></div></div>
-<div class="header"><div class="logo-box"><svg viewBox="0 0 200 270" style="width:100%;height:100%"><use href="#wingL"/><use href="#wingL" transform="matrix(-1 0 0 1 200 0)"/><g clip-path="url(#ab)"><rect x="60" y="130" width="80" height="130" fill="url(#gY)"/></g></svg></div><div><div class="iwasp-text">IWASP</div><div class="uid-text" id="uidText">UID — • Profile</div></div></div>
-<div id="home" class="screen active"><div class="card"><div style="display:flex;justify-content:space-between;align-items:center"><div class="label">Total balance</div><div class="label" style="border:1px solid var(--line);color:var(--gold);padding:5px 11px;border-radius:20px">7-day streak +$0.10</div></div><div class="amount" id="balHome">$0.00</div><div class="meta" id="payHint">Loading…</div><div class="grid2"><div class="stat"><div class="stat-label">Offers completed</div><div class="stat-value" id="tasksHome">0</div></div><div class="stat"><div class="stat-label">Check-in streak</div><div class="stat-value" id="streakHome">0/7</div></div></div></div><div class="payday"><span id="paydayHome">Calculating payday…</span></div><div class="card"><div class="label">Daily check-in</div><div class="dots" id="dots"></div><p class="meta" style="margin-top:10px">Check in 7 days in a row to earn $0.10.</p><button class="btn" id="checkBtn">Check in</button></div><div class="trending" data-go="offers" style="margin-top:14px"><div><b>Play games and finish surveys</b><p style="color:var(--mute);font-size:12px">Rewards arrive after advertiser confirms</p></div></div></div>
 
-<!-- OFFERS TAB WITH CPAlead EMBED -->
+<div class="header"><div class="logo-box"><svg viewBox="0 0 200 270" style="width:100%;height:100%"><use href="#wingL"/><use href="#wingL" transform="matrix(-1 0 0 1 200 0)"/><g clip-path="url(#ab)"><rect x="60" y="130" width="80" height="130" fill="url(#gY)"/></g></svg></div><div><div class="iwasp-text">IWASP</div><div class="uid-text" id="uidText">UID — • Profile</div></div></div>
+
+<!-- HOME SCREEN -->
+<div id="home" class="screen active">
+  <div class="card">
+    <div style="display:flex;justify-content:space-between;align-items:center">
+      <div class="label">Total Balance</div>
+      <div class="label" style="border:1px solid var(--line);color:var(--gold);padding:5px 11px;border-radius:20px">100 Wasp = $1.00</div>
+    </div>
+    <div class="amount" id="balHome">$0.00</div>
+    <div class="sub-amount" id="coinsHome">0 Wasp Coins</div>
+    <div class="meta" id="payHint">Loading…</div>
+    <div class="grid2">
+      <div class="stat"><div class="stat-label">Offers completed</div><div class="stat-value" id="tasksHome">0</div></div>
+      <div class="stat"><div class="stat-label">Pending bonus</div><div class="stat-value" id="pendingCoinsHome">0 Wasp</div></div>
+    </div>
+  </div>
+  <div class="payday"><span id="paydayHome">Calculating payday…</span></div>
+  <div class="trending" data-go="offers" style="margin-top:14px"><div><b>Play games and finish surveys</b><p style="color:var(--mute);font-size:12px">Earn Wasp Coins on every offer completed</p></div></div>
+</div>
+
+<!-- OFFERS TAB -->
 <div id="offers" class="screen">
   <div class="h">Offers</div>
-  <div class="sub">Play games and complete surveys without leaving the app.</div>
+  <div class="sub">Complete tasks to earn Wasp Coins directly.</div>
   <iframe class="wall" id="cpaleadFrame" src="" frameborder="0" allow="geolocation"></iframe>
 </div>
 
-<div id="referral" class="screen"><div class="h">Invite friends</div><div class="sub">Earn 10% extra on everything your friends earn.</div><div class="card"><div class="label">Your link</div><div class="ref-link" id="refLink">…</div><button class="btn" id="copyBtn">Copy link</button><div class="grid2"><div class="stat"><div class="stat-label">Invited</div><div class="stat-value" id="refCount">0</div></div><div class="stat"><div class="stat-label">Earned</div><div class="stat-value" id="refEarn">$0.00</div></div></div></div></div>
-<div id="wallet" class="screen"><div class="h">Wallet</div><div class="sub">Paid every Saturday 12 PM WAT in USDT on Solana, once you reach $5. Under $5 rolls over.</div><div class="card"><div class="label">Balance</div><div class="amount" id="balWallet" style="font-size:44px">$0.00</div><div class="progress"><i id="bar"></i></div><input class="input" id="wAddr" placeholder="Solana wallet address"><button class="btn" id="walletBtn">Save wallet</button><div class="warn">Double-check your address. Payments sent to wrong address can't be recovered.</div></div><div class="h" style="font-size:22px;margin-top:28px">Payout history</div><div id="hist"></div></div>
-<div id="profile" class="screen"><div class="h">Profile</div><div class="card"><div class="row" style="margin:0"><span class="meta">User</span><b id="pName">—</b></div><div class="row"><span class="meta">UID</span><b id="pUid">—</b></div><div class="row"><span class="meta">Offers completed</span><b id="pTasks">0</b></div></div></div>
+<!-- INVITE SCREEN -->
+<div id="referral" class="screen">
+  <div class="h">Invite Friends</div>
+  <div class="sub">Get 300 Wasp Coins ($3.00) per referral once they earn 700 Wasp Coins ($7.00).</div>
+  <div class="card">
+    <div class="label">Your invite link</div>
+    <div class="ref-link" id="refLink">…</div>
+    <button class="btn" id="copyBtn">Copy invite link</button>
+    <div class="grid2">
+      <div class="stat"><div class="stat-label">Invited users</div><div class="stat-value" id="refCount">0</div></div>
+      <div class="stat"><div class="stat-label">Unlocked bonus</div><div class="stat-value" id="refEarn">$0.00</div></div>
+    </div>
+  </div>
+  
+  <div class="h" style="font-size:20px;margin-top:24px">Your Referrals</div>
+  <div class="card" style="padding:10px;" id="refList">
+    <div style="text-align:center;color:var(--mute);font-size:12px;padding:10px;">Loading referrals…</div>
+  </div>
 </div>
-<div class="bottom-nav"><div class="nav-item active" data-go="home">🏠<br>Home</div><div class="nav-item" data-go="offers">📋<br>Offers</div><div class="nav-item" data-go="referral">👥<br>Invite</div><div class="nav-item" data-go="wallet">👛<br>Wallet</div></div>
+
+<!-- WALLET SCREEN -->
+<div id="wallet" class="screen">
+  <div class="h">Wallet</div>
+  <div class="sub">Minimum withdrawal: 1,000 Wasp Coins ($10.00). Paid bi-weekly in USDT on Solana.</div>
+  <div class="card">
+    <div class="label">Available balance</div>
+    <div class="amount" id="balWallet" style="font-size:40px">$0.00</div>
+    <div class="sub-amount" id="coinsWallet">0 Wasp Coins</div>
+    <div class="progress"><i id="bar"></i></div>
+    <input class="input" id="wAddr" placeholder="Solana Wallet Address (USDT - SPL)">
+    <button class="btn" id="walletBtn" disabled>Save & Request Payout</button>
+    <div class="warn" id="walletWarn">Withdrawals open on scheduled bi-weekly payout dates.</div>
+  </div>
+</div>
+
+<!-- PROFILE SCREEN -->
+<div id="profile" class="screen">
+  <div class="h">Profile</div>
+  <div class="card">
+    <div class="row" style="margin:0"><span class="meta">User</span><b id="pName">—</b></div>
+    <div class="row"><span class="meta">UID</span><b id="pUid">—</b></div>
+    <div class="row"><span class="meta">Offers completed</span><b id="pTasks">0</b></div>
+  </div>
+</div>
+</div>
+
+<div class="bottom-nav">
+  <div class="nav-item active" data-go="home">🏠<br>Home</div>
+  <div class="nav-item" data-go="offers">📋<br>Offers</div>
+  <div class="nav-item" data-go="referral">👥<br>Invite</div>
+  <div class="nav-item" data-go="wallet">👛<br>Wallet</div>
+</div>
 <div class="toast" id="toast"></div>
+
 <script>
-const tg=window.Telegram&&Telegram.WebApp; if(tg){try{tg.ready();tg.expand();}catch(e){}}
-const $=id=>document.getElementById(id);
-let UID="583826997"; if(tg&&tg.initDataUnsafe&&tg.initDataUnsafe.user&&tg.initDataUnsafe.user.id){UID=String(tg.initDataUnsafe.user.id);}
+const tg = window.Telegram && Telegram.WebApp;
+if(tg){ try{ tg.ready(); tg.expand(); }catch(e){} }
+const $ = id => document.getElementById(id);
 
-// Load CPAlead Offerwall dynamically with user's Telegram UID as subid
-const cpaleadUrl = `https://www.cdnflyer.com/wall/i07LGTum?subid=${UID}`;
-const frame = $('cpaleadFrame');
-if (frame) {
-  frame.src = cpaleadUrl;
+let UID = "583826997";
+if(tg && tg.initDataUnsafe && tg.initDataUnsafe.user && tg.initDataUnsafe.user.id){
+  UID = String(tg.initDataUnsafe.user.id);
 }
 
-const WALLET_KEY="iwasp_wallet_"+UID, STATS_KEY="iwasp_stats_"+UID, HIST_KEY="iwasp_hist_"+UID;
-function getStats(){try{return JSON.parse(localStorage.getItem(STATS_KEY)||'{"earned":0,"tasks":0,"streak":0,"checked":false}')}catch(e){return{earned:0,tasks:0,streak:0,checked:false}}}
-function saveStats(s){localStorage.setItem(STATS_KEY,JSON.stringify(s));}
-function toast(m){const t=$('toast');t.textContent=m;t.classList.add('show');clearTimeout(toast.h);toast.h=setTimeout(()=>t.classList.remove('show'),2200);}
-function showScreen(id){document.querySelectorAll('.screen').forEach(e=>e.classList.toggle('active',e.id===id)); document.querySelectorAll('.nav-item').forEach(e=>e.classList.toggle('active',e.dataset.go===id)); window.scrollTo(0,0);}
-function isValidSol(a){if(!a) return false; if(a.length<32||a.length>44) return false; return /^[1-9A-HJ-NP-Za-km-z]+$/.test(a);}
-function render(){
- const s=getStats();
- const bal=s.earned;
- $('balHome').textContent="$"+bal.toFixed(2); $('balWallet').textContent="$"+bal.toFixed(2);
- $('bar').style.width=Math.min(100,bal/5*100)+"%";
- $('tasksHome').textContent=s.tasks; $('pTasks').textContent=s.tasks; $('streakHome').textContent=s.streak+"/7";
- $('dots').innerHTML=Array.from({length:7},(_,i)=>'<i class="dot'+(i<s.streak?' on':'')+'"></i>').join('');
- const c=$('checkBtn'); c.disabled=s.checked; c.textContent=s.checked?"Checked in today":"Check in";
- $('uidText').textContent="UID "+UID+" • Profile"; $('pName').textContent="User "+UID; $('pUid').textContent=UID;
- $('refLink').textContent="https://t.me/Iwasp_bot?start="+UID;
- const w=localStorage.getItem(WALLET_KEY)||""; $('wAddr').value=w;
- const need=Math.max(0,5-bal);
- if(need>0){$('payHint').textContent="$"+need.toFixed(2)+" more to qualify for Saturday. Under $5 rolls over."} else {$('payHint').textContent=w?"You qualify for Saturday's payout.":"You qualify. Add your wallet to get paid."}
- const now=new Date(); let day=now.getDay(); let daysToSat=(6-day+7)%7; if(daysToSat==0) daysToSat=7; const nextSat=new Date(now); nextSat.setDate(now.getDate()+daysToSat); nextSat.setHours(12,0,0,0); const diff=Math.ceil((nextSat-now)/(1000*60*60*24));
- let txt="Next payday Saturday 12 PM WAT • "+diff+" days left"; if(bal<5) txt+=" • Under $5 rolls over"; $('paydayHome').textContent=txt;
- const hist=JSON.parse(localStorage.getItem(HIST_KEY)||"[]");
- const histEl=$('hist'); if(hist.length==0){histEl.innerHTML='<div class="card"><div class="meta">No payouts yet. Paid every Saturday 12 PM WAT once you reach $5.</div></div>'} else {histEl.innerHTML=hist.map(h=>'<div class="card" style="margin-top:10px"><div style="display:flex;justify-content:space-between"><span class="meta">'+h.text+'</span><span class="badge '+(h.status=='PENDING'?'badge-pending':'badge-approved')+'">'+h.status+'</span></div></div>').join('')}
+const SUPABASE_URL = "https://tjlqyoktagopiaqlkszg.supabase.co";
+const SUPABASE_ANON_KEY = "Sb_publishable_cZNn1foS_FTvZzYwV61FsQ_3aj7whEP";
+const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+// CPAlead dynamic offerwall binding
+$('cpaleadFrame').src = `https://www.cdnflyer.com/wall/i07LGTum?subid=${UID}`;
+
+function toast(m){
+  const t = $('toast'); t.textContent = m; t.classList.add('show');
+  clearTimeout(toast.h); toast.h = setTimeout(() => t.classList.remove('show'), 2200);
 }
-$('checkBtn').onclick=()=>{
- const s=getStats(); const todayKey='daily_'+new Date().toDateString();
- if(localStorage.getItem(todayKey)){toast("Already checked in today");return;}
- if(s.checked){toast("Already checked in");return;}
- s.streak=Math.min(7,s.streak+1); s.earned+=0.1; s.tasks+=1; s.checked=true; saveStats(s); localStorage.setItem(todayKey,"1");
- const hist=JSON.parse(localStorage.getItem(HIST_KEY)||"[]"); hist.unshift({text:"Daily check-in $0.10",status:"APPROVED"}); localStorage.setItem(HIST_KEY,JSON.stringify(hist));
- toast("Checked in +$0.10"); render();
+
+function showScreen(id){
+  document.querySelectorAll('.screen').forEach(e => e.classList.toggle('active', e.id === id));
+  document.querySelectorAll('.nav-item').forEach(e => e.classList.toggle('active', e.dataset.go === id));
+  window.scrollTo(0,0);
+}
+
+function isValidSol(a){ return a && a.length >= 32 && a.length <= 44 && /^[1-9A-HJ-NP-Za-km-z]+$/.test(a); }
+
+// Bi-weekly window checker (Example: 1st & 15th of each month)
+function isPayoutWindowOpen(){
+  const date = new Date().getDate();
+  return (date === 1 || date === 15);
+}
+
+async function fetchUserData(){
+  try {
+    let { data: user } = await supabaseClient.from('users').select('*').eq('telegram_id', UID).single();
+    
+    // Register user if not exists
+    if(!user){
+      const startParam = tg && tg.initDataUnsafe && tg.initDataUnsafe.start_param ? String(tg.initDataUnsafe.start_param) : null;
+      const { data: newUser } = await supabaseClient.from('users').insert([{
+        telegram_id: UID,
+        balance: 0,
+        pending_balance: 0,
+        referred_by: startParam
+      }]).select().single();
+      
+      // Credit inviter 300 pending Wasp Coins
+      if(startParam && startParam !== UID){
+        await supabaseClient.rpc('add_pending_referral', { inviter_uid: startParam });
+      }
+      user = newUser || { balance: 0, pending_balance: 0, offers_completed: 0 };
+    }
+
+    renderUI(user);
+    fetchReferrals();
+  } catch(e) {
+    console.error("Error fetching user data:", e);
+  }
+}
+
+async function fetchReferrals(){
+  const { data: refs } = await supabaseClient.from('users').select('telegram_id, earned_from_offers').eq('referred_by', UID);
+  const listEl = $('refList');
+  
+  if(!refs || refs.length === 0){
+    listEl.innerHTML = '<div style="text-align:center;color:var(--mute);font-size:12px;padding:10px;">No friends invited yet.</div>';
+    $('refCount').textContent = '0';
+    $('refEarn').textContent = '$0.00';
+    return;
+  }
+
+  $('refCount').textContent = refs.length;
+  let unlockedCount = 0;
+  
+  listEl.innerHTML = refs.map(r => {
+    const earned = Number(r.earned_from_offers || 0);
+    const isUnlocked = earned >= 700; // 700 Wasp Coins = $7 threshold
+    if(isUnlocked) unlockedCount++;
+    return `
+      <div class="ref-item">
+        <div>
+          <b>UID ${r.telegram_id}</b>
+          <div style="color:var(--mute);font-size:10px;">Progress: ${earned}/700 Wasp Coins</div>
+        </div>
+        <span class="badge ${isUnlocked ? 'badge-approved' : 'badge-pending'}">
+          ${isUnlocked ? '300 Wasp Approved' : 'Pending'}
+        </span>
+      </div>
+    `;
+  }).join('');
+
+  $('refEarn').textContent = "$" + (unlockedCount * 3.00).toFixed(2);
+}
+
+function renderUI(user){
+  const coins = Number(user.balance || 0);
+  const dollars = (coins / 100).toFixed(2);
+  const pendingCoins = Number(user.pending_balance || 0);
+  
+  $('balHome').textContent = "$" + dollars;
+  $('balWallet').textContent = "$" + dollars;
+  $('coinsHome').textContent = coins + " Wasp Coins";
+  $('coinsWallet').textContent = coins + " Wasp Coins";
+  $('pendingCoinsHome').textContent = pendingCoins + " Wasp";
+  $('tasksHome').textContent = user.offers_completed || 0;
+  $('pTasks').textContent = user.offers_completed || 0;
+  
+  $('bar').style.width = Math.min(100, (coins / 1000) * 100) + "%";
+  
+  $('uidText').textContent = "UID " + UID + " • Profile";
+  $('pName').textContent = "User " + UID;
+  $('pUid').textContent = UID;
+  $('refLink').textContent = "https://t.me/Iwasp_bot?start=" + UID;
+
+  if(user.wallet_address) $('wAddr').value = user.wallet_address;
+
+  const windowOpen = isPayoutWindowOpen();
+  const btn = $('walletBtn');
+  const warn = $('walletWarn');
+
+  if(coins >= 1000){
+    if(windowOpen){
+      btn.disabled = false;
+      warn.textContent = "Payout window is currently OPEN!";
+      warn.style.color = "var(--green)";
+    } else {
+      btn.disabled = true;
+      warn.textContent = "Next payout window opens on the 1st and 15th of this month at 1:00 AM.";
+    }
+  } else {
+    btn.disabled = true;
+    const needCoins = 1000 - coins;
+    warn.textContent = `Need ${needCoins} more Wasp Coins ($${(needCoins/100).toFixed(2)}) to reach $10 minimum.`;
+  }
+}
+
+$('walletBtn').onclick = async () => {
+  const addr = $('wAddr').value.trim();
+  if(!isValidSol(addr)){ toast("Invalid Solana address"); return; }
+
+  const { error } = await supabaseClient.from('users').update({
+    wallet_address: addr,
+    payout_status: 'PENDING_APPROVAL'
+  }).eq('telegram_id', UID);
+
+  if(!error){
+    toast("Payout requested! Check Admin Dashboard");
+    fetchUserData();
+  } else {
+    toast("Error submitting payout request.");
+  }
 };
-$('walletBtn').onclick=()=>{
- const addr=$('wAddr').value.trim(); if(!isValidSol(addr)){toast("Invalid Solana address");return;}
- localStorage.setItem(WALLET_KEY,addr); toast("Wallet saved ✅"); render();
+
+$('copyBtn').onclick = async () => {
+  try{ await navigator.clipboard.writeText($('refLink').textContent); }catch(e){}
+  toast("Invite link copied!");
 };
-$('copyBtn').onclick=async()=>{
- const link=$('refLink').textContent; try{await navigator.clipboard.writeText(link);}catch(e){} toast("Link copied");
-};
-document.addEventListener('click',e=>{const go=e.target.closest('[data-go]'); if(go){showScreen(go.dataset.go);}});
-setTimeout(()=>{const l=$('loader'); if(l){l.classList.add('hide'); setTimeout(()=>{l.style.display='none';},800);}},2800);
-setTimeout(()=>{const l=$('loader'); if(l) l.style.display='none';},4500);
-render();
+
+document.addEventListener('click', e => {
+  const go = e.target.closest('[data-go]');
+  if(go) showScreen(go.dataset.go);
+});
+
+setTimeout(() => {
+  const l = $('loader');
+  if(l){ l.classList.add('hide'); setTimeout(() => l.style.display='none', 800); }
+}, 2800);
+
+fetchUserData();
 </script>
 </body>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         </html>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            
+  </html>
+  
