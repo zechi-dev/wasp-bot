@@ -93,7 +93,7 @@ window.addEventListener('error',function(e){
   <button class="notif-btn" id="bellBtn" aria-label="Announcements">🔔<span class="badge-count" id="notif-badge">0</span></button>
 </div>
 
-<div id="home" class="screen active"><div class="card"><div style="display:flex;justify-content:space-between;align-items:center"><div class="label">Total balance</div><div class="label" style="border:1px solid var(--line);color:var(--gold);padding:5px 11px;border-radius:20px" id="userRoleBadge">Tier B (Standard)</div></div><div class="amount" id="balHome">$0.00</div><div class="meta" id="payHint">Loading…</div><div class="grid2"><div class="stat"><div class="stat-label">Offers completed</div><div class="stat-value" id="tasksHome">0</div></div><div class="stat"><div class="stat-label">Check-in streak</div><div class="stat-value" id="streakHome">0/7</div></div></div></div><div class="payday"><span id="paydayHome">Calculating payday…</span></div><div class="card"><div class="label">Daily check-in</div><div class="dots" id="dots"></div><p class="meta" style="margin-top:10px">Check in 7 days in a row to earn $0.10.</p><button class="btn" id="checkBtn">Check in</button></div><div class="trending" data-go="offers" style="margin-top:14px"><div><b>Play games and finish surveys</b><p style="color:var(--mute);font-size:12px">Rewards arrive after advertiser confirms</p></div></div></div>
+<div id="home" class="screen active"><div class="card"><div style="display:flex;justify-content:space-between;align-items:center"><div class="label">Total balance</div><div class="label" style="border:1px solid var(--line);color:var(--gold);padding:5px 11px;border-radius:20px" id="userRoleBadge">Tier B (Standard)</div></div><div class="amount" id="balHome">0</div><div class="meta" id="balUsdHome" style="margin:-4px 0 8px">≈ $0.00 • 100 WASP = $1</div><div class="meta" id="payHint">Loading…</div><div class="grid2"><div class="stat"><div class="stat-label">Offers completed</div><div class="stat-value" id="tasksHome">0</div></div><div class="stat"><div class="stat-label">Check-in streak</div><div class="stat-value" id="streakHome">0/7</div></div></div></div><div class="payday"><span id="paydayHome">Calculating payday…</span></div><div class="card"><div class="label">Daily check-in</div><div class="dots" id="dots"></div><p class="meta" style="margin-top:10px">Check in 7 days in a row to earn 10 WASP.</p><button class="btn" id="checkBtn">Check in</button></div><div class="trending" data-go="offers" style="margin-top:14px"><div><b>Play games and finish surveys</b><p style="color:var(--mute);font-size:12px">Rewards arrive after advertiser confirms</p></div></div></div>
 
 <!-- OFFERS TAB WITH CPAlead EMBED -->
 <div id="offers" class="screen">
@@ -102,8 +102,8 @@ window.addEventListener('error',function(e){
   <iframe class="wall" id="cpaleadFrame" src="" frameborder="0" allow="geolocation"></iframe>
 </div>
 
-<div id="referral" class="screen"><div class="h">Invite friends</div><div class="sub" id="refSubText">Earn $2.00 per qualified friend who reaches $7.00.</div><div class="card"><div class="label">Your referral link</div><div class="ref-link" id="refLink">…</div><button class="btn" id="copyBtn">Copy link</button><div class="grid2"><div class="stat"><div class="stat-label">Pending bonus</div><div class="stat-value" id="refPending">$0.00</div></div><div class="stat"><div class="stat-label">Approved earned</div><div class="stat-value" id="refEarn">$0.00</div></div></div></div></div>
-<div id="wallet" class="screen"><div class="h">Wallet</div><div class="sub">Paid bi-weekly (1st and 15th of each month) in USDT on Solana, once you reach $10. Under $10 rolls over.</div><div class="card"><div class="label">Balance</div><div class="amount" id="balWallet" style="font-size:44px">$0.00</div><div class="progress"><i id="bar"></i></div><input class="input" id="wAddr" placeholder="Solana wallet address"><button class="btn" id="walletBtn">Save wallet</button><div class="warn">Double-check your address. Payments sent to wrong address can't be recovered.</div></div><div class="h" style="font-size:22px;margin-top:28px">Payout history</div><div id="hist"></div></div>
+<div id="referral" class="screen"><div class="h">Invite friends</div><div class="sub" id="refSubText">Earn 200 WASP per qualified friend who reaches 700 WASP.</div><div class="card"><div class="label">Your referral link</div><div class="ref-link" id="refLink">…</div><button class="btn" id="copyBtn">Copy link</button><div class="meta" id="refMeta" style="margin-top:12px">Invited 0 • Qualified 0</div><div class="grid2"><div class="stat"><div class="stat-label">Pending bonus</div><div class="stat-value" id="refPending">$0.00</div></div><div class="stat"><div class="stat-label">Approved earned</div><div class="stat-value" id="refEarn">$0.00</div></div></div></div></div>
+<div id="wallet" class="screen"><div class="h">Wallet</div><div class="sub">Paid bi-weekly (1st and 15th of each month) in USDT on Solana, once you reach 1,000 WASP ($10). Under 1,000 WASP rolls over.</div><div class="card"><div class="label">Balance</div><div class="amount" id="balWallet" style="font-size:44px">0</div><div class="meta" id="balUsdWallet" style="margin:-4px 0 8px">≈ $0.00 • 100 WASP = $1</div><div class="progress"><i id="bar"></i></div><input class="input" id="wAddr" placeholder="Solana wallet address"><button class="btn" id="walletBtn">Save wallet</button><div class="warn">Double-check your address. Payments sent to wrong address can't be recovered.</div></div><div class="h" style="font-size:22px;margin-top:28px">Activity</div><div id="hist"></div></div>
 <div id="profile" class="screen"><div class="h">Profile</div><div class="card"><div class="row" style="margin:0"><span class="meta">User</span><b id="pName">—</b></div><div class="row"><span class="meta">UID</span><b id="pUid">—</b></div><div class="row"><span class="meta">Account tier</span><b id="pTier">Standard</b></div><div class="row"><span class="meta">Offers completed</span><b id="pTasks">0</b></div></div></div>
 </div>
 <div class="modal" id="notif-modal">
@@ -117,152 +117,129 @@ window.addEventListener('error',function(e){
 </div>
 
 <div class="bottom-nav"><div class="nav-item active" data-go="home">🏠<br>Home</div><div class="nav-item" data-go="offers">📋<br>Offers</div><div class="nav-item" data-go="referral">👥<br>Invite</div><div class="nav-item" data-go="wallet">👛<br>Wallet</div></div>
+<div id="lock" style="display:none;position:fixed;inset:0;z-index:99990;background:var(--ink);align-items:center;justify-content:center;text-align:center;padding:30px"><div style="max-width:320px"><div class="iwasp-text" style="font-size:30px;padding-left:6px">IWASP</div><p class="sub" id="lockMsg" style="margin:14px 0 18px;font-size:14px">Open this app from Telegram to continue.</p><a id="lockLink" class="btn" style="display:block;text-decoration:none;text-align:center" href="https://t.me/Iwasp_bot">Open in Telegram</a></div></div>
 <div class="toast" id="toast"></div>
 <script>
 const SUPABASE_URL="https://tjlqyoktagopiaqlkszg.supabase.co";
-const SUPABASE_ANON_KEY="sb_publishable_cZNn1foS_FTvZzYwV61FsQ_3aj7whEP";
-let supabaseClient=null;
-function initSupabase(){
- if(SUPABASE_URL.indexOf("YOUR_")===0||SUPABASE_ANON_KEY.indexOf("YOUR_")===0) return;
- const sc=document.createElement('script');
- sc.src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js";
- sc.onload=function(){
-  try{supabaseClient=window.supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY,{global:{fetch:function(u,o){o=o||{};if(o.headers&&typeof o.headers.forEach==="function"&&!Array.isArray(o.headers)){var h={};o.headers.forEach(function(v,k){h[k]=v;});o=Object.assign({},o,{headers:h});}return fetch(u,o);}}});}catch(e){return;}
-  fetchAnnouncements(); syncUserWithSupabase();
-  setInterval(fetchAnnouncements,60000);
-  document.addEventListener('visibilitychange',function(){if(!document.hidden)fetchAnnouncements();});
- };
- sc.onerror=function(){};
- document.head.appendChild(sc);
-}
+const API_URL=SUPABASE_URL+"/functions/v1/api";
+const BOT_LINK="https://t.me/Iwasp_bot?startapp=";
+const $=id=>document.getElementById(id);
 
 const tg=window.Telegram&&Telegram.WebApp; if(tg){try{tg.ready();tg.expand();}catch(e){}}
-const $=id=>document.getElementById(id);
-let UID="guest"; if(tg&&tg.initDataUnsafe&&tg.initDataUnsafe.user&&tg.initDataUnsafe.user.id){UID=String(tg.initDataUnsafe.user.id);}
+const INIT=(tg&&tg.initData)||"";
+const TUSER=tg&&tg.initDataUnsafe&&tg.initDataUnsafe.user;
+const UID=TUSER&&TUSER.id?String(TUSER.id):"";
+let S=null, wallLoaded=false;
 
-// CPAlead offerwall with the user's UID as subid
-const cpaleadUrl=`https://www.cdnflyer.com/wall/i07LGTum?subid=${encodeURIComponent(UID)}`;
-const frame=$('cpaleadFrame'); if(frame){frame.src=cpaleadUrl;}
-
-let userRole="STANDARD";
-const startParam=(tg&&tg.initDataUnsafe&&tg.initDataUnsafe.start_param)?String(tg.initDataUnsafe.start_param):null;
-
-const WALLET_KEY="iwasp_wallet_"+UID, STATS_KEY="iwasp_stats_"+UID, HIST_KEY="iwasp_hist_"+UID;
-const DEFAULT_STATS={earned:0,pendingRef:0,approvedRef:0,tasks:0,streak:0,lastCheckIn:""};
-
-// Safe storage helpers
 function lsGet(k,d){try{const v=localStorage.getItem(k);return v===null?d:v;}catch(e){return d;}}
 function lsSet(k,v){try{localStorage.setItem(k,v);}catch(e){}}
-function getStats(){try{return Object.assign({},DEFAULT_STATS,JSON.parse(lsGet(STATS_KEY,"{}")));}catch(e){return Object.assign({},DEFAULT_STATS);}}
-function saveStats(s){lsSet(STATS_KEY,JSON.stringify(s));}
-function getHist(){try{return JSON.parse(lsGet(HIST_KEY,"[]"));}catch(e){return [];}}
-
-// Local-date helpers (YYYY-MM-DD)
-function dateKey(d){return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");}
-function todayKey(){return dateKey(new Date());}
-function yesterdayKey(){const d=new Date();d.setDate(d.getDate()-1);return dateKey(d);}
-// Streak shown on screen: if a day was missed, it is already broken
-function liveStreak(s){return (s.lastCheckIn===todayKey()||s.lastCheckIn===yesterdayKey())?s.streak:0;}
-
-function toast(m){const t=$('toast');t.textContent=m;t.classList.add('show');clearTimeout(toast.h);toast.h=setTimeout(()=>t.classList.remove('show'),2200);}
+function toast(m){const t=$('toast');t.textContent=m;t.classList.add('show');clearTimeout(toast.h);toast.h=setTimeout(()=>t.classList.remove('show'),2400);}
 function showScreen(id){document.querySelectorAll('.screen').forEach(e=>e.classList.toggle('active',e.id===id));document.querySelectorAll('.nav-item').forEach(e=>e.classList.toggle('active',e.dataset.go===id));window.scrollTo(0,0);}
-function isValidSol(a){if(!a)return false;if(a.length<32||a.length>44)return false;return /^[1-9A-HJ-NP-Za-km-z]+$/.test(a);}
 function esc(t){return String(t).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
-
-function render(){
- const s=getStats(), bal=s.earned, streak=liveStreak(s), checkedToday=s.lastCheckIn===todayKey();
- $('balHome').textContent="$"+bal.toFixed(2); $('balWallet').textContent="$"+bal.toFixed(2);
- $('bar').style.width=Math.min(100,bal/10*100)+"%";
- $('tasksHome').textContent=s.tasks; $('pTasks').textContent=s.tasks; $('streakHome').textContent=streak+"/7";
- $('dots').innerHTML=Array.from({length:7},(_,i)=>'<i class="dot'+(i<streak?' on':'')+'"></i>').join('');
- const c=$('checkBtn'); c.disabled=checkedToday; c.textContent=checkedToday?"Checked in today":"Check in";
- $('uidText').textContent="UID "+UID+" \u2022 Profile"; $('pName').textContent="User "+UID; $('pUid').textContent=UID;
- $('refLink').textContent="https://t.me/Iwasp_bot?start="+UID;
- $('refPending').textContent="$"+(s.pendingRef||0).toFixed(2); $('refEarn').textContent="$"+(s.approvedRef||0).toFixed(2);
- const w=lsGet(WALLET_KEY,""); $('wAddr').value=w;
- const need=Math.max(0,10-bal);
- if(need>0){$('payHint').textContent="$"+need.toFixed(2)+" more to qualify for payout. Under $10 rolls over."}
- else{$('payHint').textContent=w?"You qualify for the next bi-weekly payout.":"You qualify. Add your wallet to get paid."}
- const daysLeft=getDaysToNextBiWeekly();
- let txt="Next payout bi-weekly (1st & 15th) \u2022 "+daysLeft+" day"+(daysLeft===1?"":"s")+" left"; if(bal<10)txt+=" \u2022 Under $10 rolls over"; $('paydayHome').textContent=txt;
- const hist=getHist(), histEl=$('hist');
- if(!hist.length){histEl.innerHTML='<div class="card"><div class="meta">No payouts yet. Paid on the 1st and 15th once you reach $10.</div></div>';}
- else{histEl.innerHTML=hist.map(h=>'<div class="card" style="margin-top:10px"><div style="display:flex;justify-content:space-between"><span class="meta">'+esc(h.text)+'</span><span class="badge '+(h.status==='PENDING'?'badge-pending':'badge-approved')+'">'+esc(h.status)+'</span></div></div>').join('');}
-}
-
-// Days until next payout (1st or 15th)
+function isValidSol(a){return !!a&&a.length>=32&&a.length<=44&&/^[1-9A-HJ-NP-Za-km-z]+$/.test(a);}
+function money(n){return "$"+(Number(n)||0).toFixed(2);}
+// 1 WASP = $0.01 of payable value (100 WASP = $1). The database stores dollars.
+function coinsOf(usd){return Math.floor((Number(usd)||0)*100+1e-6);}
+function nf(n){return n.toLocaleString('en-US');}
+function wasp(usd){return nf(coinsOf(usd))+" WASP";}
 function getDaysToNextBiWeekly(){
- const now=new Date(); const day=now.getDate(); let next;
- if(day<15){next=new Date(now.getFullYear(),now.getMonth(),15);}
- else{next=new Date(now.getFullYear(),now.getMonth()+1,1);}
- return Math.max(0,Math.ceil((next-now)/(1000*60*60*24)));
+ const now=new Date(), day=now.getDate(); let next;
+ if(day<15){next=new Date(now.getFullYear(),now.getMonth(),15);}else{next=new Date(now.getFullYear(),now.getMonth()+1,1);}
+ return Math.max(0,Math.ceil((next-now)/86400000));
+}
+function lockScreen(msg){$('lock').style.display='flex'; if(msg)$('lockMsg').textContent=msg;}
+
+async function api(action,extra){
+ const r=await fetch(API_URL,{method:"POST",headers:{"Content-Type":"application/json","x-init-data":INIT},body:JSON.stringify(Object.assign({action:action},extra||{}))});
+ let j={}; try{j=await r.json();}catch(e){}
+ if(!r.ok){const err=new Error(j.error||("HTTP "+r.status)); err.status=r.status; throw err;}
+ return j;
+}
+function handleErr(e){
+ if(e&&e.status===401){lockScreen("Session expired. Please reopen the app from Telegram.");return;}
+ toast((e&&e.message)||"Network error");
 }
 
-// Read the user's tier from Supabase. Tier is assigned server-side only; the app never sets it.
-async function syncUserWithSupabase(){
- if(!supabaseClient) return;
- try{
-  const {data:user}=await supabaseClient.from('users').select('user_role').eq('telegram_id',UID).maybeSingle();
-  if(user&&user.user_role) userRole=user.user_role;
- }catch(e){/* ignore */}
- if(userRole==="SUPER_AFFILIATE"){
-  $('userRoleBadge').textContent="\u2B50 Tier A (Super Affiliate)"; $('pTier').textContent="Super Affiliate (Tier A)";
-  $('refSubText').textContent="Earn $3.00 per friend ($7 unlock) + $2.00 monthly if they earn \u2265 $15/mo.";
- } else {
-  $('userRoleBadge').textContent="Tier B (Standard)"; $('pTier').textContent="Standard User (Tier B)";
-  $('refSubText').textContent="Earn $2.00 per qualified friend who reaches $7.00.";
- }
-}
-
-// ---- Announcements ----
-let announcements=[];
+// ---- announcements (from server state) ----
 const SEEN_KEY="iwasp_ann_seen_"+UID;
+function annList(){return (S&&S.announcements)||[];}
 function updateBadge(){
  const seen=Number(lsGet(SEEN_KEY,"0"));
- const unread=announcements.filter(a=>new Date(a.created_at).getTime()>seen).length;
+ const unread=annList().filter(a=>new Date(a.created_at).getTime()>seen).length;
  const b=$('notif-badge'); b.textContent=unread>9?"9+":unread; b.style.display=unread?'inline-block':'none';
 }
 function renderAnnouncements(){
- const el=$('announcement-list');
- if(!announcements.length){el.innerHTML='<p style="color:var(--mute);font-size:13px">No announcements yet.</p>';return;}
- el.innerHTML=announcements.map(a=>'<div class="notif-item"><div class="notif-title">'+esc(a.title)+'</div><div class="notif-date">'+new Date(a.created_at).toLocaleString()+'</div><p style="margin-top:6px;font-size:13px;color:var(--bone)">'+esc(a.message)+'</p></div>').join('');
-}
-async function fetchAnnouncements(){
- if(!supabaseClient) return;
- try{
-  const {data,error}=await supabaseClient.from('announcements').select('id,title,message,created_at').order('created_at',{ascending:false}).limit(30);
-  if(error) throw error;
-  announcements=data||[]; renderAnnouncements(); updateBadge();
- }catch(e){/* ignore: bell simply stays empty */}
+ const list=annList(), el=$('announcement-list');
+ if(!list.length){el.innerHTML='<p style="color:var(--mute);font-size:13px">No announcements yet.</p>';return;}
+ el.innerHTML=list.map(a=>'<div class="notif-item"><div class="notif-title">'+esc(a.title)+'</div><div class="notif-date">'+new Date(a.created_at).toLocaleString()+'</div><p style="margin-top:6px;font-size:13px;color:var(--bone)">'+esc(a.message)+'</p></div>').join('');
 }
 function openAnnouncements(){
  $('notif-modal').style.display='block';
- if(announcements.length){lsSet(SEEN_KEY,String(new Date(announcements[0].created_at).getTime()));}
- updateBadge(); fetchAnnouncements();
+ const l=annList(); if(l.length){lsSet(SEEN_KEY,String(new Date(l[0].created_at).getTime()));}
+ updateBadge();
 }
-function closeAnnouncements(){ $('notif-modal').style.display='none'; }
+function closeAnnouncements(){$('notif-modal').style.display='none';}
 $('bellBtn').onclick=openAnnouncements;
 $('closeNotif').onclick=closeAnnouncements;
-$('notif-modal').onclick=e=>{ if(e.target===$('notif-modal')) closeAnnouncements(); };
+$('notif-modal').onclick=e=>{if(e.target===$('notif-modal'))closeAnnouncements();};
 
-$('checkBtn').onclick=()=>{
- const s=getStats(), today=todayKey();
- if(s.lastCheckIn===today){toast("Already checked in today");return;}
- // Continue streak only if last check-in was yesterday and the cycle isn't complete; otherwise start over
- if(s.lastCheckIn===yesterdayKey()&&s.streak<7){s.streak+=1;}else{s.streak=1;}
- s.lastCheckIn=today;
- if(s.streak===7){
-  s.earned=Math.round((s.earned+0.1)*100)/100;
-  const hist=getHist(); hist.unshift({text:"7-day streak bonus $0.10",status:"APPROVED"}); lsSet(HIST_KEY,JSON.stringify(hist));
-  toast("7-day streak! +$0.10");
+// ---- render ----
+const KIND_LABEL={offer:"Offer reward",checkin_bonus:"7-day streak bonus",ref_bonus:"Referral bonus",ref_monthly:"Monthly referral bonus",payout:"Payout sent"};
+function render(){
+ const st=S||{balance:0,tasks:0,streak:0,checked_today:false,role:"STANDARD",wallet:"",min_payout:10,invited:0,qualified:0,ref_pending:0,ref_approved:0,history:[]};
+ const bal=Number(st.balance)||0, min=Number(st.min_payout)||10;
+ const big='<span>'+nf(coinsOf(bal))+'</span><small style="font-size:16px;letter-spacing:2px;color:var(--mute);margin-left:8px;font-family:Inter,sans-serif">WASP</small>';
+ const usdLine="\u2248 "+money(bal)+" \u2022 100 WASP = $1";
+ $('balHome').innerHTML=big; $('balWallet').innerHTML=big; $('balUsdHome').textContent=usdLine; $('balUsdWallet').textContent=usdLine;
+ $('bar').style.width=Math.min(100,bal/min*100)+"%";
+ $('tasksHome').textContent=st.tasks; $('pTasks').textContent=st.tasks; $('streakHome').textContent=st.streak+"/7";
+ $('dots').innerHTML=Array.from({length:7},(_,i)=>'<i class="dot'+(i<st.streak?' on':'')+'"></i>').join('');
+ const c=$('checkBtn'); c.disabled=!!st.checked_today; c.textContent=st.checked_today?"Checked in today":"Check in";
+ $('uidText').textContent="UID "+UID+" \u2022 Profile"; $('pName').textContent="User "+UID; $('pUid').textContent=UID;
+ $('refLink').textContent=BOT_LINK+UID;
+ $('refPending').textContent=wasp(st.ref_pending); $('refEarn').textContent=wasp(st.ref_approved);
+ $('refMeta').textContent="Invited "+st.invited+" \u2022 Qualified "+st.qualified;
+ if(document.activeElement!==$('wAddr')) $('wAddr').value=st.wallet||"";
+
+ if(st.role==="SUPER_AFFILIATE"){
+  $('userRoleBadge').textContent="\u2B50 Tier A (Super Affiliate)"; $('pTier').textContent="Super Affiliate (Tier A)";
+  $('refSubText').textContent="Earn 300 WASP per friend who reaches 700 WASP, plus 200 WASP each month a friend earns 1,500 WASP or more.";
  } else {
-  toast("Checked in \u2022 day "+s.streak+"/7");
+  $('userRoleBadge').textContent="Tier B (Standard)"; $('pTier').textContent="Standard User (Tier B)";
+  $('refSubText').textContent="Earn 200 WASP per qualified friend who reaches 700 WASP.";
  }
- saveStats(s); render();
+
+ const need=Math.max(0,min-bal);
+ if(need>0){$('payHint').textContent=wasp(need)+" more to qualify for payout. Under "+wasp(min)+" rolls over.";}
+ else{$('payHint').textContent=st.wallet?"You qualify. You are in the next bi-weekly payout.":"You qualify. Add your wallet to get paid.";}
+ const d=getDaysToNextBiWeekly();
+ let txt="Next payout bi-weekly (1st & 15th) \u2022 "+d+" day"+(d===1?"":"s")+" left"; if(bal<min)txt+=" \u2022 Under "+wasp(min)+" rolls over"; $('paydayHome').textContent=txt;
+
+ const histEl=$('hist'), h=st.history||[];
+ if(!h.length){histEl.innerHTML='<div class="card"><div class="meta">Nothing yet. Rewards appear here as soon as they are credited.</div></div>';}
+ else{histEl.innerHTML=h.map(x=>{const amt=Number(x.amount);const paid=x.kind==="payout";
+  return '<div class="card" style="margin-top:10px"><div style="display:flex;justify-content:space-between;align-items:center;gap:10px"><span class="meta">'+esc(KIND_LABEL[x.kind]||x.kind)+'<br>'+new Date(x.created_at).toLocaleDateString()+'</span><span class="badge badge-approved">'+(amt<0?"-":"+")+wasp(Math.abs(amt))+(paid?" PAID":"")+'</span></div></div>';}).join('');}
+ renderAnnouncements(); updateBadge();
+ if(!wallLoaded&&UID){wallLoaded=true; $('cpaleadFrame').src="https://www.cdnflyer.com/wall/i07LGTum?subid="+encodeURIComponent(UID);}
+}
+
+async function refresh(){
+ try{const j=await api('state'); S=j.state; render();}catch(e){handleErr(e);}
+}
+
+$('checkBtn').onclick=async()=>{
+ $('checkBtn').disabled=true;
+ try{
+  const j=await api('checkin'); S=j.state; const r=j.result||{};
+  if(!r.ok) toast("Already checked in today");
+  else toast(r.bonus?"7-day streak! +10 WASP":"Checked in \u2022 day "+r.streak+"/7");
+ }catch(e){handleErr(e);}
+ render();
 };
-$('walletBtn').onclick=()=>{
+$('walletBtn').onclick=async()=>{
  const addr=$('wAddr').value.trim(); if(!isValidSol(addr)){toast("Invalid Solana address");return;}
- lsSet(WALLET_KEY,addr); toast("Wallet saved \u2705"); render();
+ try{const j=await api('wallet',{wallet:addr}); S=j.state; toast("Wallet saved \u2705");}catch(e){handleErr(e);}
+ render();
 };
 $('copyBtn').onclick=async()=>{
  const link=$('refLink').textContent; try{await navigator.clipboard.writeText(link);}catch(e){} toast("Link copied");
@@ -270,8 +247,14 @@ $('copyBtn').onclick=async()=>{
 document.addEventListener('click',e=>{const go=e.target.closest('[data-go]');if(go){showScreen(go.dataset.go);}});
 setTimeout(()=>{const l=$('loader');if(l){l.classList.add('hide');setTimeout(()=>{l.style.display='none';},800);}},2800);
 setTimeout(()=>{const l=$('loader');if(l)l.style.display='none';},4500);
+
 render();
-initSupabase();
+if(!INIT){ lockScreen("Open IWASP from Telegram to use the app."); }
+else{
+ refresh();
+ setInterval(refresh,30000);
+ document.addEventListener('visibilitychange',()=>{if(!document.hidden)refresh();});
+}
 </script>
 </body>
 </html>
