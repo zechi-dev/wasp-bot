@@ -22,7 +22,7 @@ body{background:#000;display:flex;justify-content:center;color:var(--bone)}
 .bar{width:120px;height:1px;background:var(--hair);margin-top:30px;overflow:hidden}
 .bar-fill{height:100%;width:0;background:var(--gold);animation:fill 2.6s forwards}
 @keyframes fill{to{width:100%}}
-.header{padding:20px;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;background:rgba(11,10,8,.94);z-index:10;border-bottom:1px solid var(--hair)}
+.header{padding:20px;display:flex;gap:12px;align-items:center;position:sticky;top:0;background:rgba(11,10,8,.94);z-index:10;border-bottom:1px solid var(--hair)}
 .logo-box{width:34px;height:44px}
 .iwasp-text{font-family:var(--serif);font-size:24px;letter-spacing:6px;color:var(--bone)}
 .uid-text{color:var(--mute);font-size:11px;margin-top:5px}
@@ -84,5 +84,143 @@ body{background:#000;display:flex;justify-content:center;color:var(--bone)}
   <button class="notif-btn" onclick="openAnnouncements()">🔔 <span class="badge-count" id="notif-badge">0</span></button>
 </div>
 
-<div id="home" class="screen active"><div class="card"><div style="display:flex;justify-content:space-between;align-items:center"><div class="label">Total balance</div><div class="label" style="border:1px solid var(--line);color:var(--gold);padding:5px 11px;border-radius:20px">7-day streak +$0.10</div></div><div class="amount" id="balHome">$0.00</div><div class="meta" id="payHint">Loading…</div><div class="grid2"><div class="stat"><div class="stat-label">Offers completed</div><div class="stat-value" id="tasksHome">0</div></div><div class="stat"><div class="stat-label">Check-in streak</div><div class="stat-value" id="streakHome">0/7</div></div></div></div><div class="payday"><span id="paydayHome">Calculating payday…</span></div><div class="card"><div class="label">Daily check-in</div><div class="
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              
+<div id="home" class="screen active"><div class="card"><div style="display:flex;justify-content:space-between;align-items:center"><div class="label">Total balance</div><div class="label" style="border:1px solid var(--line);color:var(--gold);padding:5px 11px;border-radius:20px">7-day streak +$0.10</div></div><div class="amount" id="balHome">$0.00</div><div class="meta" id="payHint">Loading…</div><div class="grid2"><div class="stat"><div class="stat-label">Offers completed</div><div class="stat-value" id="tasksHome">0</div></div><div class="stat"><div class="stat-label">Check-in streak</div><div class="stat-value" id="streakHome">0/7</div></div></div></div><div class="payday"><span id="paydayHome">Calculating payday…</span></div><div class="card"><div class="label">Daily check-in</div><div class="dots" id="dots"></div><p class="meta" style="margin-top:10px">Check in 7 days in a row to earn $0.10.</p><button class="btn" id="checkBtn">Check in</button></div><div class="trending" data-go="offers" style="margin-top:14px"><div><b>Play games and finish surveys</b><p style="color:var(--mute);font-size:12px">Rewards arrive after advertiser confirms</p></div></div></div>
+
+<!-- OFFERS TAB WITH CPAlead EMBED -->
+<div id="offers" class="screen">
+  <div class="h">Offers</div>
+  <div class="sub">Play games and complete surveys without leaving the app.</div>
+  <iframe class="wall" id="cpaleadFrame" src="" frameborder="0" allow="geolocation"></iframe>
+</div>
+
+<div id="referral" class="screen"><div class="h">Invite friends</div><div class="sub">Earn $2.00 per qualified friend who reaches $7.00.</div><div class="card"><div class="label">Your link</div><div class="ref-link" id="refLink">…</div><button class="btn" id="copyBtn">Copy link</button><div class="grid2"><div class="stat"><div class="stat-label">Invited</div><div class="stat-value" id="refCount">0</div></div><div class="stat"><div class="stat-label">Earned</div><div class="stat-value" id="refEarn">$0.00</div></div></div></div></div>
+<div id="wallet" class="screen"><div class="h">Wallet</div><div class="sub">Paid bi-weekly (1st and 15th) in USDT on Solana, once you reach $10. Under $10 rolls over.</div><div class="card"><div class="label">Balance</div><div class="amount" id="balWallet" style="font-size:44px">$0.00</div><div class="progress"><i id="bar"></i></div><input class="input" id="wAddr" placeholder="Solana wallet address"><button class="btn" id="walletBtn">Save wallet</button><div class="warn">Double-check your address. Payments sent to wrong address can't be recovered.</div></div><div class="h" style="font-size:22px;margin-top:28px">Payout history</div><div id="hist"></div></div>
+<div id="profile" class="screen"><div class="h">Profile</div><div class="card"><div class="row" style="margin:0"><span class="meta">User</span><b id="pName">—</b></div><div class="row"><span class="meta">UID</span><b id="pUid">—</b></div><div class="row"><span class="meta">Offers completed</span><b id="pTasks">0</b></div></div></div>
+</div>
+
+<!-- ANNOUNCEMENTS MODAL -->
+<div class="modal" id="notif-modal">
+  <div class="modal-content">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+      <h3 style="color:var(--bone); font-family:var(--serif); font-size:24px;">Announcements</h3>
+      <button onclick="closeAnnouncements()" style="background:none; border:none; color:var(--bone); font-size:18px; cursor:pointer;">✕</button>
+    </div>
+    <div id="announcement-list">
+      <p style="color: var(--mute); font-size:13px;">No announcements available.</p>
+    </div>
+  </div>
+</div>
+
+<div class="bottom-nav"><div class="nav-item active" data-go="home">🏠<br>Home</div><div class="nav-item" data-go="offers">📋<br>Offers</div><div class="nav-item" data-go="referral">👥<br>Invite</div><div class="nav-item" data-go="wallet">👛<br>Wallet</div></div>
+<div class="toast" id="toast"></div>
+
+<script>
+const SUPABASE_URL = "YOUR_SUPABASE_PROJECT_URL";
+const SUPABASE_ANON_KEY = "YOUR_SUPABASE_ANON_KEY";
+const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+const tg = window.Telegram && Telegram.WebApp; 
+let UID = "";
+
+// Telegram App Environment Lock
+if (tg && tg.initDataUnsafe && tg.initDataUnsafe.user && tg.initDataUnsafe.user.id) {
+    try { tg.ready(); tg.expand(); } catch(e) {}
+    UID = String(tg.initDataUnsafe.user.id);
+} else {
+    // Block web browser access
+    document.getElementById('app-root').innerHTML = `
+        <div style="text-align: center; padding: 80px 24px;">
+            <h2 style="font-family:var(--serif); font-size:32px; color:var(--bone); margin-bottom:12px;">🛑 Telegram Access Only</h2>
+            <p style="color:var(--mute); font-size:14px; line-height:1.6;">IWASP Mini App can only be launched directly inside the official Telegram Mobile App.</p>
+        </div>
+    `;
+}
+
+// Load CPAlead Offerwall dynamically with user's Telegram UID as subid
+const cpaleadUrl = `https://www.cdnflyer.com/wall/i07LGTum?subid=${UID}`;
+const frame = $('cpaleadFrame');
+if (frame) { frame.src = cpaleadUrl; }
+
+const $=id=>document.getElementById(id);
+const WALLET_KEY="iwasp_wallet_"+UID, STATS_KEY="iwasp_stats_"+UID, HIST_KEY="iwasp_hist_"+UID;
+
+function getStats(){try{return JSON.parse(localStorage.getItem(STATS_KEY)||'{"earned":0,"tasks":0,"streak":0,"checked":false}')}catch(e){return{earned:0,tasks:0,streak:0,checked:false}}}
+function saveStats(s){localStorage.setItem(STATS_KEY,JSON.stringify(s));}
+function toast(m){const t=$('toast');t.textContent=m;t.classList.add('show');clearTimeout(toast.h);toast.h=setTimeout(()=>t.classList.remove('show'),2200);}
+function showScreen(id){document.querySelectorAll('.screen').forEach(e=>e.classList.toggle('active',e.id===id)); document.querySelectorAll('.nav-item').forEach(e=>e.classList.toggle('active',e.dataset.go===id)); window.scrollTo(0,0);}
+function isValidSol(a){if(!a) return false; if(a.length<32||a.length>44) return false; return /^[1-9A-HJ-NP-Za-km-z]+$/.test(a);}
+
+function render(){
+ const s=getStats();
+ const bal=s.earned;
+ $('balHome').textContent="$"+bal.toFixed(2); $('balWallet').textContent="$"+bal.toFixed(2);
+ $('bar').style.width=Math.min(100,bal/10*100)+"%";
+ $('tasksHome').textContent=s.tasks; $('pTasks').textContent=s.tasks; $('streakHome').textContent=s.streak+"/7";
+ $('dots').innerHTML=Array.from({length:7},(_,i)=>'<i class="dot'+(i<s.streak?' on':'')+'"></i>').join('');
+ const c=$('checkBtn'); c.disabled=s.checked; c.textContent=s.checked?"Checked in today":"Check in";
+ $('uidText').textContent="UID "+UID+" • Profile"; $('pName').textContent="User "+UID; $('pUid').textContent=UID;
+ $('refLink').textContent="https://t.me/Iwasp_bot?start="+UID;
+ const w=localStorage.getItem(WALLET_KEY)||""; $('wAddr').value=w;
+ const need=Math.max(0,10-bal);
+ if(need>0){$('payHint').textContent="$"+need.toFixed(2)+" more to qualify for payout. Under $10 rolls over."} else {$('payHint').textContent=w?"You qualify for the payout.":"You qualify. Add your wallet to get paid."}
+ const now=new Date(); 
+ let txt="Next payout bi-weekly (1st & 15th)"; if(bal<10) txt+=" • Under $10 rolls over"; $('paydayHome').textContent=txt;
+ const hist=JSON.parse(localStorage.getItem(HIST_KEY)||"[]");
+ const histEl=$('hist'); if(hist.length==0){histEl.innerHTML='<div class="card"><div class="meta">No payouts yet. Paid bi-weekly once you reach $10.</div></div>'} else {histEl.innerHTML=hist.map(h=>'<div class="card" style="margin-top:10px"><div style="display:flex;justify-content:space-between"><span class="meta">'+h.text+'</span><span class="badge '+(h.status=='PENDING'?'badge-pending':'badge-approved')+'">'+h.status+'</span></div></div>').join('')}
+}
+
+// Fetch Announcements from Supabase
+async function fetchAnnouncements() {
+    const { data, error } = await supabaseClient.from('announcements').select('*').order('created_at', { ascending: false });
+    if (data && data.length > 0) {
+        const badge = $('notif-badge');
+        badge.style.display = 'inline';
+        badge.textContent = data.length;
+        
+        let html = '';
+        data.forEach(item => {
+            html += `
+                <div class="notif-item">
+                    <div class="notif-title">${item.title}</div>
+                    <div class="notif-date">${new Date(item.created_at).toLocaleString()}</div>
+                    <p style="margin-top:6px; font-size:13px; color:var(--bone);">${item.message}</p>
+                </div>
+            `;
+        });
+        $('announcement-list').innerHTML = html;
+    }
+}
+
+function openAnnouncements() { $('notif-modal').style.display = 'block'; }
+function closeAnnouncements() { $('notif-modal').style.display = 'none'; }
+
+$('checkBtn').onclick=()=>{
+ const s=getStats(); const todayKey='daily_'+new Date().toDateString();
+ if(localStorage.getItem(todayKey)){toast("Already checked in today");return;}
+ if(s.checked){toast("Already checked in");return;}
+ s.streak=Math.min(7,s.streak+1); s.earned+=0.1; s.tasks+=1; s.checked=true; saveStats(s); localStorage.setItem(todayKey,"1");
+ const hist=JSON.parse(localStorage.getItem(HIST_KEY)||"[]"); hist.unshift({text:"Daily check-in $0.10",status:"APPROVED"}); localStorage.setItem(HIST_KEY,JSON.stringify(hist));
+ toast("Checked in +$0.10"); render();
+};
+
+$('walletBtn').onclick=()=>{
+ const addr=$('wAddr').value.trim(); if(!isValidSol(addr)){toast("Invalid Solana address");return;}
+ localStorage.setItem(WALLET_KEY,addr); toast("Wallet saved ✅"); render();
+};
+
+$('copyBtn').onclick=async()=>{
+ const link=$('refLink').textContent; try{await navigator.clipboard.writeText(link);}catch(e){} toast("Link copied");
+};
+
+document.addEventListener('click',e=>{const go=e.target.closest('[data-go]'); if(go){showScreen(go.dataset.go);}});
+
+setTimeout(()=>{const l=$('loader'); if(l){l.classList.add('hide'); setTimeout(()=>{l.style.display='none';},800);}},2800);
+setTimeout(()=>{const l=$('loader'); if(l) l.style.display='none';},4500);
+
+if (UID) {
+    render();
+    fetchAnnouncements();
+}
+</script>
+</body>
+</html>
