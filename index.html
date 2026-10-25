@@ -119,18 +119,20 @@ window.addEventListener('error',function(e){
 <div class="bottom-nav"><div class="nav-item active" data-go="home">🏠<br>Home</div><div class="nav-item" data-go="offers">📋<br>Offers</div><div class="nav-item" data-go="referral">👥<br>Invite</div><div class="nav-item" data-go="wallet">👛<br>Wallet</div></div>
 <div class="toast" id="toast"></div>
 <script>
-const SUPABASE_URL="YOUR_SUPABASE_PROJECT_URL";
-const SUPABASE_ANON_KEY="YOUR_SUPABASE_ANON_KEY";
+const SUPABASE_URL="https://tjlqyoktagopiaqlkszg.supabase.co";
+const SUPABASE_ANON_KEY="sb_publishable_cZNn1foS_FTvZzYwV61FsQ_3aj7whEP";
 let supabaseClient=null;
 function initSupabase(){
- if(SUPABASE_URL==="YOUR_SUPABASE_PROJECT_URL") return;
+ if(SUPABASE_URL.indexOf("YOUR_")===0||SUPABASE_ANON_KEY.indexOf("YOUR_")===0) return;
  const sc=document.createElement('script');
  sc.src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js";
  sc.onload=function(){
-  try{supabaseClient=window.supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY);}catch(e){console.log("Supabase init failed",e);return;}
+  try{supabaseClient=window.supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY,{global:{fetch:function(u,o){o=o||{};if(o.headers&&typeof o.headers.forEach==="function"&&!Array.isArray(o.headers)){var h={};o.headers.forEach(function(v,k){h[k]=v;});o=Object.assign({},o,{headers:h});}return fetch(u,o);}}});}catch(e){return;}
   fetchAnnouncements(); syncUserWithSupabase();
+  setInterval(fetchAnnouncements,60000);
+  document.addEventListener('visibilitychange',function(){if(!document.hidden)fetchAnnouncements();});
  };
- sc.onerror=function(){console.log("Supabase SDK failed to load");};
+ sc.onerror=function(){};
  document.head.appendChild(sc);
 }
 
@@ -202,7 +204,7 @@ async function syncUserWithSupabase(){
  try{
   const {data:user}=await supabaseClient.from('users').select('user_role').eq('telegram_id',UID).maybeSingle();
   if(user&&user.user_role) userRole=user.user_role;
- }catch(e){console.log("Supabase sync skipped");}
+ }catch(e){/* ignore */}
  if(userRole==="SUPER_AFFILIATE"){
   $('userRoleBadge').textContent="\u2B50 Tier A (Super Affiliate)"; $('pTier').textContent="Super Affiliate (Tier A)";
   $('refSubText').textContent="Earn $3.00 per friend ($7 unlock) + $2.00 monthly if they earn \u2265 $15/mo.";
@@ -231,7 +233,7 @@ async function fetchAnnouncements(){
   const {data,error}=await supabaseClient.from('announcements').select('id,title,message,created_at').order('created_at',{ascending:false}).limit(30);
   if(error) throw error;
   announcements=data||[]; renderAnnouncements(); updateBadge();
- }catch(e){console.log("Announcements fetch skipped",e);}
+ }catch(e){/* ignore: bell simply stays empty */}
 }
 function openAnnouncements(){
  $('notif-modal').style.display='block';
@@ -273,4 +275,3 @@ initSupabase();
 </script>
 </body>
 </html>
-
