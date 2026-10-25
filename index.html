@@ -117,28 +117,36 @@ body{background:#000;display:flex;justify-content:center;color:var(--bone)}
 <script>
 const SUPABASE_URL = "YOUR_SUPABASE_PROJECT_URL";
 const SUPABASE_ANON_KEY = "YOUR_SUPABASE_ANON_KEY";
-const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+let supabaseClient = null;
+try {
+    if (SUPABASE_URL !== "YOUR_SUPABASE_PROJECT_URL") {
+        supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    }
+} catch (err) {
+    console.log("Supabase init pending configuration");
+}
 
 const $=id=>document.getElementById(id);
 
 const tg = window.Telegram && Telegram.WebApp; 
-let UID = "";
+let UID = "583826997"; // Fallback for safe testing
 
 // Telegram App Environment Lock
 if (tg && tg.initDataUnsafe && tg.initDataUnsafe.user && tg.initDataUnsafe.user.id) {
     try { tg.ready(); tg.expand(); } catch(e) {}
     UID = String(tg.initDataUnsafe.user.id);
 } else {
-    // Block web browser access and show warning
-    $('app-root').innerHTML = `
-        <div style="text-align: center; padding: 80px 24px;">
-            <h2 style="font-family:var(--serif); font-size:32px; color:var(--bone); margin-bottom:12px;">🛑 Telegram Access Only</h2>
-            <p style="color:var(--mute); font-size:14px; line-height:1.6;">IWASP Mini App can only be launched directly inside the official Telegram Mobile App.</p>
-        </div>
-    `;
-    // Instantly hide the loader so the warning is visible in browser tests
-    const l = $('loader'); 
-    if(l) { l.style.display = 'none'; }
+    // If opened in a regular web browser, show warning block
+    const root = $('app-root');
+    if(root) {
+        root.innerHTML = `
+            <div style="text-align: center; padding: 80px 24px;">
+                <h2 style="font-family:var(--serif); font-size:32px; color:var(--bone); margin-bottom:12px;">🛑 Telegram Access Only</h2>
+                <p style="color:var(--mute); font-size:14px; line-height:1.6;">IWASP Mini App can only be launched directly inside the official Telegram Mobile App.</p>
+            </div>
+        `;
+    }
 }
 
 // Load CPAlead Offerwall dynamically with user's Telegram UID as subid
@@ -173,25 +181,30 @@ function render(){
  const histEl=$('hist'); if(hist.length==0){histEl.innerHTML='<div class="card"><div class="meta">No payouts yet. Paid bi-weekly once you reach $10.</div></div>'} else {histEl.innerHTML=hist.map(h=>'<div class="card" style="margin-top:10px"><div style="display:flex;justify-content:space-between"><span class="meta">'+h.text+'</span><span class="badge '+(h.status=='PENDING'?'badge-pending':'badge-approved')+'">'+h.status+'</span></div></div>').join('')}
 }
 
-// Fetch Announcements from Supabase
+// Fetch Announcements from Supabase safely
 async function fetchAnnouncements() {
-    const { data, error } = await supabaseClient.from('announcements').select('*').order('created_at', { ascending: false });
-    if (data && data.length > 0) {
-        const badge = $('notif-badge');
-        badge.style.display = 'inline';
-        badge.textContent = data.length;
-        
-        let html = '';
-        data.forEach(item => {
-            html += `
-                <div class="notif-item">
-                    <div class="notif-title">${item.title}</div>
-                    <div class="notif-date">${new Date(item.created_at).toLocaleString()}</div>
-                    <p style="margin-top:6px; font-size:13px; color:var(--bone);">${item.message}</p>
-                </div>
-            `;
-        });
-        $('announcement-list').innerHTML = html;
+    if (!supabaseClient) return;
+    try {
+        const { data, error } = await supabaseClient.from('announcements').select('*').order('created_at', { ascending: false });
+        if (data && data.length > 0) {
+            const badge = $('notif-badge');
+            badge.style.display = 'inline';
+            badge.textContent = data.length;
+            
+            let html = '';
+            data.forEach(item => {
+                html += `
+                    <div class="notif-item">
+                        <div class="notif-title">${item.title}</div>
+                        <div class="notif-date">${new Date(item.created_at).toLocaleString()}</div>
+                        <p style="margin-top:6px; font-size:13px; color:var(--bone);">${item.message}</p>
+                    </div>
+                `;
+            });
+            $('announcement-list').innerHTML = html;
+        }
+    } catch(e) {
+        console.log("Announcements fetch skipped");
     }
 }
 
@@ -218,8 +231,8 @@ $('copyBtn').onclick=async()=>{
 
 document.addEventListener('click',e=>{const go=e.target.closest('[data-go]'); if(go){showScreen(go.dataset.go);}});
 
-setTimeout(()=>{const l=$('loader'); if(l){l.classList.add('hide'); setTimeout(()=>{l.style.display='none';},800);}},2800);
-setTimeout(()=>{const l=$('loader'); if(l) l.style.display='none';},4500);
+// Safe loader removal
+setTimeout(()=>{const l=$('loader'); if(l){l.classList.add('hide'); setTimeout(()=>{l.style.display='none';},800);}},2000);
 
 if (UID) {
     render();
@@ -227,4 +240,5 @@ if (UID) {
 }
 </script>
 </body>
-</html>
+                                                                                 </html>
+                                                                                 
