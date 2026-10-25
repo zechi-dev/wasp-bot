@@ -5,6 +5,8 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>IWASP</title>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
+<!-- Supabase JS SDK -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Instrument+Serif&display=swap" rel="stylesheet">
 <style>
 :root{--ink:#0B0A08;--panel:#14120E;--panel2:#1A1712;--line:rgba(212,167,44,.16);--hair:rgba(237,230,211,.07);--gold:#D4A72C;--bone:#EDE6D3;--mute:#8A8374;--red:#D9776B;--green:#8FBF8A;--serif:'Instrument Serif',serif}
@@ -12,8 +14,6 @@
 body{background:#000;display:flex;justify-content:center;color:var(--bone)}
 .app{width:100%;max-width:430px;min-height:100vh;background:var(--ink);position:relative;padding-bottom:120px}
 #loader{position:fixed;inset:0;background:var(--ink);z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;transition:opacity .8s}
-@keyframes loaderOut{to{opacity:0;visibility:hidden;pointer-events:none}}
-#loader{animation:loaderOut .6s 4.2s forwards}
 #loader.hide{opacity:0;pointer-events:none}
 .wasp-wrap{position:relative;width:200px;height:270px}
 .wasp{width:100%;height:100%}
@@ -22,19 +22,10 @@ body{background:#000;display:flex;justify-content:center;color:var(--bone)}
 .bar{width:120px;height:1px;background:var(--hair);margin-top:30px;overflow:hidden}
 .bar-fill{height:100%;width:0;background:var(--gold);animation:fill 2.6s forwards}
 @keyframes fill{to{width:100%}}
-.header{padding:20px;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;background:rgba(11,10,8,.94);z-index:10;border-bottom:1px solid var(--hair)}
+.header{padding:20px;display:flex;gap:12px;align-items:center;position:sticky;top:0;background:rgba(11,10,8,.94);z-index:10;border-bottom:1px solid var(--hair)}
 .logo-box{width:34px;height:44px}
 .iwasp-text{font-family:var(--serif);font-size:24px;letter-spacing:6px;color:var(--bone)}
 .uid-text{color:var(--mute);font-size:11px;margin-top:5px}
-/* Notification bell & modal */
-.notif-btn{position:relative;background:var(--panel2);border:1px solid var(--line);color:var(--bone);font-size:16px;padding:8px 12px;border-radius:12px;cursor:pointer}
-.badge-count{position:absolute;top:-6px;right:-6px;background:var(--red);color:#fff;font-size:10px;font-weight:700;border-radius:10px;padding:2px 6px;display:none;min-width:18px;text-align:center}
-.modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:999;padding:20px}
-.modal-content{max-width:390px;margin:60px auto 0;background:var(--panel2);border:1px solid var(--line);border-radius:16px;padding:20px;max-height:80vh;overflow-y:auto}
-.notif-item{border-bottom:1px solid var(--hair);padding:12px 0}
-.notif-item:last-child{border-bottom:none}
-.notif-title{font-weight:700;color:var(--gold);font-size:15px}
-.notif-date{font-size:11px;color:var(--mute);margin-top:2px}
 .screen{display:none;padding:0 20px}.screen.active{display:block}
 .card{border:1px solid var(--line);background:linear-gradient(180deg,var(--panel2),var(--panel));border-radius:16px;padding:22px 20px;margin-top:18px}
 .label{color:var(--mute);font-size:12px}
@@ -77,23 +68,8 @@ body{background:#000;display:flex;justify-content:center;color:var(--bone)}
 <body>
 <div class="app">
 <div id="loader"><div class="wasp-wrap"><svg viewBox="0 0 200 270"><defs><radialGradient id="gY" cx="40%" cy="30%" r="80%"><stop offset="0" stop-color="#F6D75A"/><stop offset=".55" stop-color="#D9A514"/><stop offset="1" stop-color="#7A5307"/></radialGradient><radialGradient id="gK" cx="40%" cy="28%" r="80%"><stop offset="0" stop-color="#40382A"/><stop offset="1" stop-color="#0A0907"/></radialGradient><radialGradient id="gE" cx="35%" cy="30%" r="75%"><stop offset="0" stop-color="#6A5630"/><stop offset=".5" stop-color="#17110A"/><stop offset="1" stop-color="#000"/></radialGradient><linearGradient id="gW" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#F3E7C4" stop-opacity=".6"/><stop offset="1" stop-color="#9C8F6A" stop-opacity=".12"/></linearGradient><clipPath id="ab"><path d="M100 140C78 152 70 192 100 248C130 192 122 152 100 140Z"/></clipPath><g id="wingL"><ellipse cx="58" cy="116" rx="46" ry="13" transform="rotate(-12 58 116)" fill="url(#gW)" opacity=".7" stroke="#CDBB86" stroke-opacity=".4" stroke-width=".8"/><ellipse cx="54" cy="106" rx="52" ry="17" transform="rotate(-24 54 106)" fill="url(#gW)" stroke="#CDBB86" stroke-opacity=".55" stroke-width=".8"/></g><g id="legL" fill="none" stroke="#1B160C" stroke-width="2.2" stroke-linecap="round"><path d="M88 96L68 86L50 100"/><path d="M86 106L58 112L44 136"/><path d="M90 116L72 134L64 162"/></g></defs><use href="#wingL"/><use href="#wingL" transform="matrix(-1 0 0 1 200 0)"/><use href="#legL"/><use href="#legL" transform="matrix(-1 0 0 1 200 0)"/><g clip-path="url(#ab)"><rect x="60" y="130" width="80" height="130" fill="url(#gY)"/><path d="M60 160Q100 172 140 160V174Q100 186 60 174Z" fill="#0C0A07"/><path d="M60 188Q100 200 140 188V202Q100 214 60 202Z" fill="#0C0A07"/><path d="M60 216Q100 228 140 216V232Q100 244 60 232Z" fill="#0C0A07"/></g><ellipse cx="100" cy="106" rx="21" ry="26" fill="url(#gK)"/><ellipse cx="100" cy="60" rx="21" ry="18" fill="url(#gY)"/><ellipse cx="84" cy="56" rx="7.5" ry="11" fill="url(#gE)"/><ellipse cx="116" cy="56" rx="7.5" ry="11" fill="url(#gE)"/></svg></div><div class="loader-title">IWASP</div><div class="loader-sub">Earn on your own time</div><div class="bar"><div class="bar-fill"></div></div></div>
-<script>
-setTimeout(function(){var l=document.getElementById('loader');if(l)l.style.display='none';},4500);
-window.addEventListener('error',function(e){
- var b=document.getElementById('errBanner');
- if(!b){b=document.createElement('div');b.id='errBanner';b.style.cssText='position:fixed;top:0;left:0;right:0;z-index:99999;background:#7a1f16;color:#fff;font:11px/1.4 monospace;padding:8px 10px;word-break:break-all';document.body.appendChild(b);}
- b.textContent='Error: '+(e.message||'script failed to load')+(e.lineno?' (line '+e.lineno+')':'');
-});
-</script>
-<div class="header">
-  <div style="display:flex;gap:12px;align-items:center">
-    <div class="logo-box"><svg viewBox="0 0 200 270" style="width:100%;height:100%"><use href="#wingL"/><use href="#wingL" transform="matrix(-1 0 0 1 200 0)"/><g clip-path="url(#ab)"><rect x="60" y="130" width="80" height="130" fill="url(#gY)"/></g></svg></div>
-    <div><div class="iwasp-text">IWASP</div><div class="uid-text" id="uidText">UID — • Profile</div></div>
-  </div>
-  <button class="notif-btn" id="bellBtn" aria-label="Announcements">🔔<span class="badge-count" id="notif-badge">0</span></button>
-</div>
-
-<div id="home" class="screen active"><div class="card"><div style="display:flex;justify-content:space-between;align-items:center"><div class="label">Total balance</div><div class="label" style="border:1px solid var(--line);color:var(--gold);padding:5px 11px;border-radius:20px" id="userRoleBadge">Tier B (Standard)</div></div><div class="amount" id="balHome">0</div><div class="meta" id="balUsdHome" style="margin:-4px 0 8px">≈ $0.00 • 100 WASP = $1</div><div class="meta" id="payHint">Loading…</div><div class="grid2"><div class="stat"><div class="stat-label">Offers completed</div><div class="stat-value" id="tasksHome">0</div></div><div class="stat"><div class="stat-label">Check-in streak</div><div class="stat-value" id="streakHome">0/7</div></div></div></div><div class="payday"><span id="paydayHome">Calculating payday…</span></div><div class="card"><div class="label">Daily check-in</div><div class="dots" id="dots"></div><p class="meta" style="margin-top:10px">Check in 7 days in a row to earn 10 WASP.</p><button class="btn" id="checkBtn">Check in</button></div><div class="trending" data-go="offers" style="margin-top:14px"><div><b>Play games and finish surveys</b><p style="color:var(--mute);font-size:12px">Rewards arrive after advertiser confirms</p></div></div></div>
+<div class="header"><div class="logo-box"><svg viewBox="0 0 200 270" style="width:100%;height:100%"><use href="#wingL"/><use href="#wingL" transform="matrix(-1 0 0 1 200 0)"/><g clip-path="url(#ab)"><rect x="60" y="130" width="80" height="130" fill="url(#gY)"/></g></svg></div><div><div class="iwasp-text">IWASP</div><div class="uid-text" id="uidText">UID — • Profile</div></div></div>
+<div id="home" class="screen active"><div class="card"><div style="display:flex;justify-content:space-between;align-items:center"><div class="label">Total balance</div><div class="label" style="border:1px solid var(--line);color:var(--gold);padding:5px 11px;border-radius:20px">7-day streak +$0.10</div></div><div class="amount" id="balHome">$0.00</div><div class="meta" id="payHint">Loading…</div><div class="grid2"><div class="stat"><div class="stat-label">Offers completed</div><div class="stat-value" id="tasksHome">0</div></div><div class="stat"><div class="stat-label">Check-in streak</div><div class="stat-value" id="streakHome">0/7</div></div></div></div><div class="payday"><span id="paydayHome">Calculating payday…</span></div><div class="card"><div class="label">Daily check-in</div><div class="dots" id="dots"></div><p class="meta" style="margin-top:10px">Check in 7 days in a row to earn $0.10.</p><button class="btn" id="checkBtn">Check in</button></div><div class="trending" data-go="offers" style="margin-top:14px"><div><b>Play games and finish surveys</b><p style="color:var(--mute);font-size:12px">Rewards arrive after advertiser confirms</p></div></div></div>
 
 <!-- OFFERS TAB WITH CPAlead EMBED -->
 <div id="offers" class="screen">
@@ -102,159 +78,67 @@ window.addEventListener('error',function(e){
   <iframe class="wall" id="cpaleadFrame" src="" frameborder="0" allow="geolocation"></iframe>
 </div>
 
-<div id="referral" class="screen"><div class="h">Invite friends</div><div class="sub" id="refSubText">Earn 200 WASP per qualified friend who reaches 700 WASP.</div><div class="card"><div class="label">Your referral link</div><div class="ref-link" id="refLink">…</div><button class="btn" id="copyBtn">Copy link</button><div class="meta" id="refMeta" style="margin-top:12px">Invited 0 • Qualified 0</div><div class="grid2"><div class="stat"><div class="stat-label">Pending bonus</div><div class="stat-value" id="refPending">$0.00</div></div><div class="stat"><div class="stat-label">Approved earned</div><div class="stat-value" id="refEarn">$0.00</div></div></div></div></div>
-<div id="wallet" class="screen"><div class="h">Wallet</div><div class="sub">Paid bi-weekly (1st and 15th of each month) in USDT on Solana, once you reach 1,000 WASP ($10). Under 1,000 WASP rolls over.</div><div class="card"><div class="label">Balance</div><div class="amount" id="balWallet" style="font-size:44px">0</div><div class="meta" id="balUsdWallet" style="margin:-4px 0 8px">≈ $0.00 • 100 WASP = $1</div><div class="progress"><i id="bar"></i></div><input class="input" id="wAddr" placeholder="Solana wallet address"><button class="btn" id="walletBtn">Save wallet</button><div class="warn">Double-check your address. Payments sent to wrong address can't be recovered.</div></div><div class="h" style="font-size:22px;margin-top:28px">Activity</div><div id="hist"></div></div>
-<div id="profile" class="screen"><div class="h">Profile</div><div class="card"><div class="row" style="margin:0"><span class="meta">User</span><b id="pName">—</b></div><div class="row"><span class="meta">UID</span><b id="pUid">—</b></div><div class="row"><span class="meta">Account tier</span><b id="pTier">Standard</b></div><div class="row"><span class="meta">Offers completed</span><b id="pTasks">0</b></div></div></div>
+<div id="referral" class="screen"><div class="h">Invite friends</div><div class="sub">Earn 10% extra on everything your friends earn.</div><div class="card"><div class="label">Your link</div><div class="ref-link" id="refLink">…</div><button class="btn" id="copyBtn">Copy link</button><div class="grid2"><div class="stat"><div class="stat-label">Invited</div><div class="stat-value" id="refCount">0</div></div><div class="stat"><div class="stat-label">Earned</div><div class="stat-value" id="refEarn">$0.00</div></div></div></div></div>
+<div id="wallet" class="screen"><div class="h">Wallet</div><div class="sub">Paid every Saturday 12 PM WAT in USDT on Solana, once you reach $5. Under $5 rolls over.</div><div class="card"><div class="label">Balance</div><div class="amount" id="balWallet" style="font-size:44px">$0.00</div><div class="progress"><i id="bar"></i></div><input class="input" id="wAddr" placeholder="Solana wallet address"><button class="btn" id="walletBtn">Save wallet</button><div class="warn">Double-check your address. Payments sent to wrong address can't be recovered.</div></div><div class="h" style="font-size:22px;margin-top:28px">Payout history</div><div id="hist"></div></div>
+<div id="profile" class="screen"><div class="h">Profile</div><div class="card"><div class="row" style="margin:0"><span class="meta">User</span><b id="pName">—</b></div><div class="row"><span class="meta">UID</span><b id="pUid">—</b></div><div class="row"><span class="meta">Offers completed</span><b id="pTasks">0</b></div></div></div>
 </div>
-<div class="modal" id="notif-modal">
-  <div class="modal-content">
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
-      <h3 style="color:var(--bone);font-family:var(--serif);font-size:24px;font-weight:400">Announcements</h3>
-      <button id="closeNotif" aria-label="Close" style="background:none;border:none;color:var(--bone);font-size:18px;cursor:pointer">✕</button>
-    </div>
-    <div id="announcement-list"><p style="color:var(--mute);font-size:13px">No announcements yet.</p></div>
-  </div>
-</div>
-
 <div class="bottom-nav"><div class="nav-item active" data-go="home">🏠<br>Home</div><div class="nav-item" data-go="offers">📋<br>Offers</div><div class="nav-item" data-go="referral">👥<br>Invite</div><div class="nav-item" data-go="wallet">👛<br>Wallet</div></div>
-<div id="lock" style="display:none;position:fixed;inset:0;z-index:99990;background:var(--ink);align-items:center;justify-content:center;text-align:center;padding:30px"><div style="max-width:320px"><div class="iwasp-text" style="font-size:30px;padding-left:6px">IWASP</div><p class="sub" id="lockMsg" style="margin:14px 0 18px;font-size:14px">Open this app from Telegram to continue.</p><a id="lockLink" class="btn" style="display:block;text-decoration:none;text-align:center" href="https://t.me/Iwasp_bot">Open in Telegram</a></div></div>
 <div class="toast" id="toast"></div>
 <script>
-const SUPABASE_URL="https://tjlqyoktagopiaqlkszg.supabase.co";
-const API_URL=SUPABASE_URL+"/functions/v1/api";
-const BOT_LINK="https://t.me/Iwasp_bot?startapp=";
-const $=id=>document.getElementById(id);
-
 const tg=window.Telegram&&Telegram.WebApp; if(tg){try{tg.ready();tg.expand();}catch(e){}}
-const INIT=(tg&&tg.initData)||"";
-const TUSER=tg&&tg.initDataUnsafe&&tg.initDataUnsafe.user;
-const UID=TUSER&&TUSER.id?String(TUSER.id):"";
-let S=null, wallLoaded=false;
+const $=id=>document.getElementById(id);
+let UID="583826997"; if(tg&&tg.initDataUnsafe&&tg.initDataUnsafe.user&&tg.initDataUnsafe.user.id){UID=String(tg.initDataUnsafe.user.id);}
 
-function lsGet(k,d){try{const v=localStorage.getItem(k);return v===null?d:v;}catch(e){return d;}}
-function lsSet(k,v){try{localStorage.setItem(k,v);}catch(e){}}
-function toast(m){const t=$('toast');t.textContent=m;t.classList.add('show');clearTimeout(toast.h);toast.h=setTimeout(()=>t.classList.remove('show'),2400);}
-function showScreen(id){document.querySelectorAll('.screen').forEach(e=>e.classList.toggle('active',e.id===id));document.querySelectorAll('.nav-item').forEach(e=>e.classList.toggle('active',e.dataset.go===id));window.scrollTo(0,0);}
-function esc(t){return String(t).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
-function isValidSol(a){return !!a&&a.length>=32&&a.length<=44&&/^[1-9A-HJ-NP-Za-km-z]+$/.test(a);}
-function money(n){return "$"+(Number(n)||0).toFixed(2);}
-// 1 WASP = $0.01 of payable value (100 WASP = $1). The database stores dollars.
-function coinsOf(usd){return Math.floor((Number(usd)||0)*100+1e-6);}
-function nf(n){return n.toLocaleString('en-US');}
-function wasp(usd){return nf(coinsOf(usd))+" WASP";}
-function getDaysToNextBiWeekly(){
- const now=new Date(), day=now.getDate(); let next;
- if(day<15){next=new Date(now.getFullYear(),now.getMonth(),15);}else{next=new Date(now.getFullYear(),now.getMonth()+1,1);}
- return Math.max(0,Math.ceil((next-now)/86400000));
-}
-function lockScreen(msg){$('lock').style.display='flex'; if(msg)$('lockMsg').textContent=msg;}
-
-async function api(action,extra){
- const r=await fetch(API_URL,{method:"POST",headers:{"Content-Type":"application/json","x-init-data":INIT},body:JSON.stringify(Object.assign({action:action},extra||{}))});
- let j={}; try{j=await r.json();}catch(e){}
- if(!r.ok){const err=new Error(j.error||("HTTP "+r.status)); err.status=r.status; throw err;}
- return j;
-}
-function handleErr(e){
- if(e&&e.status===401){lockScreen("Session expired. Please reopen the app from Telegram.");return;}
- toast((e&&e.message)||"Network error");
+// Load CPAlead Offerwall dynamically with user's Telegram UID as subid
+const cpaleadUrl = `https://www.cdnflyer.com/wall/i07LGTum?subid=${UID}`;
+const frame = $('cpaleadFrame');
+if (frame) {
+  frame.src = cpaleadUrl;
 }
 
-// ---- announcements (from server state) ----
-const SEEN_KEY="iwasp_ann_seen_"+UID;
-function annList(){return (S&&S.announcements)||[];}
-function updateBadge(){
- const seen=Number(lsGet(SEEN_KEY,"0"));
- const unread=annList().filter(a=>new Date(a.created_at).getTime()>seen).length;
- const b=$('notif-badge'); b.textContent=unread>9?"9+":unread; b.style.display=unread?'inline-block':'none';
-}
-function renderAnnouncements(){
- const list=annList(), el=$('announcement-list');
- if(!list.length){el.innerHTML='<p style="color:var(--mute);font-size:13px">No announcements yet.</p>';return;}
- el.innerHTML=list.map(a=>'<div class="notif-item"><div class="notif-title">'+esc(a.title)+'</div><div class="notif-date">'+new Date(a.created_at).toLocaleString()+'</div><p style="margin-top:6px;font-size:13px;color:var(--bone)">'+esc(a.message)+'</p></div>').join('');
-}
-function openAnnouncements(){
- $('notif-modal').style.display='block';
- const l=annList(); if(l.length){lsSet(SEEN_KEY,String(new Date(l[0].created_at).getTime()));}
- updateBadge();
-}
-function closeAnnouncements(){$('notif-modal').style.display='none';}
-$('bellBtn').onclick=openAnnouncements;
-$('closeNotif').onclick=closeAnnouncements;
-$('notif-modal').onclick=e=>{if(e.target===$('notif-modal'))closeAnnouncements();};
-
-// ---- render ----
-const KIND_LABEL={offer:"Offer reward",checkin_bonus:"7-day streak bonus",ref_bonus:"Referral bonus",ref_monthly:"Monthly referral bonus",payout:"Payout sent"};
+const WALLET_KEY="iwasp_wallet_"+UID, STATS_KEY="iwasp_stats_"+UID, HIST_KEY="iwasp_hist_"+UID;
+function getStats(){try{return JSON.parse(localStorage.getItem(STATS_KEY)||'{"earned":0,"tasks":0,"streak":0,"checked":false}')}catch(e){return{earned:0,tasks:0,streak:0,checked:false}}}
+function saveStats(s){localStorage.setItem(STATS_KEY,JSON.stringify(s));}
+function toast(m){const t=$('toast');t.textContent=m;t.classList.add('show');clearTimeout(toast.h);toast.h=setTimeout(()=>t.classList.remove('show'),2200);}
+function showScreen(id){document.querySelectorAll('.screen').forEach(e=>e.classList.toggle('active',e.id===id)); document.querySelectorAll('.nav-item').forEach(e=>e.classList.toggle('active',e.dataset.go===id)); window.scrollTo(0,0);}
+function isValidSol(a){if(!a) return false; if(a.length<32||a.length>44) return false; return /^[1-9A-HJ-NP-Za-km-z]+$/.test(a);}
 function render(){
- const st=S||{balance:0,tasks:0,streak:0,checked_today:false,role:"STANDARD",wallet:"",min_payout:10,invited:0,qualified:0,ref_pending:0,ref_approved:0,history:[]};
- const bal=Number(st.balance)||0, min=Number(st.min_payout)||10;
- const big='<span>'+nf(coinsOf(bal))+'</span><small style="font-size:16px;letter-spacing:2px;color:var(--mute);margin-left:8px;font-family:Inter,sans-serif">WASP</small>';
- const usdLine="\u2248 "+money(bal)+" \u2022 100 WASP = $1";
- $('balHome').innerHTML=big; $('balWallet').innerHTML=big; $('balUsdHome').textContent=usdLine; $('balUsdWallet').textContent=usdLine;
- $('bar').style.width=Math.min(100,bal/min*100)+"%";
- $('tasksHome').textContent=st.tasks; $('pTasks').textContent=st.tasks; $('streakHome').textContent=st.streak+"/7";
- $('dots').innerHTML=Array.from({length:7},(_,i)=>'<i class="dot'+(i<st.streak?' on':'')+'"></i>').join('');
- const c=$('checkBtn'); c.disabled=!!st.checked_today; c.textContent=st.checked_today?"Checked in today":"Check in";
- $('uidText').textContent="UID "+UID+" \u2022 Profile"; $('pName').textContent="User "+UID; $('pUid').textContent=UID;
- $('refLink').textContent=BOT_LINK+UID;
- $('refPending').textContent=wasp(st.ref_pending); $('refEarn').textContent=wasp(st.ref_approved);
- $('refMeta').textContent="Invited "+st.invited+" \u2022 Qualified "+st.qualified;
- if(document.activeElement!==$('wAddr')) $('wAddr').value=st.wallet||"";
-
- if(st.role==="SUPER_AFFILIATE"){
-  $('userRoleBadge').textContent="\u2B50 Tier A (Super Affiliate)"; $('pTier').textContent="Super Affiliate (Tier A)";
-  $('refSubText').textContent="Earn 300 WASP per friend who reaches 700 WASP, plus 200 WASP each month a friend earns 1,500 WASP or more.";
- } else {
-  $('userRoleBadge').textContent="Tier B (Standard)"; $('pTier').textContent="Standard User (Tier B)";
-  $('refSubText').textContent="Earn 200 WASP per qualified friend who reaches 700 WASP.";
- }
-
- const need=Math.max(0,min-bal);
- if(need>0){$('payHint').textContent=wasp(need)+" more to qualify for payout. Under "+wasp(min)+" rolls over.";}
- else{$('payHint').textContent=st.wallet?"You qualify. You are in the next bi-weekly payout.":"You qualify. Add your wallet to get paid.";}
- const d=getDaysToNextBiWeekly();
- let txt="Next payout bi-weekly (1st & 15th) \u2022 "+d+" day"+(d===1?"":"s")+" left"; if(bal<min)txt+=" \u2022 Under "+wasp(min)+" rolls over"; $('paydayHome').textContent=txt;
-
- const histEl=$('hist'), h=st.history||[];
- if(!h.length){histEl.innerHTML='<div class="card"><div class="meta">Nothing yet. Rewards appear here as soon as they are credited.</div></div>';}
- else{histEl.innerHTML=h.map(x=>{const amt=Number(x.amount);const paid=x.kind==="payout";
-  return '<div class="card" style="margin-top:10px"><div style="display:flex;justify-content:space-between;align-items:center;gap:10px"><span class="meta">'+esc(KIND_LABEL[x.kind]||x.kind)+'<br>'+new Date(x.created_at).toLocaleDateString()+'</span><span class="badge badge-approved">'+(amt<0?"-":"+")+wasp(Math.abs(amt))+(paid?" PAID":"")+'</span></div></div>';}).join('');}
- renderAnnouncements(); updateBadge();
- if(!wallLoaded&&UID){wallLoaded=true; $('cpaleadFrame').src="https://www.cdnflyer.com/wall/i07LGTum?subid="+encodeURIComponent(UID);}
+ const s=getStats();
+ const bal=s.earned;
+ $('balHome').textContent="$"+bal.toFixed(2); $('balWallet').textContent="$"+bal.toFixed(2);
+ $('bar').style.width=Math.min(100,bal/5*100)+"%";
+ $('tasksHome').textContent=s.tasks; $('pTasks').textContent=s.tasks; $('streakHome').textContent=s.streak+"/7";
+ $('dots').innerHTML=Array.from({length:7},(_,i)=>'<i class="dot'+(i<s.streak?' on':'')+'"></i>').join('');
+ const c=$('checkBtn'); c.disabled=s.checked; c.textContent=s.checked?"Checked in today":"Check in";
+ $('uidText').textContent="UID "+UID+" • Profile"; $('pName').textContent="User "+UID; $('pUid').textContent=UID;
+ $('refLink').textContent="https://t.me/Iwasp_bot?start="+UID;
+ const w=localStorage.getItem(WALLET_KEY)||""; $('wAddr').value=w;
+ const need=Math.max(0,5-bal);
+ if(need>0){$('payHint').textContent="$"+need.toFixed(2)+" more to qualify for Saturday. Under $5 rolls over."} else {$('payHint').textContent=w?"You qualify for Saturday's payout.":"You qualify. Add your wallet to get paid."}
+ const now=new Date(); let day=now.getDay(); let daysToSat=(6-day+7)%7; if(daysToSat==0) daysToSat=7; const nextSat=new Date(now); nextSat.setDate(now.getDate()+daysToSat); nextSat.setHours(12,0,0,0); const diff=Math.ceil((nextSat-now)/(1000*60*60*24));
+ let txt="Next payday Saturday 12 PM WAT • "+diff+" days left"; if(bal<5) txt+=" • Under $5 rolls over"; $('paydayHome').textContent=txt;
+ const hist=JSON.parse(localStorage.getItem(HIST_KEY)||"[]");
+ const histEl=$('hist'); if(hist.length==0){histEl.innerHTML='<div class="card"><div class="meta">No payouts yet. Paid every Saturday 12 PM WAT once you reach $5.</div></div>'} else {histEl.innerHTML=hist.map(h=>'<div class="card" style="margin-top:10px"><div style="display:flex;justify-content:space-between"><span class="meta">'+h.text+'</span><span class="badge '+(h.status=='PENDING'?'badge-pending':'badge-approved')+'">'+h.status+'</span></div></div>').join('')}
 }
-
-async function refresh(){
- try{const j=await api('state'); S=j.state; render();}catch(e){handleErr(e);}
-}
-
-$('checkBtn').onclick=async()=>{
- $('checkBtn').disabled=true;
- try{
-  const j=await api('checkin'); S=j.state; const r=j.result||{};
-  if(!r.ok) toast("Already checked in today");
-  else toast(r.bonus?"7-day streak! +10 WASP":"Checked in \u2022 day "+r.streak+"/7");
- }catch(e){handleErr(e);}
- render();
+$('checkBtn').onclick=()=>{
+ const s=getStats(); const todayKey='daily_'+new Date().toDateString();
+ if(localStorage.getItem(todayKey)){toast("Already checked in today");return;}
+ if(s.checked){toast("Already checked in");return;}
+ s.streak=Math.min(7,s.streak+1); s.earned+=0.1; s.tasks+=1; s.checked=true; saveStats(s); localStorage.setItem(todayKey,"1");
+ const hist=JSON.parse(localStorage.getItem(HIST_KEY)||"[]"); hist.unshift({text:"Daily check-in $0.10",status:"APPROVED"}); localStorage.setItem(HIST_KEY,JSON.stringify(hist));
+ toast("Checked in +$0.10"); render();
 };
-$('walletBtn').onclick=async()=>{
+$('walletBtn').onclick=()=>{
  const addr=$('wAddr').value.trim(); if(!isValidSol(addr)){toast("Invalid Solana address");return;}
- try{const j=await api('wallet',{wallet:addr}); S=j.state; toast("Wallet saved \u2705");}catch(e){handleErr(e);}
- render();
+ localStorage.setItem(WALLET_KEY,addr); toast("Wallet saved ✅"); render();
 };
 $('copyBtn').onclick=async()=>{
  const link=$('refLink').textContent; try{await navigator.clipboard.writeText(link);}catch(e){} toast("Link copied");
 };
-document.addEventListener('click',e=>{const go=e.target.closest('[data-go]');if(go){showScreen(go.dataset.go);}});
-setTimeout(()=>{const l=$('loader');if(l){l.classList.add('hide');setTimeout(()=>{l.style.display='none';},800);}},2800);
-setTimeout(()=>{const l=$('loader');if(l)l.style.display='none';},4500);
-
+document.addEventListener('click',e=>{const go=e.target.closest('[data-go]'); if(go){showScreen(go.dataset.go);}});
+setTimeout(()=>{const l=$('loader'); if(l){l.classList.add('hide'); setTimeout(()=>{l.style.display='none';},800);}},2800);
+setTimeout(()=>{const l=$('loader'); if(l) l.style.display='none';},4500);
 render();
-if(!INIT){ lockScreen("Open IWASP from Telegram to use the app."); }
-else{
- refresh();
- setInterval(refresh,30000);
- document.addEventListener('visibilitychange',()=>{if(!document.hidden)refresh();});
-}
 </script>
 </body>
 </html>
