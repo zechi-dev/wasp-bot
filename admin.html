@@ -1,71 +1,152 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<title>IWASP Admin</title>
-<style>
-body{font-family:sans-serif;background:#0f0f0f;color:#fff;padding:20px}
-.card{background:#1a1a1a;border:1px solid #333;border-radius:12px;padding:16px;margin:10px 0}
-input,button{width:100%;padding:12px;border-radius:8px;border:none;margin:6px 0}
-button{background:#facc15;color:#000;font-weight:bold;cursor:pointer}
-table{width:100%;border-collapse:collapse;margin-top:12px}
-th,td{border-bottom:1px solid #333;padding:8px;text-align:left;font-size:13px}
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>IWASP Admin Dashboard</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    body { background: #0B0A08; color: #EDE6D3; font-family: Inter, sans-serif; padding: 20px; }
+    .container { max-width: 900px; margin: 0 auto; }
+    h1 { color: #D4A72C; margin-bottom: 20px; }
+    #login-box { background: #14120E; padding: 30px; border-radius: 12px; border: 1px solid rgba(212,167,44,.2); max-width: 400px; margin: 50px auto; }
+    input { width: 100%; padding: 12px; margin: 10px 0; background: #000; border: 1px solid #333; color: #fff; border-radius: 8px; box-sizing: border-box; }
+    button { width: 100%; padding: 12px; background: #D4A72C; border: none; font-weight: bold; border-radius: 8px; cursor: pointer; color: #000; }
+    table { width: 100%; border-collapse: collapse; margin-top: 20px; background: #14120E; border-radius: 10px; overflow: hidden; }
+    th, td { padding: 12px 15px; text-align: left; border-bottom: 1px solid rgba(237,230,211,.07); font-size: 13px; }
+    th { background: #1A1712; color: #D4A72C; }
+    .btn-pay { background: #8FBF8A; color: #000; padding: 6px 12px; border-radius: 6px; font-weight: bold; cursor: pointer; border: none; width: auto; }
+    .hidden { display: none; }
+    .badge-pending { color: #D4A72C; font-weight: bold; }
+  </style>
 </head>
 <body>
-<h2>🐝 IWASP Admin Panel</h2>
-<div id="loginBox" class="card">
-<h3>Admin Login</h3>
-<input id="adminEmail" placeholder="Admin Email">
-<input id="adminPass" type="password" placeholder="Admin Password">
-<button onclick="login()">Login</button>
-<p id="loginMsg"></p>
-</div>
 
-<div id="mainBox" style="display:none">
-<div class="card">
-<h3>Invite Super Affiliate (USA Channels)</h3>
-<input id="affEmail" placeholder="affiliate@gmail.com">
-<button onclick="invite()">Generate Invite Link</button>
-<p id="inviteLink" style="word-break:break-all;background:#111;padding:10px;border-radius:8px"></p>
-</div>
-<div class="card">
-<h3>Quick Stats</h3>
-<p>IWASP_DB Blobs hold all users. Check in Netlify > Blobs after deploy.</p>
-<p>Bot endpoint: <code>/.netlify/functions/bot</code></p>
-<p>Admin API: <code>/.netlify/functions/admin-api</code></p>
-</div>
+<div class="container">
+  <!-- LOGIN SCREEN -->
+  <div id="login-box">
+    <h2>Admin Login</h2>
+    <input type="password" id="adminPass" placeholder="Enter Admin Password">
+    <button onclick="checkAuth()">Access Dashboard</button>
+  </div>
+
+  <!-- DASHBOARD CONTENT -->
+  <div id="dashboard" class="hidden">
+    <h1>IWASP Control Center</h1>
+    <p>Manage users, review bi-weekly payout requests, and process payouts.</p>
+    
+    <h2>Payout Queue (Min $10)</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Telegram UID</th>
+          <th>Solana Wallet</th>
+          <th>Balance</th>
+          <th>Status</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody id="payout-table-body">
+        <!-- Dynamic payout requests will load here -->
+      </tbody>
+    </table>
+
+    <h2 style="margin-top: 40px;">All Registered Users</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Telegram UID</th>
+          <th>Balance ($)</th>
+          <th>Pending Bonus ($)</th>
+          <th>Offers Completed</th>
+          <th>Wallet Address</th>
+        </tr>
+      </thead>
+      <tbody id="users-table-body">
+        <!-- Dynamic user list will load here -->
+      </tbody>
+    </table>
+  </div>
 </div>
 
 <script>
-let ADMIN_EMAIL='';
-function login(){
-  ADMIN_EMAIL=document.getElementById('adminEmail').value.trim();
-  const pass=document.getElementById('adminPass').value;
-  if(!ADMIN_EMAIL||!pass){alert('Enter email & pass');return}
-  localStorage.setItem('iwasp_admin_email',ADMIN_EMAIL);
-  localStorage.setItem('iwasp_admin_pass',pass);
-  document.getElementById('loginBox').style.display='none';
-  document.getElementById('mainBox').style.display='block';
-}
-async function invite(){
-  const email=document.getElementById('affEmail').value.trim();
-  if(!email){alert('Enter email');return}
-  const res=await fetch('/.netlify/functions/affiliate-api',{
-    method:'POST',headers:{'Content-Type':'application/json'},
-    body:JSON.stringify({action:'invite',email,adminEmail:localStorage.getItem('iwasp_admin_email')})
-  });
-  const data=await res.json();
-  if(data.link){
-    document.getElementById('inviteLink').innerHTML=`✅ Link generated:<br><b>${data.link}</b><br><br>Send this to affiliate. They will click and set password.`;
-  } else {
-    document.getElementById('inviteLink').textContent='Error: '+(data.error||'Failed');
+  const SUPABASE_URL = "https://tjlqyoktagopiaqlkszg.supabase.co";
+  const SUPABASE_ANON_KEY = "Sb_publishable_cZNn1foS_FTvZzYwV61FsQ_3aj7whEP";
+  const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+  const ADMIN_PASSWORD = "Ikechukwusia1#"; 
+
+  function checkAuth() {
+    const pass = document.getElementById('adminPass').value;
+    if (pass === ADMIN_PASSWORD) {
+      document.getElementById('login-box').classList.add('hidden');
+      document.getElementById('dashboard').classList.remove('hidden');
+      loadAdminData();
+    } else {
+      alert("Invalid Admin Password!");
+    }
   }
-}
-// auto login if saved
-if(localStorage.getItem('iwasp_admin_email')){
-  document.getElementById('adminEmail').value=localStorage.getItem('iwasp_admin_email');
-}
+
+  async function loadAdminData() {
+    const { data: payoutUsers } = await supabaseClient
+      .from('users')
+      .select('*')
+      .eq('payout_status', 'PENDING_APPROVAL');
+
+    const payoutBody = document.getElementById('payout-table-body');
+    payoutBody.innerHTML = '';
+
+    if (payoutUsers && payoutUsers.length > 0) {
+      payoutUsers.forEach(u => {
+        payoutBody.innerHTML += `
+          <tr>
+            <td>${u.telegram_id}</td>
+            <td>$${(Number(u.balance || 0)/100).toFixed(2)} (${u.balance || 0} Wasp)</td>
+            <td style="word-break:break-all;">${u.wallet_address || 'Not Provided'}</td>
+            <td><span class="badge-pending">PENDING</span></td>
+            <td><button class="btn-pay" onclick="processPayout('${u.telegram_id}')">MARK PAID</button></td>
+          </tr>
+        `;
+      });
+    } else {
+      payoutBody.innerHTML = '<tr><td colspan="5">No pending payouts at this time.</td></tr>';
+    }
+
+    const { data: allUsers } = await supabaseClient.from('users').select('*');
+    const usersBody = document.getElementById('users-table-body');
+    usersBody.innerHTML = '';
+
+    if (allUsers) {
+      allUsers.forEach(u => {
+        usersBody.innerHTML += `
+          <tr>
+            <td>${u.telegram_id}</td>
+            <td>$${(Number(u.balance || 0)/100).toFixed(2)}</td>
+            <td>$${(Number(u.pending_balance || 0)/100).toFixed(2)}</td>
+            <td>${u.offers_completed || 0}</td>
+            <td>${u.wallet_address || '—'}</td>
+          </tr>
+        `;
+      });
+    }
+  }
+
+  async function processPayout(uid) {
+    if (!confirm(`Confirm payout complete for UID: ${uid}? This will reset their balance to 0 Wasp Coins.`)) return;
+
+    const { error } = await supabaseClient
+      .from('users')
+      .update({ balance: 0, payout_status: 'PAID' })
+      .eq('telegram_id', uid);
+
+    if (error) {
+      alert("Error processing payout: " + error.message);
+    } else {
+      alert("User marked as PAID!");
+      loadAdminData();
+    }
+  }
 </script>
 </body>
 </html>
