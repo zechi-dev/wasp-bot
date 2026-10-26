@@ -63,12 +63,13 @@ body{background:#000;display:flex;justify-content:center;color:var(--bone)}
 .dots{display:flex;gap:6px;margin:14px 0 2px}.dot{flex:1;height:6px;border-radius:3px;background:var(--hair)}.dot.on{background:var(--gold)}
 .wall{width:100%;height:calc(100vh - 230px);min-height:520px;border:1px solid var(--hair);border-radius:12px;background:var(--panel);margin-top:12px}
 .progress{height:4px;background:var(--hair);border-radius:2px;margin-top:14px;overflow:hidden}.progress i{display:block;height:100%;width:0;background:var(--gold);transition:width .6s}
+#msgDot{display:none;position:absolute;top:-2px;right:-4px;width:10px;height:10px;border-radius:50%;background:var(--red)}
 </style>
 </head>
 <body>
 <div class="app">
 <div id="loader"><div class="wasp-wrap"><svg viewBox="0 0 200 270"><defs><radialGradient id="gY" cx="40%" cy="30%" r="80%"><stop offset="0" stop-color="#F6D75A"/><stop offset=".55" stop-color="#D9A514"/><stop offset="1" stop-color="#7A5307"/></radialGradient><radialGradient id="gK" cx="40%" cy="28%" r="80%"><stop offset="0" stop-color="#40382A"/><stop offset="1" stop-color="#0A0907"/></radialGradient><radialGradient id="gE" cx="35%" cy="30%" r="75%"><stop offset="0" stop-color="#6A5630"/><stop offset=".5" stop-color="#17110A"/><stop offset="1" stop-color="#000"/></radialGradient><linearGradient id="gW" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#F3E7C4" stop-opacity=".6"/><stop offset="1" stop-color="#9C8F6A" stop-opacity=".12"/></linearGradient><clipPath id="ab"><path d="M100 140C78 152 70 192 100 248C130 192 122 152 100 140Z"/></clipPath><g id="wingL"><ellipse cx="58" cy="116" rx="46" ry="13" transform="rotate(-12 58 116)" fill="url(#gW)" opacity=".7" stroke="#CDBB86" stroke-opacity=".4" stroke-width=".8"/><ellipse cx="54" cy="106" rx="52" ry="17" transform="rotate(-24 54 106)" fill="url(#gW)" stroke="#CDBB86" stroke-opacity=".55" stroke-width=".8"/></g><g id="legL" fill="none" stroke="#1B160C" stroke-width="2.2" stroke-linecap="round"><path d="M88 96L68 86L50 100"/><path d="M86 106L58 112L44 136"/><path d="M90 116L72 134L64 162"/></g></defs><use href="#wingL"/><use href="#wingL" transform="matrix(-1 0 0 1 200 0)"/><use href="#legL"/><use href="#legL" transform="matrix(-1 0 0 1 200 0)"/><g clip-path="url(#ab)"><rect x="60" y="130" width="80" height="130" fill="url(#gY)"/><path d="M60 160Q100 172 140 160V174Q100 186 60 174Z" fill="#0C0A07"/><path d="M60 188Q100 200 140 188V202Q100 214 60 202Z" fill="#0C0A07"/><path d="M60 216Q100 228 140 216V232Q100 244 60 232Z" fill="#0C0A07"/></g><ellipse cx="100" cy="106" rx="21" ry="26" fill="url(#gK)"/><ellipse cx="100" cy="60" rx="21" ry="18" fill="url(#gY)"/><ellipse cx="84" cy="56" rx="7.5" ry="11" fill="url(#gE)"/><ellipse cx="116" cy="56" rx="7.5" ry="11" fill="url(#gE)"/></svg></div><div class="loader-title">IWASP</div><div class="loader-sub">Earn on your own time</div><div class="bar"><div class="bar-fill"></div></div></div>
-<div class="header"><div class="logo-box"><svg viewBox="0 0 200 270" style="width:100%;height:100%"><use href="#wingL"/><use href="#wingL" transform="matrix(-1 0 0 1 200 0)"/><g clip-path="url(#ab)"><rect x="60" y="130" width="80" height="130" fill="url(#gY)"/></g></svg></div><div><div class="iwasp-text">IWASP</div><div class="uid-text" id="uidText">UID — • Profile</div></div></div>
+<div class="header"><div class="logo-box"><svg viewBox="0 0 200 270" style="width:100%;height:100%"><use href="#wingL"/><use href="#wingL" transform="matrix(-1 0 0 1 200 0)"/><g clip-path="url(#ab)"><rect x="60" y="130" width="80" height="130" fill="url(#gY)"/></g></svg></div><div><div class="iwasp-text">IWASP</div><div class="uid-text" id="uidText">UID — • Profile</div></div><div id="msgBtn" style="margin-left:auto;position:relative;cursor:pointer;font-size:24px;padding:4px">✉️<b id="msgDot"></b></div></div>
 <div id="home" class="screen active"><div class="card"><div style="display:flex;justify-content:space-between;align-items:center"><div class="label">Total balance</div><div class="label" style="border:1px solid var(--line);color:var(--gold);padding:5px 11px;border-radius:20px">7-day streak +10 WASP</div></div><div class="amount" id="balHome">0 WASP</div><div class="meta" id="payHint">Loading…</div><div class="grid2"><div class="stat"><div class="stat-label">Offers completed</div><div class="stat-value" id="tasksHome">0</div></div><div class="stat"><div class="stat-label">Check-in streak</div><div class="stat-value" id="streakHome">0/7</div></div></div></div><div class="payday"><span id="paydayHome">Calculating payday…</span></div><div class="card"><div class="label">Daily check-in</div><div class="dots" id="dots"></div><p class="meta" style="margin-top:10px">Check in 7 days in a row to earn 10 WASP. Miss a day and your streak goes back to 0.</p><button class="btn" id="checkBtn">Check in</button></div><div class="trending" data-go="offers" style="margin-top:14px"><div><b>Play games and finish surveys</b><p style="color:var(--mute);font-size:12px">Rewards arrive after advertiser confirms</p></div></div></div>
 
 <!-- OFFERS TAB WITH CPAlead EMBED -->
@@ -76,14 +77,15 @@ body{background:#000;display:flex;justify-content:center;color:var(--bone)}
   <div class="h">Offers</div>
   <div class="sub">Play games and complete surveys without leaving the app.</div>
   <div class="meta" style="margin:8px 0 4px;padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:var(--panel)">Offers not loading, or seeing an ad blocker message? Turn off your ad blocker, VPN or Private DNS, then reopen the app.</div>
-  <iframe class="wall" id="cpaleadFrame" src="" frameborder="0" allow="geolocation"></iframe>
+  <iframe class="wall" id="cpaleadFrame" src="" sandbox="allow-popups allow-same-origin allow-scripts allow-forms allow-popups-to-escape-sandbox" referrerpolicy="no-referrer" frameborder="0" allow="geolocation"></iframe>
 </div>
 
-<div id="referral" class="screen"><div class="h">Invite people</div><div class="sub">Earn $2 (200 WASP) for every person you invite. It stays pending until they earn $7 (700 WASP), then it is added to your balance.</div><div class="card"><div class="label">Your link</div><div class="ref-link" id="refLink">…</div><button class="btn" id="copyBtn">Copy link</button><div class="grid2"><div class="stat"><div class="stat-label">Invited</div><div class="stat-value" id="refCount">0</div></div><div class="stat"><div class="stat-label">Earned</div><div class="stat-value" id="refEarn">0 WASP</div></div></div></div><div class="card"><div class="grid2" style="margin-top:0;border-top:none;padding-top:0"><div class="stat"><div class="stat-label">Pending bonus</div><div class="stat-value" id="refPendAmt">0 WASP</div></div><div class="stat"><div class="stat-label">Approved bonus</div><div class="stat-value" id="refApprAmt">0 WASP</div></div></div><div class="meta" id="refPending" style="margin-top:14px"></div></div><div class="h" style="font-size:22px;margin-top:28px">Your referrals</div><div id="refList" style="margin-top:6px"></div><div></div></div>
+<div id="referral" class="screen"><div class="h">Invite people</div><div class="sub" id="refSub">Earn $2 (200 WASP) for every person you invite. It stays pending until they earn $7 (700 WASP), then it is added to your balance.</div><div class="card"><div class="label">Your link</div><div class="ref-link" id="refLink">…</div><button class="btn" id="copyBtn">Copy link</button><div class="grid2"><div class="stat"><div class="stat-label">Invited</div><div class="stat-value" id="refCount">0</div></div><div class="stat"><div class="stat-label">Earned</div><div class="stat-value" id="refEarn">0 WASP</div></div></div></div><div class="card"><div class="grid2" style="margin-top:0;border-top:none;padding-top:0"><div class="stat"><div class="stat-label">Pending bonus</div><div class="stat-value" id="refPendAmt">0 WASP</div></div><div class="stat"><div class="stat-label">Approved bonus</div><div class="stat-value" id="refApprAmt">0 WASP</div></div></div><div class="meta" id="refPending" style="margin-top:14px"></div></div><div class="h" style="font-size:22px;margin-top:28px">Your referrals</div><div id="refList" style="margin-top:6px"></div><div></div></div>
 <div id="wallet" class="screen"><div class="h">Wallet</div><div class="sub">Paid on the 1st and 15th of every month, 12 PM WAT, in USDT on Solana, once you reach 1,000 WASP ($10). Under 1,000 WASP rolls over. 100 WASP = $1.</div><div class="card"><div class="label">Balance</div><div class="amount" id="balWallet" style="font-size:44px">0 WASP</div><div class="meta" id="balUsd">≈ $0.00</div><div class="progress"><i id="bar"></i></div><input class="input" id="wAddr" placeholder="Solana wallet address"><button class="btn" id="walletBtn">Save wallet</button><div class="warn">Double-check your address. Payments sent to wrong address can't be recovered.</div></div><div class="h" style="font-size:22px;margin-top:28px">Payout history</div><div id="hist"></div></div>
 <div id="profile" class="screen"><div class="h">Profile</div><div class="card"><div class="row" style="margin:0"><span class="meta">User</span><b id="pName">—</b></div><div class="row"><span class="meta">UID</span><b id="pUid">—</b></div><div class="row"><span class="meta">Offers completed</span><b id="pTasks">0</b></div></div></div>
 </div>
 <div class="bottom-nav"><div class="nav-item active" data-go="home">🏠<br>Home</div><div class="nav-item" data-go="offers">📋<br>Offers</div><div class="nav-item" data-go="referral">👥<br>Invite</div><div class="nav-item" data-go="wallet">👛<br>Wallet</div></div>
+<div id="msgModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:100;justify-content:center;align-items:flex-start;padding:70px 16px"><div class="card" style="max-width:400px;width:100%;max-height:75vh;overflow:auto;margin:0"><div style="display:flex;justify-content:space-between;align-items:center"><div class="h" style="margin:0;font-size:24px">Messages</div><div id="msgClose" style="cursor:pointer;font-size:22px;padding:4px 8px">✕</div></div><div id="msgBox"></div></div></div>
 <div class="toast" id="toast"></div>
 <script>
 const tg=window.Telegram&&Telegram.WebApp; if(tg){try{tg.ready();tg.expand();}catch(e){}}
@@ -100,7 +102,7 @@ let REFS={invited:0,approved:0,pending:0}; let REFLIST=[];
 let SERVER_COINS=0; // WASP coin balance from Supabase
 
 // CPAlead Offerwall with the user's Telegram ID as subid
-const cpaleadUrl = `https://www.cdnflair.com/wall/i07LGTum?subid=${UID}`;
+const cpaleadUrl = `https://www.directcpi.com/wall/i07LGTum?subid=${UID}`;
 const frame = $('cpaleadFrame');
 if (frame) { frame.src = cpaleadUrl; }
 
@@ -113,6 +115,23 @@ function toast(m){const t=$('toast');t.textContent=m;t.classList.add('show');cle
 function showScreen(id){document.querySelectorAll('.screen').forEach(e=>e.classList.toggle('active',e.id===id)); document.querySelectorAll('.nav-item').forEach(e=>e.classList.toggle('active',e.dataset.go===id)); window.scrollTo(0,0); fetchBalance();}
 function isValidSol(a){if(!a) return false; if(a.length<32||a.length>44) return false; return /^[1-9A-HJ-NP-Za-km-z]+$/.test(a);}
 const fmt=n=>Number(n).toLocaleString(undefined,{maximumFractionDigits:2});
+let MSGS=[]; const SEEN_KEY="iwasp_msg_seen_"+UID;
+function maxMsgId(){return MSGS.reduce((m,x)=>Math.max(m,x.id),0);}
+function updateDot(){const seen=parseInt(localStorage.getItem(SEEN_KEY)||"0"); $('msgDot').style.display=maxMsgId()>seen?'block':'none';}
+async function fetchMsgs(){
+ if(!sb) return;
+ try{const r=await sb.rpc('iwasp_get_messages'); if(Array.isArray(r.data)){MSGS=r.data; updateDot();}}catch(e){}
+}
+function openMsgs(){
+ const box=$('msgBox'); box.textContent='';
+ if(!MSGS.length){const e=document.createElement('div'); e.className='meta'; e.style.marginTop='12px'; e.textContent='No messages yet.'; box.appendChild(e);}
+ MSGS.forEach(m=>{const d=document.createElement('div'); d.className='row'; d.style.display='block'; const t=document.createElement('b'); t.textContent=m.title||'Message'; const x=document.createElement('div'); x.className='meta'; x.style.whiteSpace='pre-wrap'; x.style.marginTop='6px'; x.textContent=m.body; const dt=document.createElement('div'); dt.className='meta'; dt.style.marginTop='6px'; dt.textContent=new Date(m.created_at).toLocaleDateString(); d.append(t,x,dt); box.appendChild(d);});
+ $('msgModal').style.display='flex';
+ localStorage.setItem(SEEN_KEY,String(maxMsgId())); updateDot();
+}
+$('msgBtn').onclick=openMsgs;
+$('msgClose').onclick=()=>{$('msgModal').style.display='none';};
+$('msgModal').onclick=e=>{if(e.target===$('msgModal'))$('msgModal').style.display='none';};
 async function fetchRefs(){
  if(!sb) return;
  try{const r=await sb.rpc('iwasp_referrals',{p_tg:UID}); if(r.data){REFS=r.data;} const l=await sb.rpc('iwasp_referral_list',{p_tg:UID}); if(Array.isArray(l.data)){REFLIST=l.data;} render();}catch(e){}
@@ -123,7 +142,7 @@ async function fetchBalance(){
   const {data,error}=await sb.rpc('iwasp_get_user',{p_tg:UID,p_name:TG_NAME,p_ref:REF});
   if(error){console.error('Balance error:',error);return;}
   const v=parseFloat(data); if(!isNaN(v)&&v!==SERVER_COINS){SERVER_COINS=v;render();}
-  fetchRefs();
+  fetchRefs(); fetchMsgs();
  }catch(e){console.error(e);}
 }
 function render(){
@@ -139,8 +158,9 @@ function render(){
  const c=$('checkBtn'); c.disabled=done; c.textContent=done?"Checked in today":"Check in";
  $('uidText').textContent="UID "+UID+" • Profile"; $('pName').textContent=TG_NAME; $('pUid').textContent=UID;
  $('refLink').textContent="https://t.me/Iwasp_bot?startapp="+UID;
- $('refPendAmt').textContent=fmt((REFS.pending||0)*200)+" WASP"; $('refApprAmt').textContent=fmt((REFS.approved||0)*200)+" WASP"; $('refCount').textContent=REFS.invited||0; $('refEarn').textContent=fmt((REFS.approved||0)*200)+" WASP"; $('refPending').textContent=(REFS.pending||0)>0?(REFS.pending+" referral(s) pending: "+fmt(REFS.pending*200)+" WASP waiting until each earns 700 WASP"):"Each person you invite adds $2 (200 WASP) as pending. It is approved and added to your balance once that person earns $7 (700 WASP).";
- const L=$('refList'); L.textContent=''; REFLIST.forEach(r=>{const d=document.createElement('div'); d.className='row'; const n=document.createElement('span'); n.className='meta'; n.textContent=r.name+' ••'+r.id; const b=document.createElement('span'); b.className='badge '+(r.approved?'badge-approved':'badge-pending'); b.textContent=r.approved?'APPROVED +200 WASP':'PENDING'; d.appendChild(n); d.appendChild(b); L.appendChild(d);});
+ $('refPendAmt').textContent=fmt(REFS.pending_coins||0)+" WASP"; $('refApprAmt').textContent=fmt(REFS.approved_coins||0)+" WASP"; $('refCount').textContent=REFS.invited||0; $('refEarn').textContent=fmt(REFS.approved_coins||0)+" WASP"; $('refPending').textContent=(REFS.pending||0)>0?(REFS.pending+" referral(s) pending: "+fmt(REFS.pending_coins||0)+" WASP waiting until each earns 700 WASP"):"Each person you invite adds $2 (200 WASP) as pending. It is approved and added to your balance once that person earns $7 (700 WASP).";
+ $('refSub').textContent=REFS.tier==='SUPER'?'Super Referral: earn $3 (300 WASP) for every person you invite, plus $1 (100 WASP) each month for every invited person who earns $30 or more that month. Each $3 stays pending until that person earns $7 (700 WASP).':'Earn $2 (200 WASP) for every person you invite. It stays pending until they earn $7 (700 WASP), then it is added to your balance.';
+ const L=$('refList'); L.textContent=''; REFLIST.forEach(r=>{const d=document.createElement('div'); d.className='row'; const n=document.createElement('span'); n.className='meta'; n.textContent=r.name+' ••'+r.id; const b=document.createElement('span'); b.className='badge '+(r.approved?'badge-approved':'badge-pending'); b.textContent=r.approved?'APPROVED +'+(r.bonus||200)+' WASP':'PENDING +'+(r.bonus||200)+' WASP'; d.appendChild(n); d.appendChild(b); L.appendChild(d);});
  if(!REFLIST.length){const e=document.createElement('div'); e.className='meta'; e.style.marginTop='10px'; e.textContent='No referrals yet. Share your link to invite people.'; L.appendChild(e);}
  const w=localStorage.getItem(WALLET_KEY)||""; $('wAddr').value=w;
  const need=Math.max(0,1000-coins);
