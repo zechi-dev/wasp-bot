@@ -1,167 +1,132 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>IWASP Admin Dashboard</title>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <style>
-        body { font-family: sans-serif; background: #0f172a; color: #fff; margin: 0; padding: 20px; }
-        .card { background: #1e293b; border-radius: 12px; padding: 20px; margin-bottom: 20px; border: 1px solid #334155; }
-        input, button, textarea, select { padding: 10px; border-radius: 6px; border: 1px solid #334155; background: #0f172a; color: white; }
-        button { background: #f59e0b; color: black; font-weight: bold; cursor: pointer; border: none; }
-        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-        th, td { padding: 12px; text-align: left; border-bottom: 1px solid #334155; }
-        th { background: #0f172a; color: #f59e0b; }
-        .badge-super { background: #8b5cf6; padding: 4px 8px; border-radius: 4px; font-size: 12px; }
-        .badge-std { background: #64748b; padding: 4px 8px; border-radius: 4px; font-size: 12px; }
-        #auth-screen { max-width: 400px; margin: 100px auto; }
-    </style>
-</head>
-<body>
+alter table users add column if not exists referral_tier text default 'STANDARD';
+alter table users add column if not exists referral_bonus numeric default 200;
 
-    <!-- LOGIN SCREEN -->
-    <div id="auth-screen" class="card">
-        <h2>🔒 Admin Login</h2>
-        <input type="email" id="admin-email" placeholder="Admin Email" style="width:94%; margin-bottom:10px;">
-        <input type="password" id="admin-password" placeholder="Password" style="width:94%; margin-bottom:15px;">
-        <button onclick="loginAdmin()" style="width:100%;">Login to Dashboard</button>
-    </div>
+create table if not exists iwasp_messages (
+  id bigint generated always as identity primary key,
+  title text,
+  body text not null,
+  created_at timestamptz default now()
+);
+alter table iwasp_messages enable row level security;
 
-    <!-- MAIN DASHBOARD -->
-    <div id="dashboard-screen" style="display:none;">
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
-            <h1>IWASP Command Center</h1>
-            <button onclick="logoutAdmin()" style="background:#ef4444; color:white;">Logout</button>
-        </div>
+create table if not exists monthly_bonus_log (
+  referrer text not null,
+  referred text not null,
+  month text not null,
+  created_at timestamptz default now(),
+  primary key (referrer, referred, month)
+);
+alter table monthly_bonus_log enable row level security;
 
-        <!-- SEARCH & PROMOTE BOX -->
-        <div class="card">
-            <h3>🔍 Super Affiliate Manager</h3>
-            <p style="font-size:12px; color:#94a3b8;">Paste Telegram UID or referral link to promote user to Super Affiliate (Tier A).</p>
-            <div style="display:flex; gap:10px;">
-                <input type="text" id="search-input" placeholder="e.g. 583826997 or https://t.me/Iwasp_bot?start=583826997" style="flex:1;">
-                <button onclick="searchAndPromote()">Promote / Update Role</button>
-            </div>
-        </div>
+create or replace function iwasp_get_user(p_tg text, p_name text, p_ref text default null)
+returns numeric
+language plpgsql
+security definer
+as $$
+declare b numeric; bonus numeric := 200; tier text;
+begin
+  if p_ref is not null and p_ref <> p_tg then
+    select referral_tier into tier from users where telegram_id = p_ref;
+    if tier = 'SUPER' then bonus := 300; end if;
+  end if;
 
-        <!-- BROADCAST ANNOUNCEMENTS -->
-        <div class="card">
-            <h3>📢 Broadcast Announcement to Users</h3>
-            <input type="text" id="announcement-title" placeholder="Title (e.g. Payout Update)" style="width:98%; margin-bottom:8px;"><br>
-            <textarea id="announcement-body" placeholder="Message content..." style="width:98%; height:60px; margin-bottom:8px;"></textarea><br>
-            <button onclick="sendAnnouncement()">Send Broadcast</button>
-        </div>
+  insert into users (telegram_id, username, referred_by, referral_bonus)
+  values (p_tg, p_name, case when p_ref is not null and p_ref <> p_tg then p_ref end, bonus)
+  on conflict (telegram_id) do nothing;
 
-        <!-- TIER A: SUPER AFFILIATES -->
-        <div class="card">
-            <h2>⭐ Tier A: Super Affiliates</h2>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Telegram UID</th>
-                        <th>Approved ($)</th>
-                        <th>Pending ($)</th>
-                        <th>Role</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody id="super-affiliate-table"></tbody>
-            </table>
-        </div>
+  select balance into b from users where telegram_id = p_tg;
+  return coalesce(b, 0);
+end;
+$$;
 
-        <!-- TIER B: STANDARD USERS -->
-        <div class="card">
-            <h2>👥 Tier B: Standard Users</h2>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Telegram UID</th>
-                        <th>Approved ($)</th>
-                        <th>Pending ($)</th>
-                        <th>Role</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody id="standard-user-table"></tbody>
-            </table>
-        </div>
-    </div>
+create or replace function iwasp_referrals(p_tg text)
+returns json
+language sql
+security definer
+as $$
+  select json_build_object(
+    'invited', count(*),
+    'approved', count(*) filter (where coalesce(referral_paid, false)),
+    'pending', count(*) filter (where not coalesce(referral_paid, false)),
+    'approved_coins', coalesce(sum(coalesce(referral_bonus, 200)) filter (where coalesce(referral_paid, false)), 0),
+    'pending_coins', coalesce(sum(coalesce(referral_bonus, 200)) filter (where not coalesce(referral_paid, false)), 0),
+    'tier', coalesce((select referral_tier from users where telegram_id = p_tg), 'STANDARD')
+  ) from users where referred_by = p_tg;
+$$;
 
-    <script>
-        const SUPABASE_URL = "YOUR_SUPABASE_PROJECT_URL";
-        const SUPABASE_ANON_KEY = "YOUR_SUPABASE_ANON_KEY";
-        const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+create or replace function iwasp_referral_list(p_tg text)
+returns json
+language sql
+security definer
+as $$
+  select coalesce(
+    json_agg(json_build_object(
+      'name', coalesce(username, 'User'),
+      'id', right(telegram_id, 4),
+      'approved', coalesce(referral_paid, false),
+      'bonus', coalesce(referral_bonus, 200)
+    )), '[]'::json)
+  from users where referred_by = p_tg;
+$$;
 
-        async function loginAdmin() {
-            const email = document.getElementById("admin-email").value;
-            const password = document.getElementById("admin-password").value;
-            const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
-            if (error) {
-                alert("Login failed: " + error.message);
-            } else {
-                showDashboard();
-            }
-        }
+create or replace function credit_offer(p_user text, p_offer text, p_payout numeric)
+returns void
+language plpgsql
+security definer
+as $$
+declare total numeric; ref text; bonus numeric;
+begin
+  insert into conversions (user_id, offer_id, payout)
+  values (p_user, p_offer, p_payout);
 
-        async function logoutAdmin() {
-            await supabaseClient.auth.signOut();
-            document.getElementById("dashboard-screen").style.display = "none";
-            document.getElementById("auth-screen").style.display = "block";
-        }
+  update users set balance = coalesce(balance, 0) + p_payout
+  where telegram_id = p_user;
 
-        function showDashboard() {
-            document.getElementById("auth-screen").style.display = "none";
-            document.getElementById("dashboard-screen").style.display = "block";
-            loadTables();
-        }
+  select sum(payout) into total from conversions where user_id = p_user;
+  select referred_by, coalesce(referral_bonus, 200) into ref, bonus from users
+  where telegram_id = p_user and coalesce(referral_paid, false) = false;
 
-        async function loadTables() {
-            const { data: users } = await supabaseClient.from('users').select('*');
-            let superHtml = "", stdHtml = "";
-            (users || []).forEach(u => {
-                const isSuper = u.user_role === 'SUPER_AFFILIATE';
-                const row = `
-                    <tr>
-                        <td>${u.telegram_id}</td>
-                        <td>$${((u.balance||0)/100).toFixed(2)}</td>
-                        <td>$${((u.pending_balance||0)/100).toFixed(2)}</td>
-                        <td><span class="${isSuper ? 'badge-super' : 'badge-std'}">${u.user_role || 'STANDARD'}</span></td>
-                        <td>
-                            <button onclick="toggleRole('${u.telegram_id}', '${isSuper ? 'STANDARD' : 'SUPER_AFFILIATE'}')">
-                                ${isSuper ? 'Demote' : 'Promote to Super'}
-                            </button>
-                        </td>
-                    </tr>
-                `;
-                if (isSuper) superHtml += row; else stdHtml += row;
-            });
-            document.getElementById("super-affiliate-table").innerHTML = superHtml || "<tr><td colspan='5'>No Super Affiliates yet.</td></tr>";
-            document.getElementById("standard-user-table").innerHTML = stdHtml || "<tr><td colspan='5'>No standard users yet.</td></tr>";
-        }
+  if ref is not null and total >= 700 then
+    update users set balance = coalesce(balance, 0) + bonus where telegram_id = ref;
+    update users set referral_paid = true where telegram_id = p_user;
+  end if;
+end;
+$$;
 
-        async function toggleRole(uid, newRole) {
-            await supabaseClient.from('users').update({ user_role: newRole }).eq('telegram_id', uid);
-            loadTables();
-        }
+create or replace function iwasp_get_messages()
+returns json
+language sql
+security definer
+as $$
+  select coalesce(json_agg(m order by m.id desc), '[]'::json)
+  from (select id, title, body, created_at from iwasp_messages order by id desc limit 20) m;
+$$;
 
-        async function searchAndPromote() {
-            let input = document.getElementById("search-input").value.trim();
-            if (input.includes("start=")) input = input.split("start=")[1];
-            if (!input) return alert("Enter valid UID or link!");
-            await toggleRole(input, 'SUPER_AFFILIATE');
-            document.getElementById("search-input").value = "";
-        }
-
-        async function sendAnnouncement() {
-            const title = document.getElementById("announcement-title").value;
-            const message = document.getElementById("announcement-body").value;
-            if (!message) return alert("Enter a message!");
-            await supabaseClient.from('announcements').insert([{ title, message }]);
-            alert("Broadcast sent successfully!");
-            document.getElementById("announcement-title").value = "";
-            document.getElementById("announcement-body").value = "";
-        }
-    </script>
-</body>
-</html>
+create or replace function run_monthly_bonus(p_month text)
+returns integer
+language plpgsql
+security definer
+as $$
+declare r record; n integer := 0; start_ts timestamptz; end_ts timestamptz;
+begin
+  start_ts := (p_month || '-01')::timestamptz;
+  end_ts := start_ts + interval '1 month';
+  for r in
+    select u.referred_by as referrer, u.telegram_id as referred
+    from users u join users s on s.telegram_id = u.referred_by
+    where s.referral_tier = 'SUPER'
+      and (select coalesce(sum(payout), 0) from conversions c
+           where c.user_id = u.telegram_id
+             and c.created_at >= start_ts and c.created_at < end_ts) >= 3000
+  loop
+    begin
+      insert into monthly_bonus_log (referrer, referred, month)
+      values (r.referrer, r.referred, p_month);
+      update users set balance = coalesce(balance, 0) + 100 where telegram_id = r.referrer;
+      n := n + 1;
+    exception when unique_violation then null;
+    end;
+  end loop;
+  return n;
+end;
+$$;
