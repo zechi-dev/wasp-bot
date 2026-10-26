@@ -61,7 +61,7 @@ body{background:#000;display:flex;justify-content:center;color:var(--bone)}
 .toast{position:fixed;left:50%;bottom:104px;transform:translateX(-50%);background:var(--bone);color:#16110A;font-weight:600;font-size:12px;padding:10px 16px;border-radius:10px;z-index:50;opacity:0;pointer-events:none;transition:opacity .25s}
 .toast.show{opacity:1}
 .dots{display:flex;gap:6px;margin:14px 0 2px}.dot{flex:1;height:6px;border-radius:3px;background:var(--hair)}.dot.on{background:var(--gold)}
-.wall{width:100%;height:520px;border:1px solid var(--hair);border-radius:12px;background:var(--panel);margin-top:12px}
+.wall{width:100%;height:calc(100vh - 230px);min-height:520px;border:1px solid var(--hair);border-radius:12px;background:var(--panel);margin-top:12px}
 .progress{height:4px;background:var(--hair);border-radius:2px;margin-top:14px;overflow:hidden}.progress i{display:block;height:100%;width:0;background:var(--gold);transition:width .6s}
 </style>
 </head>
@@ -163,6 +163,8 @@ document.addEventListener('click',e=>{const go=e.target.closest('[data-go]'); if
 setTimeout(()=>{const l=$('loader'); if(l){l.classList.add('hide'); setTimeout(()=>{l.style.display='none';},800);}},2800);
 setTimeout(()=>{const l=$('loader'); if(l) l.style.display='none';},4500);
 render(); fetchBalance(); setInterval(fetchBalance,20000);
+document.addEventListener('visibilitychange',()=>{if(!document.hidden)fetchBalance();});
+if(tg&&tg.onEvent){try{tg.onEvent('activated',fetchBalance);}catch(e){}}
 </script>
 </body>
 </html>
