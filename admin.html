@@ -1,132 +1,186 @@
-alter table users add column if not exists referral_tier text default 'STANDARD';
-alter table users add column if not exists referral_bonus numeric default 200;
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex,nofollow">
+<title>IWASP Admin</title>
+<style>
+*{box-sizing:border-box}
+body{font-family:sans-serif;background:#0f172a;color:#fff;margin:0;padding:16px}
+.card{background:#1e293b;border-radius:12px;padding:18px;margin-bottom:16px;border:1px solid #334155}
+h1,h2,h3{margin:0 0 10px}
+input,textarea,select{width:100%;padding:12px;border-radius:8px;border:1px solid #334155;background:#0f172a;color:#fff;font-size:14px;margin-bottom:10px}
+button{padding:11px 16px;border-radius:8px;border:none;background:#f59e0b;color:#000;font-weight:bold;cursor:pointer;font-size:13px}
+button.red{background:#ef4444;color:#fff}
+button.small{padding:7px 10px;font-size:12px}
+.note{font-size:12px;color:#94a3b8;margin:0 0 10px;line-height:1.5}
+.scroll{overflow-x:auto}
+table{width:100%;border-collapse:collapse;min-width:520px}
+th,td{padding:10px;text-align:left;border-bottom:1px solid #334155;font-size:13px}
+th{color:#f59e0b}
+.badge{padding:3px 8px;border-radius:4px;font-size:11px}
+.super{background:#8b5cf6}.std{background:#64748b}
+.msg{border:1px solid #334155;border-radius:8px;padding:10px;margin-top:8px;display:flex;justify-content:space-between;gap:10px}
+.msg b{display:block}
+.msg span{font-size:12px;color:#94a3b8;white-space:pre-wrap}
+#auth{max-width:380px;margin:80px auto}
+#status{font-size:13px;margin-top:6px;min-height:18px}
+</style>
+</head>
+<body>
 
-create table if not exists iwasp_messages (
-  id bigint generated always as identity primary key,
-  title text,
-  body text not null,
-  created_at timestamptz default now()
-);
-alter table iwasp_messages enable row level security;
+<div id="auth" class="card">
+  <h2>🔒 Admin Login</h2>
+  <input type="password" id="pw" placeholder="Password" autocomplete="current-password">
+  <button style="width:100%" onclick="login()">Login</button>
+  <div id="authErr" class="note" style="color:#f87171;margin-top:10px"></div>
+</div>
 
-create table if not exists monthly_bonus_log (
-  referrer text not null,
-  referred text not null,
-  month text not null,
-  created_at timestamptz default now(),
-  primary key (referrer, referred, month)
-);
-alter table monthly_bonus_log enable row level security;
+<div id="dash" style="display:none">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
+    <h1>IWASP Command Center</h1>
+    <button class="red" onclick="logout()">Logout</button>
+  </div>
+  <div id="status" class="note"></div>
 
-create or replace function iwasp_get_user(p_tg text, p_name text, p_ref text default null)
-returns numeric
-language plpgsql
-security definer
-as $$
-declare b numeric; bonus numeric := 200; tier text;
-begin
-  if p_ref is not null and p_ref <> p_tg then
-    select referral_tier into tier from users where telegram_id = p_ref;
-    if tier = 'SUPER' then bonus := 300; end if;
-  end if;
+  <div class="card">
+    <h3>⭐ Upgrade to Super Referral</h3>
+    <p class="note">Paste the person's referral link or Telegram ID. Super referrals earn $3 per invited person (instead of $2) plus $1 per month for each invited person who earns $30 or more that month. They must have opened the app at least once.</p>
+    <input type="text" id="linkIn" placeholder="https://t.me/Iwasp_bot?startapp=583826997">
+    <button onclick="setTier('SUPER')">Upgrade to Super Referral</button>
+    <button class="red" onclick="setTier('STANDARD')">Set back to Standard</button>
+  </div>
 
-  insert into users (telegram_id, username, referred_by, referral_bonus)
-  values (p_tg, p_name, case when p_ref is not null and p_ref <> p_tg then p_ref end, bonus)
-  on conflict (telegram_id) do nothing;
+  <div class="card">
+    <h3>📢 Send Message to Users</h3>
+    <p class="note">Users see a message icon in their app and can open this message.</p>
+    <input type="text" id="mTitle" placeholder="Title (example: Payout update)">
+    <textarea id="mBody" rows="4" placeholder="Message..."></textarea>
+    <button onclick="sendMsg()">Send Message</button>
+    <div id="msgList"></div>
+  </div>
 
-  select balance into b from users where telegram_id = p_tg;
-  return coalesce(b, 0);
-end;
-$$;
+  <div class="card">
+    <h3>💰 Monthly Super Referral Bonus</h3>
+    <p class="note">Pays $1 (100 WASP) to each super referral for every invited person who earned $30 or more in that month. Run it once after the month ends. Running it twice is safe: nobody is paid twice.</p>
+    <input type="month" id="bonusMonth">
+    <button onclick="runMonthly()">Run Monthly Bonus</button>
+  </div>
 
-create or replace function iwasp_referrals(p_tg text)
-returns json
-language sql
-security definer
-as $$
-  select json_build_object(
-    'invited', count(*),
-    'approved', count(*) filter (where coalesce(referral_paid, false)),
-    'pending', count(*) filter (where not coalesce(referral_paid, false)),
-    'approved_coins', coalesce(sum(coalesce(referral_bonus, 200)) filter (where coalesce(referral_paid, false)), 0),
-    'pending_coins', coalesce(sum(coalesce(referral_bonus, 200)) filter (where not coalesce(referral_paid, false)), 0),
-    'tier', coalesce((select referral_tier from users where telegram_id = p_tg), 'STANDARD')
-  ) from users where referred_by = p_tg;
-$$;
+  <div class="card">
+    <h2>⭐ Super Referrals</h2>
+    <div class="scroll"><table><thead><tr><th>Telegram ID</th><th>Name</th><th>Balance</th><th>Invited</th><th>Action</th></tr></thead><tbody id="superT"></tbody></table></div>
+  </div>
 
-create or replace function iwasp_referral_list(p_tg text)
-returns json
-language sql
-security definer
-as $$
-  select coalesce(
-    json_agg(json_build_object(
-      'name', coalesce(username, 'User'),
-      'id', right(telegram_id, 4),
-      'approved', coalesce(referral_paid, false),
-      'bonus', coalesce(referral_bonus, 200)
-    )), '[]'::json)
-  from users where referred_by = p_tg;
-$$;
+  <div class="card">
+    <h2>👥 Standard Users</h2>
+    <div class="scroll"><table><thead><tr><th>Telegram ID</th><th>Name</th><th>Balance</th><th>Invited</th><th>Action</th></tr></thead><tbody id="stdT"></tbody></table></div>
+  </div>
+</div>
 
-create or replace function credit_offer(p_user text, p_offer text, p_payout numeric)
-returns void
-language plpgsql
-security definer
-as $$
-declare total numeric; ref text; bonus numeric;
-begin
-  insert into conversions (user_id, offer_id, payout)
-  values (p_user, p_offer, p_payout);
+<script>
+// If your function has a different name, change the last word of this URL.
+const API = "https://tjlqyoktagopiaqlkszg.supabase.co/functions/v1/swift-task";
+let PW = sessionStorage.getItem("iwasp_admin_pw") || "";
+const $ = id => document.getElementById(id);
 
-  update users set balance = coalesce(balance, 0) + p_payout
-  where telegram_id = p_user;
+async function api(action, extra = {}) {
+  const res = await fetch(API, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ password: PW, action, ...extra })
+  });
+  let data = {};
+  try { data = await res.json(); } catch (e) {}
+  if (!res.ok) throw new Error(data.error || ("Error " + res.status));
+  return data;
+}
+function say(t, bad) { const s = $("status"); s.textContent = t; s.style.color = bad ? "#f87171" : "#4ade80"; }
 
-  select sum(payout) into total from conversions where user_id = p_user;
-  select referred_by, coalesce(referral_bonus, 200) into ref, bonus from users
-  where telegram_id = p_user and coalesce(referral_paid, false) = false;
+async function login() {
+  PW = $("pw").value;
+  $("authErr").textContent = "";
+  try { await api("login"); sessionStorage.setItem("iwasp_admin_pw", PW); showDash(); }
+  catch (e) { $("authErr").textContent = e.message; PW = ""; }
+}
+function logout() { sessionStorage.removeItem("iwasp_admin_pw"); PW = ""; $("dash").style.display = "none"; $("auth").style.display = "block"; $("pw").value = ""; }
+function showDash() {
+  $("auth").style.display = "none"; $("dash").style.display = "block";
+  const d = new Date(); d.setDate(1); d.setMonth(d.getMonth() - 1);
+  $("bonusMonth").value = d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0");
+  loadUsers(); loadMsgs();
+}
 
-  if ref is not null and total >= 700 then
-    update users set balance = coalesce(balance, 0) + bonus where telegram_id = ref;
-    update users set referral_paid = true where telegram_id = p_user;
-  end if;
-end;
-$$;
+function parseId(v) {
+  v = v.trim();
+  const m = v.match(/(?:startapp|start)=(\d+)/);
+  if (m) return m[1];
+  return /^\d+$/.test(v) ? v : "";
+}
+async function setTier(tier) {
+  const uid = parseId($("linkIn").value);
+  if (!uid) return say("Paste a valid referral link or Telegram ID.", true);
+  try { await api("set_tier", { uid, tier }); say(tier === "SUPER" ? "Upgraded to Super Referral ✅" : "Set back to Standard.", false); $("linkIn").value = ""; loadUsers(); }
+  catch (e) { say(e.message, true); }
+}
 
-create or replace function iwasp_get_messages()
-returns json
-language sql
-security definer
-as $$
-  select coalesce(json_agg(m order by m.id desc), '[]'::json)
-  from (select id, title, body, created_at from iwasp_messages order by id desc limit 20) m;
-$$;
+function cell(text) { const td = document.createElement("td"); td.textContent = text; return td; }
+async function loadUsers() {
+  try {
+    const { users } = await api("list_users");
+    const count = {};
+    users.forEach(u => { if (u.referred_by) count[u.referred_by] = (count[u.referred_by] || 0) + 1; });
+    const sT = $("superT"), tT = $("stdT"); sT.textContent = ""; tT.textContent = "";
+    users.forEach(u => {
+      const isSuper = u.referral_tier === "SUPER";
+      const tr = document.createElement("tr");
+      const bal = Number(u.balance || 0);
+      tr.append(cell(u.telegram_id), cell(u.username || "—"), cell(bal.toLocaleString() + " WASP ($" + (bal / 100).toFixed(2) + ")"), cell(count[u.telegram_id] || 0));
+      const td = document.createElement("td"); const b = document.createElement("button"); b.className = "small";
+      b.textContent = isSuper ? "Demote" : "Make Super";
+      b.onclick = async () => { try { await api("set_tier", { uid: u.telegram_id, tier: isSuper ? "STANDARD" : "SUPER" }); loadUsers(); } catch (e) { say(e.message, true); } };
+      td.appendChild(b); tr.appendChild(td);
+      (isSuper ? sT : tT).appendChild(tr);
+    });
+    if (!sT.children.length) { const r = document.createElement("tr"); const c = cell("No super referrals yet."); c.colSpan = 5; r.appendChild(c); sT.appendChild(r); }
+    if (!tT.children.length) { const r = document.createElement("tr"); const c = cell("No users yet."); c.colSpan = 5; r.appendChild(c); tT.appendChild(r); }
+  } catch (e) { say(e.message, true); }
+}
 
-create or replace function run_monthly_bonus(p_month text)
-returns integer
-language plpgsql
-security definer
-as $$
-declare r record; n integer := 0; start_ts timestamptz; end_ts timestamptz;
-begin
-  start_ts := (p_month || '-01')::timestamptz;
-  end_ts := start_ts + interval '1 month';
-  for r in
-    select u.referred_by as referrer, u.telegram_id as referred
-    from users u join users s on s.telegram_id = u.referred_by
-    where s.referral_tier = 'SUPER'
-      and (select coalesce(sum(payout), 0) from conversions c
-           where c.user_id = u.telegram_id
-             and c.created_at >= start_ts and c.created_at < end_ts) >= 3000
-  loop
-    begin
-      insert into monthly_bonus_log (referrer, referred, month)
-      values (r.referrer, r.referred, p_month);
-      update users set balance = coalesce(balance, 0) + 100 where telegram_id = r.referrer;
-      n := n + 1;
-    exception when unique_violation then null;
-    end;
-  end loop;
-  return n;
-end;
-$$;
+async function sendMsg() {
+  const title = $("mTitle").value, body = $("mBody").value;
+  if (!body.trim()) return say("Write a message first.", true);
+  try { await api("send_message", { title, body }); say("Message sent ✅", false); $("mTitle").value = ""; $("mBody").value = ""; loadMsgs(); }
+  catch (e) { say(e.message, true); }
+}
+async function loadMsgs() {
+  try {
+    const { messages } = await api("list_messages");
+    const box = $("msgList"); box.textContent = "";
+    messages.forEach(m => {
+      const d = document.createElement("div"); d.className = "msg";
+      const l = document.createElement("div");
+      const t = document.createElement("b"); t.textContent = m.title || "Message";
+      const s = document.createElement("span"); s.textContent = m.body;
+      l.append(t, s);
+      const x = document.createElement("button"); x.className = "small red"; x.textContent = "Delete";
+      x.onclick = async () => { await api("delete_message", { id: m.id }); loadMsgs(); };
+      d.append(l, x); box.appendChild(d);
+    });
+  } catch (e) { say(e.message, true); }
+}
+
+async function runMonthly() {
+  const month = $("bonusMonth").value;
+  if (!month) return say("Pick a month.", true);
+  if (!confirm("Run the super referral bonus for " + month + "?")) return;
+  try { const r = await api("run_monthly", { month }); say("Done. " + r.paid + " bonus(es) paid for " + month + ".", false); loadUsers(); }
+  catch (e) { say(e.message, true); }
+}
+
+if (PW) { api("login").then(showDash).catch(() => { PW = ""; sessionStorage.removeItem("iwasp_admin_pw"); }); }
+$("pw").addEventListener("keydown", e => { if (e.key === "Enter") login(); });
+</script>
+</body>
+</html>
