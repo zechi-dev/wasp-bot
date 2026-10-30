@@ -61,9 +61,10 @@ body{background:#000;display:flex;justify-content:center;color:var(--bone)}
 .toast{position:fixed;left:50%;bottom:104px;transform:translateX(-50%);background:var(--bone);color:#16110A;font-weight:600;font-size:12px;padding:10px 16px;border-radius:10px;z-index:50;opacity:0;pointer-events:none;transition:opacity .25s}
 .toast.show{opacity:1}
 .dots{display:flex;gap:6px;margin:14px 0 2px}.dot{flex:1;height:6px;border-radius:3px;background:var(--hair)}.dot.on{background:var(--gold)}
-.wall{width:100%;height:calc(100vh - 230px);min-height:520px;border:1px solid var(--hair);border-radius:12px;background:var(--panel);margin-top:12px}
+.wall{width:100%;height:calc(100vh - 250px);min-height:600px;border:1px solid var(--hair);border-radius:12px;background:var(--panel);margin-top:12px}
 .progress{height:4px;background:var(--hair);border-radius:2px;margin-top:14px;overflow:hidden}.progress i{display:block;height:100%;width:0;background:var(--gold);transition:width .6s}
 #msgDot{display:none;position:absolute;top:-2px;right:-4px;width:10px;height:10px;border-radius:50%;background:var(--red)}
+.otab{flex:1;text-align:center;padding:12px;border-radius:12px;border:1px solid var(--hair);background:var(--panel);color:var(--mute);font-size:14px;font-weight:600;cursor:pointer}.otab.on{background:var(--gold);color:#16110A;border-color:var(--gold)}
 </style>
 </head>
 <body>
@@ -77,11 +78,15 @@ body{background:#000;display:flex;justify-content:center;color:var(--bone)}
   <div class="h">Offers</div>
   <div class="sub">Play games and complete surveys without leaving the app.</div>
   <div class="meta" style="margin:8px 0 4px;padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:var(--panel)">Offers not loading, or seeing an ad blocker message? Turn off your ad blocker, VPN or Private DNS, then reopen the app.</div>
+  <div style="display:flex;gap:8px;margin:10px 0 4px"><div class="otab on" data-t="wall">Offer Wall</div><div class="otab" data-t="tasks">Quick Tasks</div></div>
+  <div id="panelWall">
   <iframe class="wall" id="cpaleadFrame" src="" sandbox="allow-popups allow-same-origin allow-scripts allow-forms allow-popups-to-escape-sandbox" referrerpolicy="no-referrer" frameborder="0" allow="geolocation"></iframe>
+  </div>
+  <div id="panelTasks" style="display:none"><div class="card" style="margin-top:8px"><div class="label">Complete a task and earn WASP coin</div><div id="taskHost" style="margin-top:12px"></div><div class="meta" id="taskNone" style="display:none;margin-top:10px">No tasks available right now. Check back later.</div></div></div>
 </div>
 
-<div id="referral" class="screen"><div class="h">Invite people</div><div class="sub" id="refSub">Earn $2 (200 WASP) for every person you invite. It stays pending until they earn $7 (700 WASP), then it is added to your balance.</div><div class="card"><div class="label">Your link</div><div class="ref-link" id="refLink">…</div><button class="btn" id="copyBtn">Copy link</button><div class="grid2"><div class="stat"><div class="stat-label">Invited</div><div class="stat-value" id="refCount">0</div></div><div class="stat"><div class="stat-label">Earned</div><div class="stat-value" id="refEarn">0 WASP</div></div></div></div><div class="card"><div class="grid2" style="margin-top:0;border-top:none;padding-top:0"><div class="stat"><div class="stat-label">Pending bonus</div><div class="stat-value" id="refPendAmt">0 WASP</div></div><div class="stat"><div class="stat-label">Approved bonus</div><div class="stat-value" id="refApprAmt">0 WASP</div></div></div><div class="meta" id="refPending" style="margin-top:14px"></div></div><div class="h" style="font-size:22px;margin-top:28px">Your referrals</div><div id="refList" style="margin-top:6px"></div><div></div></div>
-<div id="wallet" class="screen"><div class="h">Wallet</div><div class="sub">Paid on the 1st and 15th of every month, 12 PM WAT, in USDT on Solana, once you reach 1,000 WASP ($10). Under 1,000 WASP rolls over. 100 WASP = $1.</div><div class="card"><div class="label">Balance</div><div class="amount" id="balWallet" style="font-size:44px">0 WASP</div><div class="meta" id="balUsd">≈ $0.00</div><div class="progress"><i id="bar"></i></div><input class="input" id="wAddr" placeholder="Solana wallet address"><button class="btn" id="walletBtn">Save wallet</button><div class="warn">Double-check your address. Payments sent to wrong address can't be recovered.</div></div><div class="h" style="font-size:22px;margin-top:28px">Payout history</div><div id="hist"></div></div>
+<div id="referral" class="screen"><div class="h">Invite people</div><div class="sub" id="refSub">Earn $0.10 (10 WASP) for every person you invite. It stays pending until they earn $2 (200 WASP), then it is added to your balance.</div><div class="card"><div class="label">Your link</div><div class="ref-link" id="refLink">…</div><button class="btn" id="copyBtn">Copy link</button><div class="grid2"><div class="stat"><div class="stat-label">Invited</div><div class="stat-value" id="refCount">0</div></div><div class="stat"><div class="stat-label">Earned</div><div class="stat-value" id="refEarn">0 WASP</div></div></div></div><div class="card"><div class="grid2" style="margin-top:0;border-top:none;padding-top:0"><div class="stat"><div class="stat-label">Pending bonus</div><div class="stat-value" id="refPendAmt">0 WASP</div></div><div class="stat"><div class="stat-label">Approved bonus</div><div class="stat-value" id="refApprAmt">0 WASP</div></div></div><div class="meta" id="refPending" style="margin-top:14px"></div></div><div class="h" style="font-size:22px;margin-top:28px">Your referrals</div><div id="refList" style="margin-top:6px"></div><div></div></div>
+<div id="wallet" class="screen"><div class="h">Wallet</div><div class="sub">Paid on the 1st and 15th of every month, 12 PM WAT, in USDT on Solana, once you reach 200 WASP ($2). Under 200 WASP rolls over. 100 WASP = $1.</div><div class="card"><div class="label">Balance</div><div class="amount" id="balWallet" style="font-size:44px">0 WASP</div><div class="meta" id="balUsd">≈ $0.00</div><div class="progress"><i id="bar"></i></div><input class="input" id="wAddr" placeholder="Solana wallet address"><button class="btn" id="walletBtn">Save wallet</button><div class="warn">Double-check your address. Payments sent to wrong address can't be recovered.</div></div><div class="h" style="font-size:22px;margin-top:28px">Payout history</div><div id="hist"></div></div>
 <div id="profile" class="screen"><div class="h">Profile</div><div class="card"><div class="row" style="margin:0"><span class="meta">User</span><b id="pName">—</b></div><div class="row"><span class="meta">UID</span><b id="pUid">—</b></div><div class="row"><span class="meta">Offers completed</span><b id="pTasks">0</b></div></div></div>
 </div>
 <div class="bottom-nav"><div class="nav-item active" data-go="home">🏠<br>Home</div><div class="nav-item" data-go="offers">📋<br>Offers</div><div class="nav-item" data-go="referral">👥<br>Invite</div><div class="nav-item" data-go="wallet">👛<br>Wallet</div></div>
@@ -152,23 +157,23 @@ function render(){
  const coins=SERVER_COINS+Math.round(s.earned*100);
  const bal=coins/100; // dollars (100 WASP = $1)
  $('balHome').textContent=fmt(coins)+" WASP"; $('balWallet').textContent=fmt(coins)+" WASP"; $('balUsd').textContent="≈ $"+bal.toFixed(2);
- $('bar').style.width=Math.min(100,bal/10*100)+"%";
+ $('bar').style.width=Math.min(100,bal/2*100)+"%";
  $('tasksHome').textContent=s.tasks; $('pTasks').textContent=s.tasks; $('streakHome').textContent=s.streak+"/7";
  $('dots').innerHTML=Array.from({length:7},(_,i)=>'<i class="dot'+(i<s.streak?' on':'')+'"></i>').join('');
  const c=$('checkBtn'); c.disabled=done; c.textContent=done?"Checked in today":"Check in";
  $('uidText').textContent="UID "+UID+" • Profile"; $('pName').textContent=TG_NAME; $('pUid').textContent=UID;
  $('refLink').textContent="https://t.me/Iwasp_bot?startapp="+UID;
- $('refPendAmt').textContent=fmt(REFS.pending_coins||0)+" WASP"; $('refApprAmt').textContent=fmt(REFS.approved_coins||0)+" WASP"; $('refCount').textContent=REFS.invited||0; $('refEarn').textContent=fmt(REFS.approved_coins||0)+" WASP"; $('refPending').textContent=(REFS.pending||0)>0?(REFS.pending+" referral(s) pending: "+fmt(REFS.pending_coins||0)+" WASP waiting until each earns 700 WASP"):"Each person you invite adds $2 (200 WASP) as pending. It is approved and added to your balance once that person earns $7 (700 WASP).";
- $('refSub').textContent=REFS.tier==='SUPER'?'Super Referral: earn $3 (300 WASP) for every person you invite, plus $1 (100 WASP) each month for every invited person who earns $30 or more that month. Each $3 stays pending until that person earns $7 (700 WASP).':'Earn $2 (200 WASP) for every person you invite. It stays pending until they earn $7 (700 WASP), then it is added to your balance.';
- const L=$('refList'); L.textContent=''; REFLIST.forEach(r=>{const d=document.createElement('div'); d.className='row'; const n=document.createElement('span'); n.className='meta'; n.textContent=r.name+' ••'+r.id; const b=document.createElement('span'); b.className='badge '+(r.approved?'badge-approved':'badge-pending'); b.textContent=r.approved?'APPROVED +'+(r.bonus||200)+' WASP':'PENDING +'+(r.bonus||200)+' WASP'; d.appendChild(n); d.appendChild(b); L.appendChild(d);});
+ $('refPendAmt').textContent=fmt(REFS.pending_coins||0)+" WASP"; $('refApprAmt').textContent=fmt(REFS.approved_coins||0)+" WASP"; $('refCount').textContent=REFS.invited||0; $('refEarn').textContent=fmt(REFS.approved_coins||0)+" WASP"; $('refPending').textContent=(REFS.pending||0)>0?(REFS.pending+" referral(s) pending: "+fmt(REFS.pending_coins||0)+" WASP waiting until each earns 200 WASP"):"Each person you invite adds $2 (200 WASP) as pending. It is approved and added to your balance once that person earns $2 (200 WASP).";
+ $('refSub').textContent=REFS.tier==='NONE'?'':'Earn $0.10 (10 WASP) for every person you invite. It stays pending until they earn $2 (200 WASP), then it is added to your balance.';
+ const L=$('refList'); L.textContent=''; REFLIST.forEach(r=>{const d=document.createElement('div'); d.className='row'; const n=document.createElement('span'); n.className='meta'; n.textContent=r.name+' ••'+r.id; const b=document.createElement('span'); b.className='badge '+(r.approved?'badge-approved':'badge-pending'); b.textContent=r.approved?'APPROVED +'+(r.bonus||10)+' WASP':'PENDING +'+(r.bonus||200)+' WASP'; d.appendChild(n); d.appendChild(b); L.appendChild(d);});
  if(!REFLIST.length){const e=document.createElement('div'); e.className='meta'; e.style.marginTop='10px'; e.textContent='No referrals yet. Share your link to invite people.'; L.appendChild(e);}
  const w=localStorage.getItem(WALLET_KEY)||""; $('wAddr').value=w;
- const need=Math.max(0,1000-coins);
- if(need>0){$('payHint').textContent=fmt(need)+" WASP more to qualify for the next payout. Under 1,000 WASP rolls over."} else {$('payHint').textContent=w?"You qualify for the next payout.":"You qualify. Add your wallet to get paid."}
+ const need=Math.max(0,200-coins);
+ if(need>0){$('payHint').textContent=fmt(need)+" WASP more to qualify for the next payout. Under 200 WASP rolls over."} else {$('payHint').textContent=w?"You qualify for the next payout.":"You qualify. Add your wallet to get paid."}
  const now=new Date(); const y=now.getFullYear(), m=now.getMonth(); const nextPay=[new Date(y,m,1,12),new Date(y,m,15,12),new Date(y,m+1,1,12)].find(d=>d>now); const diff=Math.ceil((nextPay-now)/(1000*60*60*24));
- let txt="Next payday "+nextPay.toLocaleDateString(undefined,{day:'numeric',month:'short'})+", 12 PM WAT • "+diff+" days left"; if(coins<1000) txt+=" • Under 1,000 WASP rolls over"; $('paydayHome').textContent=txt;
+ let txt="Next payday "+nextPay.toLocaleDateString(undefined,{day:'numeric',month:'short'})+", 12 PM WAT • "+diff+" days left"; if(coins<200) txt+=" • Under 200 WASP rolls over"; $('paydayHome').textContent=txt;
  const hist=JSON.parse(localStorage.getItem(HIST_KEY)||"[]");
- const histEl=$('hist'); if(hist.length==0){histEl.innerHTML='<div class="card"><div class="meta">No payouts yet. Paid on the 1st and 15th of every month once you reach 1,000 WASP.</div></div>'} else {histEl.innerHTML=hist.map(h=>'<div class="card" style="margin-top:10px"><div style="display:flex;justify-content:space-between"><span class="meta">'+h.text+'</span><span class="badge '+(h.status=='PENDING'?'badge-pending':'badge-approved')+'">'+h.status+'</span></div></div>').join('')}
+ const histEl=$('hist'); if(hist.length==0){histEl.innerHTML='<div class="card"><div class="meta">No payouts yet. Paid on the 1st and 15th of every month once you reach 200 WASP.</div></div>'} else {histEl.innerHTML=hist.map(h=>'<div class="card" style="margin-top:10px"><div style="display:flex;justify-content:space-between"><span class="meta">'+h.text+'</span><span class="badge '+(h.status=='PENDING'?'badge-pending':'badge-approved')+'">'+h.status+'</span></div></div>').join('')}
 }
 $('checkBtn').onclick=()=>{
  const s=getStats();
@@ -194,6 +199,27 @@ document.addEventListener('click',e=>{const go=e.target.closest('[data-go]'); if
 setTimeout(()=>{const l=$('loader'); if(l){l.classList.add('hide'); setTimeout(()=>{l.style.display='none';},800);}},2800);
 setTimeout(()=>{const l=$('loader'); if(l) l.style.display='none';},4500);
 render(); fetchBalance(); setInterval(fetchBalance,20000);
+// Adsgram quick tasks: paste your block id (looks like task-1234) between the quotes after Adsgram approves it
+document.querySelectorAll('.otab').forEach(b=>b.onclick=()=>{
+ document.querySelectorAll('.otab').forEach(x=>x.classList.toggle('on',x===b));
+ $('panelWall').style.display=b.dataset.t==='wall'?'block':'none';
+ $('panelTasks').style.display=b.dataset.t==='tasks'?'block':'none';
+});
+const TASK_BLOCK_ID="task-56754";
+(function(){
+ if(!TASK_BLOCK_ID) return;
+ const sc=document.createElement('script'); sc.src='https://sad.adsgram.ai/js/sad.min.js';
+ sc.onload=function(){
+  const host=$('taskHost'), t=document.createElement('adsgram-task');
+  t.setAttribute('data-block-id',TASK_BLOCK_ID); t.setAttribute('data-debug','false'); t.style.display='block';
+  const r=document.createElement('span'); r.slot='reward'; r.textContent='Earn coins'; t.appendChild(r);
+  host.appendChild(t);
+  t.addEventListener('reward',()=>{toast('Task done! Your coins are on the way.'); setTimeout(fetchBalance,3000);});
+  t.addEventListener('onBannerNotFound',()=>{$('taskNone').style.display='block';});
+ };
+ document.head.appendChild(sc);
+})();
+
 document.addEventListener('visibilitychange',()=>{if(!document.hidden)fetchBalance();});
 if(tg&&tg.onEvent){try{tg.onEvent('activated',fetchBalance);}catch(e){}}
 </script>
