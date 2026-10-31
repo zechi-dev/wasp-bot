@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>IWASP</title>
+<script src='//libtl.com/sdk.js' data-zone='12129098' data-sdk='show_12129098'></script>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <!-- Supabase JS SDK -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -78,11 +79,11 @@ body{background:#000;display:flex;justify-content:center;color:var(--bone)}
   <div class="h">Offers</div>
   <div class="sub">Play games and complete surveys without leaving the app.</div>
   <div class="meta" style="margin:8px 0 4px;padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:var(--panel)">Offers not loading, or seeing an ad blocker message? Turn off your ad blocker, VPN or Private DNS, then reopen the app.</div>
-  <div style="display:flex;gap:8px;margin:10px 0 4px"><div class="otab on" data-t="wall">Offer Wall</div><div class="otab" data-t="tasks">Quick Tasks</div></div>
+  <div style="display:flex;gap:8px;margin:10px 0 4px"><div class="otab on" data-t="wall">Offer Wall</div><div class="otab" data-t="earn">Watch &amp; Earn</div></div>
   <div id="panelWall">
   <iframe class="wall" id="cpaleadFrame" src="" sandbox="allow-popups allow-same-origin allow-scripts allow-forms allow-popups-to-escape-sandbox" referrerpolicy="no-referrer" frameborder="0" allow="geolocation"></iframe>
   </div>
-  <div id="panelTasks" style="display:none"><div class="card" style="margin-top:8px"><div class="label">Complete a task and earn WASP coin</div><div id="taskHost" style="margin-top:12px"></div><div class="meta" id="taskNone" style="display:none;margin-top:10px">No tasks available right now. Check back later.</div></div></div>
+  <div id="panelEarn" style="display:none"><div class="card" style="margin-top:8px"><div class="label">Watch a short ad and earn WASP coin</div><p class="meta" style="margin-top:8px">Each ad you finish earns you a share of what the advertiser pays. Amounts are small and depend on the ad. Coins are added to your balance within a few seconds.</p><button class="btn" id="watchBtn">Watch an ad</button></div></div>
 </div>
 
 <div id="referral" class="screen"><div class="h">Invite people</div><div class="sub" id="refSub">Earn $0.10 (10 WASP) for every person you invite. It stays pending until they earn $2 (200 WASP), then it is added to your balance.</div><div class="card"><div class="label">Your link</div><div class="ref-link" id="refLink">…</div><button class="btn" id="copyBtn">Copy link</button><div class="grid2"><div class="stat"><div class="stat-label">Invited</div><div class="stat-value" id="refCount">0</div></div><div class="stat"><div class="stat-label">Earned</div><div class="stat-value" id="refEarn">0 WASP</div></div></div></div><div class="card"><div class="grid2" style="margin-top:0;border-top:none;padding-top:0"><div class="stat"><div class="stat-label">Pending bonus</div><div class="stat-value" id="refPendAmt">0 WASP</div></div><div class="stat"><div class="stat-label">Approved bonus</div><div class="stat-value" id="refApprAmt">0 WASP</div></div></div><div class="meta" id="refPending" style="margin-top:14px"></div></div><div class="h" style="font-size:22px;margin-top:28px">Your referrals</div><div id="refList" style="margin-top:6px"></div><div></div></div>
@@ -198,27 +199,23 @@ $('copyBtn').onclick=async()=>{
 document.addEventListener('click',e=>{const go=e.target.closest('[data-go]'); if(go){showScreen(go.dataset.go);}});
 setTimeout(()=>{const l=$('loader'); if(l){l.classList.add('hide'); setTimeout(()=>{l.style.display='none';},800);}},2800);
 setTimeout(()=>{const l=$('loader'); if(l) l.style.display='none';},4500);
-render(); fetchBalance(); setInterval(fetchBalance,20000);
-// Adsgram quick tasks: paste your block id (looks like task-1234) between the quotes after Adsgram approves it
 document.querySelectorAll('.otab').forEach(b=>b.onclick=()=>{
  document.querySelectorAll('.otab').forEach(x=>x.classList.toggle('on',x===b));
  $('panelWall').style.display=b.dataset.t==='wall'?'block':'none';
- $('panelTasks').style.display=b.dataset.t==='tasks'?'block':'none';
+ $('panelEarn').style.display=b.dataset.t==='earn'?'block':'none';
 });
-const TASK_BLOCK_ID="task-56807";
-(function(){
- if(!TASK_BLOCK_ID) return;
- const sc=document.createElement('script'); sc.src='https://sad.adsgram.ai/js/sad.min.js';
- sc.onload=function(){
-  const host=$('taskHost'), t=document.createElement('adsgram-task');
-  t.setAttribute('data-block-id',TASK_BLOCK_ID); t.setAttribute('data-debug','false'); t.style.display='block';
-  const r=document.createElement('span'); r.slot='reward'; r.textContent='Earn coins'; t.appendChild(r);
-  host.appendChild(t);
-  t.addEventListener('reward',()=>{toast('Task done! Your coins are on the way.'); setTimeout(fetchBalance,3000);});
-  t.addEventListener('onBannerNotFound',()=>{$('taskNone').style.display='block';});
- };
- document.head.appendChild(sc);
-})();
+$('watchBtn').onclick=async()=>{
+ const btn=$('watchBtn');
+ if(typeof window.show_12129098!=='function'){toast('Ads are not available here. Open the app from Telegram.');return;}
+ btn.disabled=true;
+ try{
+  await window.show_12129098({ymid:UID+'_'+Date.now()+'_'+Math.floor(Math.random()*100000)});
+  toast('Thanks for watching! Your coins are on the way.');
+  setTimeout(fetchBalance,3000); setTimeout(fetchBalance,10000);
+ }catch(e){toast('No ad available right now. Try again soon.');}
+ setTimeout(()=>{btn.disabled=false;},5000);
+};
+render(); fetchBalance(); setInterval(fetchBalance,20000);
 
 document.addEventListener('visibilitychange',()=>{if(!document.hidden)fetchBalance();});
 if(tg&&tg.onEvent){try{tg.onEvent('activated',fetchBalance);}catch(e){}}
