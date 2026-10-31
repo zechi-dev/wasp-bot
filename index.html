@@ -72,7 +72,7 @@ body{background:#000;display:flex;justify-content:center;color:var(--bone)}
 <div class="app">
 <div id="loader"><div class="wasp-wrap"><svg viewBox="0 0 200 270"><defs><radialGradient id="gY" cx="40%" cy="30%" r="80%"><stop offset="0" stop-color="#F6D75A"/><stop offset=".55" stop-color="#D9A514"/><stop offset="1" stop-color="#7A5307"/></radialGradient><radialGradient id="gK" cx="40%" cy="28%" r="80%"><stop offset="0" stop-color="#40382A"/><stop offset="1" stop-color="#0A0907"/></radialGradient><radialGradient id="gE" cx="35%" cy="30%" r="75%"><stop offset="0" stop-color="#6A5630"/><stop offset=".5" stop-color="#17110A"/><stop offset="1" stop-color="#000"/></radialGradient><linearGradient id="gW" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#F3E7C4" stop-opacity=".6"/><stop offset="1" stop-color="#9C8F6A" stop-opacity=".12"/></linearGradient><clipPath id="ab"><path d="M100 140C78 152 70 192 100 248C130 192 122 152 100 140Z"/></clipPath><g id="wingL"><ellipse cx="58" cy="116" rx="46" ry="13" transform="rotate(-12 58 116)" fill="url(#gW)" opacity=".7" stroke="#CDBB86" stroke-opacity=".4" stroke-width=".8"/><ellipse cx="54" cy="106" rx="52" ry="17" transform="rotate(-24 54 106)" fill="url(#gW)" stroke="#CDBB86" stroke-opacity=".55" stroke-width=".8"/></g><g id="legL" fill="none" stroke="#1B160C" stroke-width="2.2" stroke-linecap="round"><path d="M88 96L68 86L50 100"/><path d="M86 106L58 112L44 136"/><path d="M90 116L72 134L64 162"/></g></defs><use href="#wingL"/><use href="#wingL" transform="matrix(-1 0 0 1 200 0)"/><use href="#legL"/><use href="#legL" transform="matrix(-1 0 0 1 200 0)"/><g clip-path="url(#ab)"><rect x="60" y="130" width="80" height="130" fill="url(#gY)"/><path d="M60 160Q100 172 140 160V174Q100 186 60 174Z" fill="#0C0A07"/><path d="M60 188Q100 200 140 188V202Q100 214 60 202Z" fill="#0C0A07"/><path d="M60 216Q100 228 140 216V232Q100 244 60 232Z" fill="#0C0A07"/></g><ellipse cx="100" cy="106" rx="21" ry="26" fill="url(#gK)"/><ellipse cx="100" cy="60" rx="21" ry="18" fill="url(#gY)"/><ellipse cx="84" cy="56" rx="7.5" ry="11" fill="url(#gE)"/><ellipse cx="116" cy="56" rx="7.5" ry="11" fill="url(#gE)"/></svg></div><div class="loader-title">IWASP</div><div class="loader-sub">Earn on your own time</div><div class="bar"><div class="bar-fill"></div></div></div>
 <div class="header"><div class="logo-box"><svg viewBox="0 0 200 270" style="width:100%;height:100%"><use href="#wingL"/><use href="#wingL" transform="matrix(-1 0 0 1 200 0)"/><g clip-path="url(#ab)"><rect x="60" y="130" width="80" height="130" fill="url(#gY)"/></g></svg></div><div><div class="iwasp-text">IWASP</div><div class="uid-text" id="uidText">UID — • Profile</div></div><div id="msgBtn" style="margin-left:auto;position:relative;cursor:pointer;font-size:24px;padding:4px">✉️<b id="msgDot"></b></div></div>
-<div id="home" class="screen active"><div class="card"><div style="display:flex;justify-content:space-between;align-items:center"><div class="label">Total balance</div><div class="label" style="border:1px solid var(--line);color:var(--gold);padding:5px 11px;border-radius:20px">7-day streak +10 WASP</div></div><div class="amount" id="balHome">0 WASP</div><div class="meta" id="payHint">Loading…</div><div class="grid2"><div class="stat"><div class="stat-label">Offers completed</div><div class="stat-value" id="tasksHome">0</div></div><div class="stat"><div class="stat-label">Check-in streak</div><div class="stat-value" id="streakHome">0/7</div></div></div></div><div class="payday"><span id="paydayHome">Calculating payday…</span></div><div class="card"><div class="label">Daily check-in</div><div class="dots" id="dots"></div><p class="meta" style="margin-top:10px">Check in 7 days in a row to earn 10 WASP. Miss a day and your streak goes back to 0.</p><button class="btn" id="checkBtn">Check in</button></div><div class="trending" data-go="offers" style="margin-top:14px"><div><b>Play games and finish surveys</b><p style="color:var(--mute);font-size:12px">Rewards arrive after advertiser confirms</p></div></div></div>
+<div id="home" class="screen active"><div class="card"><div style="display:flex;justify-content:space-between;align-items:center"><div class="label">Total balance</div><div class="label" style="border:1px solid var(--line);color:var(--gold);padding:5px 11px;border-radius:20px">7-day streak +10 WASP</div></div><div class="amount" id="balHome">0 WASP</div><div class="meta" id="payHint">Loading…</div><div class="meta" id="adsHome" style="margin-top:6px"></div><div class="grid2"><div class="stat"><div class="stat-label">Offers completed</div><div class="stat-value" id="tasksHome">0</div></div><div class="stat"><div class="stat-label">Check-in streak</div><div class="stat-value" id="streakHome">0/7</div></div></div></div><div class="payday"><span id="paydayHome">Calculating payday…</span></div><div class="card"><div class="label">Daily check-in</div><div class="dots" id="dots"></div><p class="meta" style="margin-top:10px">Check in 7 days in a row to earn 10 WASP. Miss a day and your streak goes back to 0.</p><button class="btn" id="checkBtn">Check in</button></div><div class="trending" data-go="offers" style="margin-top:14px"><div><b>Play games and finish surveys</b><p style="color:var(--mute);font-size:12px">Rewards arrive after advertiser confirms</p></div></div></div>
 
 <!-- OFFERS TAB WITH CPAlead EMBED -->
 <div id="offers" class="screen">
@@ -104,7 +104,7 @@ const SUPABASE_URL="https://tjlqyoktagopiaqlkszg.supabase.co";
 const SUPABASE_ANON_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRqbHF5b2t0YWdvcGlhcWxrc3pnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTI4NjQ1MTIsImV4cCI6MjEwODQ0MDUxMn0.-X0nIkyzZ5OXXZHA9XYZQ0Ecu9Bh8s9DuQn1cCeyeuE";
 let sb=null; try{sb=window.supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY);}catch(e){}
 const REF=(tg&&tg.initDataUnsafe&&tg.initDataUnsafe.start_param)||null;
-let REFS={invited:0,approved:0,pending:0}; let REFLIST=[];
+let REFS={invited:0,approved:0,pending:0}; let REFLIST=[]; let ACT={offers:0,ads:0};
 let SERVER_COINS=0; // WASP coin balance from Supabase
 
 // CPAlead Offerwall with the user's Telegram ID as subid
@@ -138,6 +138,10 @@ function openMsgs(){
 $('msgBtn').onclick=openMsgs;
 $('msgClose').onclick=()=>{$('msgModal').style.display='none';};
 $('msgModal').onclick=e=>{if(e.target===$('msgModal'))$('msgModal').style.display='none';};
+async function fetchAct(){
+ if(!sb) return;
+ try{const r=await sb.rpc('iwasp_activity',{p_tg:UID}); if(r.data){ACT=r.data;render();}}catch(e){}
+}
 async function fetchRefs(){
  if(!sb) return;
  try{const r=await sb.rpc('iwasp_referrals',{p_tg:UID}); if(r.data){REFS=r.data;} const l=await sb.rpc('iwasp_referral_list',{p_tg:UID}); if(Array.isArray(l.data)){REFLIST=l.data;} render();}catch(e){}
@@ -148,7 +152,7 @@ async function fetchBalance(){
   const {data,error}=await sb.rpc('iwasp_get_user',{p_tg:UID,p_name:TG_NAME,p_ref:REF});
   if(error){console.error('Balance error:',error);return;}
   const v=parseFloat(data); if(!isNaN(v)&&v!==SERVER_COINS){SERVER_COINS=v;render();}
-  fetchRefs(); fetchMsgs();
+  fetchRefs(); fetchMsgs(); fetchAct();
  }catch(e){console.error(e);}
 }
 function render(){
@@ -159,7 +163,7 @@ function render(){
  const bal=coins/100; // dollars (100 WASP = $1)
  $('balHome').textContent=fmt(coins)+" WASP"; $('balWallet').textContent=fmt(coins)+" WASP"; $('balUsd').textContent="≈ $"+bal.toFixed(2);
  $('bar').style.width=Math.min(100,bal/2*100)+"%";
- $('tasksHome').textContent=s.tasks; $('pTasks').textContent=s.tasks; $('streakHome').textContent=s.streak+"/7";
+ $('tasksHome').textContent=ACT.offers||0; $('pTasks').textContent=ACT.offers||0; $('adsHome').textContent='Ads watched: '+(ACT.ads||0); $('streakHome').textContent=s.streak+"/7";
  $('dots').innerHTML=Array.from({length:7},(_,i)=>'<i class="dot'+(i<s.streak?' on':'')+'"></i>').join('');
  const c=$('checkBtn'); c.disabled=done; c.textContent=done?"Checked in today":"Check in";
  $('uidText').textContent="UID "+UID+" • Profile"; $('pName').textContent=TG_NAME; $('pUid').textContent=UID;
