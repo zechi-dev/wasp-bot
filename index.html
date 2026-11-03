@@ -108,7 +108,7 @@ async function api(action,extra){
 }
 const REF=(tg&&tg.initDataUnsafe&&tg.initDataUnsafe.start_param)||null;
 let REFS={invited:0,approved:0,pending:0}; let REFLIST=[]; let ACT={offers:0,ads:0};
-let SERVER_COINS=0; // WASP coin balance from Supabase
+let SYNC_ERR=''; let SERVER_COINS=0; // WASP coin balance from Supabase
 
 // CPAlead Offerwall with the user's Telegram ID as subid
 const cpaleadUrl = `https://www.directcpi.com/wall/i07LGTum?subid=${UID}`;
@@ -149,8 +149,8 @@ async function fetchBalance(){
   if(Array.isArray(d.reflist)) REFLIST=d.reflist;
   if(Array.isArray(d.messages)){MSGS=d.messages; updateDot();}
   if(d.activity) ACT=d.activity;
-  render();
- }catch(e){console.error(e);}
+  SYNC_ERR=''; render();
+ }catch(e){console.error(e); SYNC_ERR='Connection problem: '+e.message; render();}
 }
 function render(){
  const s=getStats();
@@ -160,7 +160,7 @@ function render(){
  const bal=coins/100; // dollars (100 WASP = $1)
  $('balHome').textContent=fmt(coins)+" WASP"; $('balWallet').textContent=fmt(coins)+" WASP"; $('balUsd').textContent="≈ $"+bal.toFixed(2);
  $('bar').style.width=Math.min(100,bal/2*100)+"%";
- $('tasksHome').textContent=ACT.offers||0; $('pTasks').textContent=ACT.offers||0; $('adsHome').textContent='Ads watched: '+(ACT.ads||0); $('streakHome').textContent=s.streak+"/7";
+ $('tasksHome').textContent=ACT.offers||0; $('pTasks').textContent=ACT.offers||0; $('adsHome').textContent=SYNC_ERR||('Ads watched: '+(ACT.ads||0)); $('streakHome').textContent=s.streak+"/7";
  $('dots').innerHTML=Array.from({length:7},(_,i)=>'<i class="dot'+(i<s.streak?' on':'')+'"></i>').join('');
  const c=$('checkBtn'); c.disabled=done; c.textContent=done?"Checked in today":"Check in";
  $('uidText').textContent="UID "+UID+" • Profile"; $('pName').textContent=TG_NAME; $('pUid').textContent=UID;
