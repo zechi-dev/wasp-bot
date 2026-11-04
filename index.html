@@ -1,437 +1,1178 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="scroll-smooth">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Iwasp</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="theme-color" content="#0F172A">
+<title>WorldBridge — Dubai &amp; Gulf Jobs</title>
+
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<!-- Ad Networks SDKs -->
-<script src="https://js.onclckvd.com/in-stream-ad-admanager/tma.js"></script>
-<script src="//libtl.com/sdk.js" data-zone="12129098" data-sdk="show_12129098"></script>
-<script type="module">
-  import { renderTadsWidget } from 'https://cdn.jsdelivr.net/npm/react-tads-widget/+esm';
-  window.renderTadsWidget = renderTadsWidget;
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+<script>
+tailwind.config = { theme: { extend: { colors:{navy:'#0F172A',navysoft:'#16213B',gold:'#F59E0B'}, fontFamily:{sans:['Inter','ui-sans-serif','system-ui','sans-serif']} } } };
 </script>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Instrument+Serif&display=swap" rel="stylesheet">
+
+<style type="text/tailwindcss">
+  @layer components {
+    .label { @apply block text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-1.5; }
+    .input { @apply w-full rounded-xl bg-white/5 border border-white/10 px-4 py-3 text-sm text-white placeholder-slate-500 outline-none transition focus:border-gold focus:bg-white/[0.07] focus:ring-2 focus:ring-gold/20; }
+    .select { @apply w-full rounded-xl bg-white/5 border border-white/10 px-4 py-3 text-sm text-white outline-none transition appearance-none pr-10 focus:border-gold focus:bg-white/[0.07] focus:ring-2 focus:ring-gold/20; background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2394A3B8' stroke-width='2'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='m19 9-7 7-7-7'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 0.85rem center; background-size: 1rem; }
+    .card { @apply rounded-2xl bg-white/5 border border-white/10; }
+  }
+</style>
+
 <style>
-:root{--ink:#0B0A08;--panel:#14120E;--panel2:#1A1712;--line:rgba(212,167,44,.16);--hair:rgba(237,230,211,.07);--gold:#D4A72C;--bone:#EDE6D3;--mute:#8A8374;--red:#D9776B;--green:#8FBF8A;--serif:'Instrument Serif',serif}
-*{margin:0;padding:0;box-sizing:border-box;font-family:Inter,sans-serif;-webkit-tap-highlight-color:transparent}
-body{background:#000;display:flex;justify-content:center;color:var(--bone)}
-.app{width:100%;max-width:430px;min-height:100vh;background:var(--ink);position:relative;padding-bottom:120px}
-.header{padding:20px;display:flex;gap:12px;align-items:center;position:sticky;top:0;background:rgba(11,10,8,.94);z-index:10;border-bottom:1px solid var(--hair)}
-.iwasp-text{font-family:var(--serif);font-size:24px;letter-spacing:6px;color:var(--bone)}
-.uid-text{color:var(--mute);font-size:11px;margin-top:5px}
-.screen{display:none;padding:0 20px}.screen.active{display:block}
-.card{border:1px solid var(--line);background:linear-gradient(180deg,var(--panel2),var(--panel));border-radius:16px;padding:22px 20px;margin-top:18px}
-.label{color:var(--mute);font-size:12px}
-.amount{font-family:var(--serif);color:var(--bone);font-size:58px;margin:10px 0}
-.meta{color:var(--mute);font-size:11px;line-height:1.5}
-.grid2{display:grid;grid-template-columns:1fr 1fr;margin-top:20px;border-top:1px solid var(--hair);padding-top:16px}
-.stat+.stat{border-left:1px solid var(--hair);padding-left:18px}
-.stat-label{color:var(--mute);font-size:11px}
-.stat-value{font-family:var(--serif);color:var(--bone);font-size:28px;margin-top:2px}
-.btn{width:100%;margin-top:16px;background:var(--gold);color:#16110A;border:none;padding:15px;border-radius:12px;font-weight:700;font-size:14px;cursor:pointer}
-.btn.ghost{background:transparent;color:var(--gold);border:1px solid var(--line)}
-.btn:disabled{background:var(--panel2);color:var(--mute);cursor:not-allowed}
-.h{font-family:var(--serif);color:var(--bone);font-size:30px;margin:26px 0 4px}
-.sub{color:var(--mute);font-size:12px;margin-bottom:6px}
-.bottom-nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:430px;background:rgba(14,12,9,.96);border-top:1px solid var(--hair);display:grid;grid-template-columns:repeat(4,1fr);padding:10px 0 14px;z-index:20}
-.nav-item{text-align:center;color:#6A6458;font-size:10px;cursor:pointer}
-.nav-item.active{color:var(--gold)}
-.toast{position:fixed;left:50%;bottom:104px;transform:translateX(-50%);background:var(--bone);color:#16110A;font-weight:600;font-size:12px;padding:10px 16px;border-radius:10px;z-index:50;opacity:0;pointer-events:none;transition:opacity .25s}
-.toast.show{opacity:1}
-.dots{display:flex;gap:6px;margin:14px 0 2px}.dot{flex:1;height:6px;border-radius:3px;background:var(--hair)}.dot.on{background:var(--gold)}
-.countdown-box{background:rgba(212,167,44,0.1);border:1px dashed var(--gold);border-radius:10px;padding:10px;text-align:center;margin-top:15px}
-.countdown-timer{font-family:monospace;font-size:16px;color:var(--gold);font-weight:bold;margin-top:4px}
-#loader{position:fixed;inset:0;background:var(--ink);z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;transition:opacity .8s}
-#loader.hide{opacity:0;pointer-events:none}
-.wasp-wrap{position:relative;width:200px;height:270px}
-.wasp{width:100%;height:100%}
-.loader-title{margin-top:26px;font-family:var(--serif);color:var(--bone);font-size:38px;letter-spacing:14px;padding-left:14px}
-.loader-sub{color:var(--mute);font-size:12px;margin-top:10px}
-.bar{width:120px;height:1px;background:var(--hair);margin-top:30px;overflow:hidden}
-.bar-fill{height:100%;width:0;background:var(--gold);animation:fill 2.6s forwards}
-@keyframes fill{to{width:100%}}
-.coin-container { display: flex; justify-content: center; align-items: center; height: 140px; margin: 15px 0; }
-.coin {
-    width: 120px; height: 120px; border-radius: 50%;
-    background: radial-gradient(circle at 30% 30%, #F6D75A 0%, #D9A514 50%, #7A5307 100%);
-    border: 5px solid #FFEAA7;
-    box-shadow: inset 0 0 15px rgba(0,0,0,0.6), 0 10px 25px rgba(0,0,0,0.8), 0 0 30px rgba(212,167,44,0.3);
-    display: flex; justify-content: center; align-items: center;
-    animation: spinCoin 6s linear infinite;
-    position: relative;
-}
-.coin::before { content: ''; position: absolute; inset: 5px; border-radius: 50%; border: 2px dashed rgba(255,255,255,0.3); }
-.coin-svg { width: 70px; height: 94px; z-index: 2; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.6)); }
-@keyframes spinCoin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+  html, body { -webkit-tap-highlight-color: transparent; }
+  body { overscroll-behavior-y: none; }
+  select option { color: #0F172A; background: #FFFFFF; }
+  .spinner { width:18px; height:18px; border:2.5px solid rgba(15,23,42,.25); border-top-color:#0F172A; border-radius:50%; animation: spin .7s linear infinite; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .fade-in { animation: fadeIn .35s ease both; }
+  @keyframes fadeIn { from { opacity:0; transform: translateY(8px);} to { opacity:1; transform:translateY(0);} }
+  .safe-bottom { padding-bottom: calc(1.5rem + env(safe-area-inset-bottom)); }
 </style>
 </head>
-<body>
 
-<div id="loader">
-  <div class="wasp-wrap">
-    <svg viewBox="0 0 200 270" class="wasp">
-      <defs>
-        <radialGradient id="gY" cx="40%" cy="30%" r="80%"><stop offset="0" stop-color="#F6D75A"/><stop offset=".55" stop-color="#D9A514"/><stop offset="1" stop-color="#7A5307"/></radialGradient>
-        <radialGradient id="gK" cx="40%" cy="28%" r="80%"><stop offset="0" stop-color="#40382A"/><stop offset="1" stop-color="#0A0907"/></radialGradient>
-        <radialGradient id="gE" cx="35%" cy="30%" r="75%"><stop offset="0" stop-color="#6A5630"/><stop offset=".5" stop-color="#17110A"/><stop offset="1" stop-color="#000"/></radialGradient>
-        <linearGradient id="gW" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#F3E7C4" stop-opacity=".6"/><stop offset="1" stop-color="#9C8F6A" stop-opacity=".12"/></linearGradient>
-        <clipPath id="ab"><path d="M100 140C78 152 70 192 100 248C130 192 122 152 100 140Z"/></clipPath>
-        <g id="wingL"><ellipse cx="58" cy="116" rx="46" ry="13" transform="rotate(-12 58 116)" fill="url(#gW)" opacity=".7" stroke="#CDBB86" stroke-opacity=".4" stroke-width=".8"/><ellipse cx="54" cy="106" rx="52" ry="17" transform="rotate(-24 54 106)" fill="url(#gW)" stroke="#CDBB86" stroke-opacity=".55" stroke-width=".8"/></g>
-        <g id="legL" fill="none" stroke="#1B160C" stroke-width="2.2" stroke-linecap="round"><path d="M88 96L68 86L50 100"/><path d="M86 106L58 112L44 136"/><path d="M90 116L72 134L64 162"/></g>
-      </defs>
-      <use href="#wingL"/><use href="#wingL" transform="matrix(-1 0 0 1 200 0)"/>
-      <use href="#legL"/><use href="#legL" transform="matrix(-1 0 0 1 200 0)"/>
-      <g clip-path="url(#ab)"><rect x="60" y="130" width="80" height="130" fill="url(#gY)"/><path d="M60 160Q100 172 140 160V174Q100 186 60 174Z" fill="#0C0A07"/><path d="M60 188Q100 200 140 188V202Q100 214 60 202Z" fill="#0C0A07"/><path d="M60 216Q100 228 140 216V232Q100 244 60 232Z" fill="#0C0A07"/></g>
-      <ellipse cx="100" cy="106" rx="21" ry="26" fill="url(#gK)"/><ellipse cx="100" cy="60" rx="21" ry="18" fill="url(#gY)"/><ellipse cx="84" cy="56" rx="7.5" ry="11" fill="url(#gE)"/><ellipse cx="116" cy="56" rx="7.5" ry="11" fill="url(#gE)"/>
-    </svg>
-  </div>
-  <div class="loader-title">IWASP</div>
-  <div class="loader-sub">Earn on your own time</div>
-  <div class="bar"><div class="bar-fill"></div></div>
-</div>
+<body class="bg-navy text-white font-sans antialiased selection:bg-gold selection:text-navy">
+<div class="min-h-screen w-full">
 
-<div class="app">
-  <div class="header">
-    <div>
-      <div class="iwasp-text">IWASP</div>
-      <div class="uid-text" id="uidText">UID — Profile</div>
-    </div>
-  </div>
-
-  <div id="home" class="screen active">
-    <div class="card" style="text-align:center;">
-      <div class="label">Your Mining Balance</div>
-      <div class="coin-container">
-        <div class="coin">
-          <svg viewBox="0 0 200 270" class="coin-svg">
-            <use href="#wingL"/><use href="#wingL" transform="matrix(-1 0 0 1 200 0)"/>
-            <g clip-path="url(#ab)"><rect x="60" y="130" width="80" height="130" fill="url(#gY)"/><path d="M60 160Q100 172 140 160V174Q100 186 60 174Z" fill="#0C0A07"/><path d="M60 188Q100 200 140 188V202Q100 214 60 202Z" fill="#0C0A07"/><path d="M60 216Q100 228 140 216V232Q100 244 60 232Z" fill="#0C0A07"/></g>
-            <ellipse cx="100" cy="106" rx="21" ry="26" fill="url(#gK)"/><ellipse cx="100" cy="60" rx="21" ry="18" fill="url(#gY)"/><ellipse cx="84" cy="56" rx="7.5" ry="11" fill="url(#gE)"/><ellipse cx="116" cy="56" rx="7.5" ry="11" fill="url(#gE)"/>
-          </svg>
+  <!-- VIEW 0 — ROLE -->
+  <section id="view-role" class="view">
+    <div class="max-w-md mx-auto px-5 min-h-screen flex flex-col justify-center py-12 fade-in">
+      <div class="flex items-center gap-2.5 mb-8">
+        <div class="w-11 h-11 rounded-xl bg-gold flex items-center justify-center text-navy font-black text-xl shadow-lg shadow-gold/20">W</div>
+        <div class="leading-tight">
+          <p class="font-extrabold tracking-tight text-lg">WorldBridge</p>
+          <p class="text-[9.5px] text-gold font-bold tracking-[0.18em] uppercase">Dubai · UAE · Gulf</p>
         </div>
       </div>
-      <div class="amount" id="balHome">0 IWASP</div>
-      <div class="countdown-box">
-        <div class="label">WASP Airdrop Countdown</div>
-        <div class="countdown-timer" id="airdropTimer">Loading...</div>
+      <h1 class="text-[28px] leading-tight font-extrabold tracking-tight">How will you use<br><span class="text-gold">WorldBridge?</span></h1>
+      <p class="mt-3 text-[13px] leading-relaxed text-slate-400">Choose your account type. You can switch later.</p>
+      <div class="mt-7 space-y-3">
+        <button id="roleWorker" type="button" class="w-full text-left card p-4 flex items-center gap-4 active:scale-[0.98] transition hover:border-gold/40">
+          <div class="w-12 h-12 rounded-xl bg-gold/15 border border-gold/25 flex items-center justify-center shrink-0">
+            <svg class="w-6 h-6 text-gold" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          </div>
+          <div class="flex-1 min-w-0">
+            <p class="font-extrabold text-[15px] leading-tight">I'm a Worker</p>
+            <p class="text-[11.5px] text-slate-400 mt-0.5 leading-snug">Apply for jobs in Dubai &amp; the Gulf. Free.</p>
+          </div>
+          <svg class="w-5 h-5 text-slate-500 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+        </button>
+        <button id="roleEmployer" type="button" class="w-full text-left card p-4 flex items-center gap-4 active:scale-[0.98] transition hover:border-gold/40">
+          <div class="w-12 h-12 rounded-xl bg-gold/15 border border-gold/25 flex items-center justify-center shrink-0">
+            <svg class="w-6 h-6 text-gold" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M5 21V7l7-4 7 4v14"/><path d="M9 9h1M9 13h1M9 17h1M14 9h1M14 13h1M14 17h1"/></svg>
+          </div>
+          <div class="flex-1 min-w-0">
+            <p class="font-extrabold text-[15px] leading-tight">I'm a Recruitment Office</p>
+            <p class="text-[11.5px] text-slate-400 mt-0.5 leading-snug">Browse verified worker leads. Pay per unlock.</p>
+          </div>
+          <svg class="w-5 h-5 text-slate-500 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+        </button>
       </div>
-      <div class="grid2">
-        <div class="stat"><div class="stat-label">Ads Mined</div><div class="stat-value" id="tasksHome">0</div></div>
-        <div class="stat"><div class="stat-label">Streak</div><div class="stat-value" id="streakHome">0/7</div></div>
+      <p class="text-center text-[10px] text-slate-500 mt-8 leading-relaxed">WorldBridge Manpower Consultancy · Dubai, UAE<br>We never ask workers for money.</p>
+    </div>
+  </section>
+
+  <!-- VIEW 1 — WORKER WELCOME -->
+  <section id="view-welcome" class="view hidden">
+    <header class="sticky top-0 z-30 bg-navy/85 backdrop-blur-xl border-b border-white/10">
+      <div class="max-w-md mx-auto px-5 py-3 flex items-center justify-between">
+        <div class="flex items-center gap-2.5">
+          <div class="w-9 h-9 rounded-xl bg-gold flex items-center justify-center text-navy font-black text-lg shadow-lg shadow-gold/20">W</div>
+          <div class="leading-tight">
+            <p class="font-extrabold tracking-tight text-[15px]">WorldBridge</p>
+            <p class="text-[9px] text-gold font-bold tracking-[0.18em] uppercase">Dubai · UAE · Gulf</p>
+          </div>
+        </div>
+        <span class="text-[10px] font-extrabold px-2.5 py-1 rounded-full bg-gold/15 text-gold border border-gold/30">FREE</span>
+      </div>
+    </header>
+    <div class="max-w-md mx-auto px-5">
+      <div class="pt-8">
+        <div class="inline-flex items-center gap-2 rounded-full bg-white/5 border border-white/10 px-3 py-1.5">
+          <span class="w-1.5 h-1.5 rounded-full bg-gold animate-pulse"></span>
+          <span class="text-[11px] font-extrabold tracking-widest uppercase text-gold">Employer Pays</span>
+        </div>
+        <h1 class="mt-4 text-[34px] leading-[1.1] font-extrabold tracking-tight">Your Gateway to<br><span class="text-gold">Dubai &amp; Gulf</span> Jobs</h1>
+        <p class="mt-3.5 text-[13.5px] leading-relaxed text-slate-300">Verified Gulf employers. <span class="text-white font-semibold">Zero placement fees.</span> Free visa, accommodation and flight ticket — the employer pays, not you.</p>
+        <button id="startBtn" type="button" class="mt-6 w-full rounded-2xl bg-gold text-navy font-extrabold text-[15px] py-4 shadow-xl shadow-gold/25 active:scale-[0.98] transition">Apply Now — It's Free</button>
+        <div class="mt-3 flex items-center justify-center gap-3 text-[10.5px] text-slate-400 font-medium"><span>✓ No fees</span><span class="w-1 h-1 rounded-full bg-slate-600"></span><span>✓ Free visa</span><span class="w-1 h-1 rounded-full bg-slate-600"></span><span>✓ 2 min form</span></div>
+      </div>
+      <div class="mt-9">
+        <div class="flex items-end justify-between mb-3">
+          <h2 class="text-sm font-extrabold tracking-tight">Open Roles</h2>
+          <span class="text-[10.5px] font-semibold text-gold">Visa · Accommodation · Ticket</span>
+        </div>
+        <div class="grid grid-cols-2 gap-3">
+          <div class="card overflow-hidden"><img src="https://images.unsplash.com/photo-1576091160550-2173dba999ef?auto=format&fit=crop&w=500&q=70" alt="Caregiver" loading="lazy" class="h-24 w-full object-cover"><div class="p-3"><p class="text-[13px] font-extrabold leading-tight">Caregiver</p><p class="text-[10.5px] text-slate-400 mt-0.5">Homes &amp; Clinics</p></div></div>
+          <div class="card overflow-hidden"><img src="https://images.unsplash.com/photo-1449965408869-eaa3f722e40d?auto=format&fit=crop&w=500&q=70" alt="Driver" loading="lazy" class="h-24 w-full object-cover"><div class="p-3"><p class="text-[13px] font-extrabold leading-tight">Driver</p><p class="text-[10.5px] text-slate-400 mt-0.5">Light &amp; Heavy</p></div></div>
+          <div class="card overflow-hidden"><img src="https://images.unsplash.com/photo-1590650153855-d9e808231d41?auto=format&fit=crop&w=500&q=70" alt="Security" loading="lazy" class="h-24 w-full object-cover"><div class="p-3"><p class="text-[13px] font-extrabold leading-tight">Security</p><p class="text-[10.5px] text-slate-400 mt-0.5">Guard &amp; CCTV</p></div></div>
+          <div class="card overflow-hidden"><img src="https://images.unsplash.com/photo-1553413077-190dd305871c?auto=format&fit=crop&w=500&q=70" alt="Warehouse" loading="lazy" class="h-24 w-full object-cover"><div class="p-3"><p class="text-[13px] font-extrabold leading-tight">Warehouse</p><p class="text-[10.5px] text-slate-400 mt-0.5">Factory &amp; Logistics</p></div></div>
+        </div>
+      </div>
+      <div class="mt-9">
+        <h2 class="text-sm font-extrabold tracking-tight mb-3">How It Works</h2>
+        <div class="grid grid-cols-3 gap-3">
+          <div class="card p-3 text-center"><div class="mx-auto w-8 h-8 rounded-full bg-gold text-navy font-black text-[13px] flex items-center justify-center">1</div><p class="mt-2 text-[12px] font-extrabold">Apply</p><p class="text-[10px] text-slate-400 mt-0.5">2 minutes</p></div>
+          <div class="card p-3 text-center"><div class="mx-auto w-8 h-8 rounded-full bg-gold text-navy font-black text-[13px] flex items-center justify-center">2</div><p class="mt-2 text-[12px] font-extrabold">Verify</p><p class="text-[10px] text-slate-400 mt-0.5">Docs &amp; call</p></div>
+          <div class="card p-3 text-center"><div class="mx-auto w-8 h-8 rounded-full bg-gold text-navy font-black text-[13px] flex items-center justify-center">3</div><p class="mt-2 text-[12px] font-extrabold">Fly</p><p class="text-[10px] text-slate-400 mt-0.5">Visa &amp; ticket</p></div>
+        </div>
+      </div>
+      <div class="mt-9 mb-4">
+        <button type="button" data-start class="w-full rounded-2xl bg-white text-navy font-extrabold text-[14px] py-3.5 active:scale-[0.98] transition">Start My Free Application</button>
+        <button type="button" data-switch-role class="w-full mt-3 text-[11px] text-slate-500 font-semibold py-2 active:scale-95 transition">Switch account type</button>
+        <p class="text-center text-[10px] text-slate-500 mt-2 leading-relaxed">WorldBridge Manpower Consultancy · Dubai, UAE<br>We never ask candidates for money.</p>
+      </div>
+      <div class="h-6"></div>
+    </div>
+  </section>
+
+  <!-- VIEW 2 — WORKER FORM -->
+  <section id="view-form" class="view hidden">
+    <header class="sticky top-0 z-30 bg-navy/85 backdrop-blur-xl border-b border-white/10">
+      <div class="max-w-md mx-auto px-5 py-3 flex items-center gap-3">
+        <button type="button" data-back class="w-9 h-9 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center active:scale-95 transition"><svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg></button>
+        <div class="leading-tight">
+          <p class="font-extrabold text-[15px] tracking-tight">Application Form</p>
+          <p class="text-[10px] text-slate-400 font-medium">Step 1 of 1 · Takes 2 minutes</p>
+        </div>
+      </div>
+    </header>
+    <div class="max-w-md mx-auto px-5 pt-6 safe-bottom">
+      <div class="card p-4 flex items-start gap-3 border-gold/25 bg-gold/[0.07]">
+        <svg class="w-5 h-5 text-gold shrink-0 mt-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z"/><path d="m9 12 2 2 4-4"/></svg>
+        <p class="text-[11.5px] leading-relaxed text-slate-300"><span class="text-white font-bold">100% free.</span> Your details are sent directly to our Dubai recruitment desk. No agent fees at any stage.</p>
+      </div>
+      <form id="leadForm" class="mt-5 space-y-4" autocomplete="on">
+        <div><label class="label" for="name">Full Name *</label><input class="input" id="name" name="name" type="text" placeholder="e.g. Musa Abdullahi" autocomplete="name" required></div>
+        <div>
+          <label class="label" for="phone">Phone Number *</label>
+          <div class="flex gap-2">
+            <input class="input" id="phone" name="phone" type="tel" placeholder="+234 801 234 5678" autocomplete="tel" inputmode="tel" required>
+            <button type="button" id="tgPhoneBtn" class="shrink-0 px-3.5 rounded-xl bg-white/5 border border-white/10 text-gold active:scale-95 transition flex items-center justify-center" title="Use Telegram number">
+              <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.8 19.8 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.12 4.2 2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.1 9.9a16 16 0 0 0 6 6l1.26-1.26a2 2 0 0 1 2.11-.45c.9.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92Z"/></svg>
+            </button>
+          </div>
+          <p class="text-[10px] text-slate-500 mt-1.5">Tap the icon to use your Telegram number.</p>
+        </div>
+        <div><label class="label" for="email">Email <span class="text-slate-600 normal-case font-medium">(optional)</span></label><input class="input" id="email" name="email" type="email" placeholder="you@example.com" autocomplete="email"></div>
+        <div>
+          <label class="label" for="location">Current Location *</label>
+          <select class="select" id="location" name="location" required>
+            <option value="" disabled selected>Select your state</option>
+            <option>Kwara</option><option>Lagos</option><option>Abuja (FCT)</option><option>Oyo / Ibadan</option><option>Kano</option><option>Kaduna</option><option>Rivers / Port Harcourt</option><option>Edo / Benin City</option><option>Enugu</option><option>Anambra</option><option>Ogun</option><option>Delta</option><option>Other</option>
+          </select>
+        </div>
+        <div>
+          <label class="label" for="job">Job Interested In *</label>
+          <select class="select" id="job" name="job" required>
+            <option value="" disabled selected>Select a role</option>
+            <option>Caregiver</option><option>Driver</option><option>Security</option><option>Factory</option><option>Warehouse</option><option>Electrician</option><option>Plumber</option><option>Cleaner</option>
+          </select>
+        </div>
+        <div>
+          <label class="label" for="qualification">Highest Qualification *</label>
+          <select class="select" id="qualification" name="qualification" required>
+            <option value="" disabled selected>Select qualification</option>
+            <option>None / Primary</option><option>SSCE / WASSCE</option><option>OND / NCE</option><option>HND / BSc</option><option>MSc / PhD</option><option>Trade / Vocational Certificate</option>
+          </select>
+        </div>
+        <div>
+          <label class="label" for="experience">Work Experience *</label>
+          <select class="select" id="experience" name="experience" required>
+            <option value="" disabled selected>Select experience</option>
+            <option>No experience</option><option>Less than 1 year</option><option>1 – 2 years</option><option>3 – 5 years</option><option>5+ years</option>
+          </select>
+        </div>
+        <div>
+          <label class="label">Do you have a valid passport? *</label>
+          <div class="grid grid-cols-2 gap-3">
+            <label class="cursor-pointer"><input type="radio" name="passport" value="Yes" class="peer sr-only" required><div class="rounded-xl bg-white/5 border border-white/10 py-3 text-center text-sm font-bold text-slate-300 peer-checked:bg-gold peer-checked:text-navy peer-checked:border-gold transition">Yes</div></label>
+            <label class="cursor-pointer"><input type="radio" name="passport" value="No" class="peer sr-only"><div class="rounded-xl bg-white/5 border border-white/10 py-3 text-center text-sm font-bold text-slate-300 peer-checked:bg-gold peer-checked:text-navy peer-checked:border-gold transition">No</div></label>
+          </div>
+        </div>
+        <div id="passportWrap" class="hidden">
+          <label class="label" for="passportLast4">Last 4 Digits of Passport No. *</label>
+          <input class="input tracking-[0.35em] font-bold" id="passportLast4" name="passportLast4" type="text" inputmode="numeric" maxlength="4" pattern="[A-Za-z0-9]{4}" placeholder="1234">
+        </div>
+        <div>
+          <label class="label" for="ready">When Can You Travel? *</label>
+          <select class="select" id="ready" name="ready" required>
+            <option value="" disabled selected>Select availability</option>
+            <option>Immediately</option><option>Within 1 month</option><option>1 – 3 months</option><option>Just exploring</option>
+          </select>
+        </div>
+        <div><label class="label" for="cv">CV / Portfolio Link <span class="text-slate-600 normal-case font-medium">(optional)</span></label><input class="input" id="cv" name="cv" type="text" placeholder="Google Drive / Dropbox link"></div>
+        <label class="flex items-start gap-3 cursor-pointer pt-1">
+          <input type="checkbox" id="agree" name="agree" required class="mt-0.5 w-5 h-5 shrink-0 rounded-md bg-white/5 border border-white/20 text-gold focus:ring-gold/40 focus:ring-offset-0 accent-gold">
+          <span class="text-[11.5px] leading-relaxed text-slate-400">I confirm my details are correct and I agree to be contacted by WorldBridge about Gulf job opportunities. I understand <span class="text-white font-semibold">no payment is required</span>.</span>
+        </label>
+        <div id="formError" class="hidden rounded-xl bg-red-500/10 border border-red-500/30 px-4 py-3"><p class="text-[11.5px] text-red-300 font-medium leading-relaxed" id="formErrorText"></p></div>
+        <button id="submitBtn" type="submit" class="w-full rounded-2xl bg-gold text-navy font-extrabold text-[15px] py-4 shadow-xl shadow-gold/25 active:scale-[0.98] transition flex items-center justify-center gap-2.5 disabled:opacity-70 disabled:active:scale-100">
+          <span id="btnSpinner" class="spinner hidden"></span><span id="btnText">Submit Application</span>
+        </button>
+        <p class="text-center text-[10px] text-slate-500 pb-2">Your application goes straight to our Dubai office.</p>
+      </form>
+    </div>
+  </section>
+
+  <!-- VIEW 3 — WORKER SUCCESS -->
+  <section id="view-success" class="view hidden">
+    <div class="max-w-md mx-auto px-6 min-h-screen flex flex-col items-center justify-center text-center py-12 fade-in">
+      <div class="w-24 h-24 rounded-full bg-gold/15 border border-gold/30 flex items-center justify-center shadow-2xl shadow-gold/10">
+        <svg class="w-12 h-12 text-gold" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+      </div>
+      <h1 class="mt-7 text-[26px] font-extrabold tracking-tight leading-tight">Application Received</h1>
+      <p class="mt-3 text-[13.5px] leading-relaxed text-slate-300 max-w-xs">Thank you! Our Dubai recruitment team will review your profile and contact you on <span class="text-white font-semibold">WhatsApp or Telegram</span> within 48 hours.</p>
+      <div class="mt-7 w-full card p-4 text-left space-y-2.5">
+        <div class="flex items-center gap-2.5"><span class="w-1.5 h-1.5 rounded-full bg-gold shrink-0"></span><p class="text-[12px] text-slate-300">Keep your phone reachable this week.</p></div>
+        <div class="flex items-center gap-2.5"><span class="w-1.5 h-1.5 rounded-full bg-gold shrink-0"></span><p class="text-[12px] text-slate-300">Prepare your passport &amp; CV for verification.</p></div>
+        <div class="flex items-center gap-2.5"><span class="w-1.5 h-1.5 rounded-full bg-gold shrink-0"></span><p class="text-[12px] text-slate-300">You will never be asked for money.</p></div>
+      </div>
+      <button id="closeBtn" type="button" class="mt-8 w-full rounded-2xl bg-gold text-navy font-extrabold text-[15px] py-4 shadow-xl shadow-gold/25 active:scale-[0.98] transition">Close</button>
+      <p class="mt-5 text-[10px] text-slate-500">WorldBridge Manpower Consultancy · Dubai, UAE</p>
+    </div>
+  </section>
+
+  <!-- VIEW 4 — WORKER DASHBOARD -->
+  <section id="view-worker-dash" class="view hidden">
+    <header class="sticky top-0 z-30 bg-navy/85 backdrop-blur-xl border-b border-white/10">
+      <div class="max-w-md mx-auto px-5 py-3 flex items-center justify-between">
+        <div class="flex items-center gap-2.5">
+          <div class="w-9 h-9 rounded-xl bg-gold flex items-center justify-center text-navy font-black text-lg shadow-lg shadow-gold/20">W</div>
+          <div class="leading-tight">
+            <p class="font-extrabold tracking-tight text-[15px]">Worker Dashboard</p>
+            <p class="text-[9px] text-gold font-bold tracking-[0.18em] uppercase">My Profile</p>
+          </div>
+        </div>
+        <button type="button" data-switch-role class="text-[10px] font-extrabold px-2.5 py-1.5 rounded-full bg-white/5 border border-white/10 text-slate-300 active:scale-95 transition shrink-0">Switch</button>
+      </div>
+    </header>
+    <div class="max-w-md mx-auto px-5 pt-5 safe-bottom">
+      <div class="card p-4">
+        <div class="flex items-center gap-3">
+          <div class="w-12 h-12 rounded-full bg-gold/15 border border-gold/25 flex items-center justify-center text-gold text-xl font-black" id="workerInitial">M</div>
+          <div class="flex-1 min-w-0">
+            <p class="text-[15px] font-extrabold truncate" id="workerName">Loading...</p>
+            <p class="text-[11.5px] text-slate-400 truncate" id="workerJob">Loading...</p>
+          </div>
+          <span class="text-[9px] font-extrabold px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-300 border border-emerald-500/25" id="workerStatus">ACTIVE</span>
+        </div>
+      </div>
+      <div class="mt-4">
+        <h2 class="text-sm font-extrabold tracking-tight mb-2">My CV / Resume</h2>
+        <div class="card p-4">
+          <label class="label" for="updateCvLink">CV Link (Google Drive, Dropbox, etc.)</label>
+          <div class="flex gap-2">
+            <input class="input" id="updateCvLink" type="text" placeholder="Paste link here...">
+            <button id="updateCvBtn" class="shrink-0 px-4 rounded-xl bg-gold text-navy font-extrabold text-[12px] active:scale-95 transition">Save</button>
+          </div>
+          <p id="cvStatus" class="text-[10px] text-slate-500 mt-2">No CV uploaded yet.</p>
+        </div>
+      </div>
+      <div class="mt-6 mb-6">
+        <h2 class="text-sm font-extrabold tracking-tight mb-2">Interview Invitations</h2>
+        <div id="interviewsList" class="space-y-2">
+          <p class="text-[11.5px] text-slate-500 text-center py-4">Checking for updates...</p>
+        </div>
       </div>
     </div>
-    <div class="card">
-      <div class="label">Daily Check-in</div>
-      <div class="dots" id="dots"></div>
-      <p class="meta" style="margin-top:10px">Check in daily for 10 IWASP. Hit 7 days for a 500 IWASP bonus!</p>
-      <button class="btn" id="checkBtn">Check in</button>
-    </div>
-  </div>
+  </section>
 
-  <div id="mine" class="screen">
-    <div class="h">Mining Hub</div>
-    <div class="sub">Watch ads to mine IWASP. 50 Ads/day limit.</div>
-    <div class="card" id="miningCard">
-      <div class="label">Current Rotation Progress</div>
-      <div class="dots" id="rotDots"></div>
-      <div class="meta" id="rotLabel" style="margin-top:10px; font-weight:bold; color:var(--bone);">Loading...</div>
-      <div id="tads-container" style="margin-top:15px; min-height:0;"></div>
-      <button class="btn" id="watchBtn" disabled>Loading...</button>
-      <div class="meta" id="rotHint" style="margin-top:10px; text-align:center;"></div>
-    </div>
-  </div>
-
-  <div id="referral" class="screen">
-    <div class="h">Invite</div>
-    <div class="sub" id="refSub">Earn 100 IWASP when your invitee mines 20 ads.</div>
-    <div class="card">
-      <div class="label">Your link</div>
-      <div class="ref-link" id="refLink" style="margin-top:14px;background:var(--ink);border:1px solid var(--hair);border-radius:10px;padding:12px;font-size:12px;color:var(--mute);word-break:break-all;">...</div>
-      <button class="btn" id="copyBtn">Copy link</button>
-      <div class="grid2">
-        <div class="stat"><div class="stat-label">Invited</div><div class="stat-value" id="refCount">0</div></div>
-        <div class="stat"><div class="stat-label">Earned</div><div class="stat-value" id="refEarn">0 IWASP</div></div>
+  <!-- VIEW 5 — EMPLOYER REGISTER -->
+  <section id="view-employer-reg" class="view hidden">
+    <header class="sticky top-0 z-30 bg-navy/85 backdrop-blur-xl border-b border-white/10">
+      <div class="max-w-md mx-auto px-5 py-3 flex items-center gap-3">
+        <button type="button" data-back-role class="w-9 h-9 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center active:scale-95 transition"><svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg></button>
+        <div class="leading-tight">
+          <p class="font-extrabold text-[15px] tracking-tight">Recruitment Account</p>
+          <p class="text-[10px] text-slate-400 font-medium">One-time registration</p>
+        </div>
       </div>
-    </div>
-  </div>
-
-  <div id="airdrop" class="screen">
-    <div class="h">Airdrop</div>
-    <div class="sub">Connect your TON wallet to receive your WASP tokens on July 12, 2027.</div>
-    <div class="card">
-      <div class="label">TON Wallet Status</div>
-      <div class="row" style="margin-top:10px;background:var(--ink);border:1px solid var(--hair);border-radius:12px;padding:14px;display:flex;justify-content:space-between;align-items:center;">
-        <span class="meta" id="tonStatus">Not Connected</span>
+    </header>
+    <div class="max-w-md mx-auto px-5 pt-6 safe-bottom">
+      <div class="card p-4 flex items-start gap-3 border-gold/25 bg-gold/[0.07]">
+        <svg class="w-5 h-5 text-gold shrink-0 mt-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M5 21V7l7-4 7 4v14"/><path d="M9 9h1M9 13h1M9 17h1M14 9h1M14 13h1M14 17h1"/></svg>
+        <p class="text-[11.5px] leading-relaxed text-slate-300"><span class="text-white font-bold">Recruitment access.</span> Browse verified worker leads. Unlock full contact details with USDT credits.</p>
       </div>
-      <button class="btn" id="tonBtn">Connect TON Wallet</button>
-      <div class="warn" style="margin-top:14px;font-size:11px;color:var(--mute);">WASP tokens are not live yet. By connecting your wallet, you reserve your airdrop spot.</div>
+      <form id="employerForm" class="mt-5 space-y-4" autocomplete="on">
+        <div><label class="label" for="companyName">Company Name *</label><input class="input" id="companyName" name="companyName" type="text" placeholder="e.g. Al Futtaim Recruitment LLC" autocomplete="organization" required></div>
+        
+        <div><label class="label" for="employerEmail">Email <span class="text-slate-600 normal-case font-medium">(optional)</span></label><input class="input" id="employerEmail" name="employerEmail" type="email" placeholder="office@company.com" autocomplete="email"></div>
+        
+        <div>
+          <label class="label" for="employerPhone">WhatsApp / Phone Number *</label>
+          <div class="flex gap-2">
+            <input class="input" id="employerPhone" name="employerPhone" type="tel" placeholder="+971 50 123 4567" autocomplete="tel" inputmode="tel" required>
+            <button type="button" id="tgPhoneBtnEmployer" class="shrink-0 px-3.5 rounded-xl bg-white/5 border border-white/10 text-gold active:scale-95 transition flex items-center justify-center" title="Use Telegram number">
+              <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.8 19.8 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.12 4.2 2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.1 9.9a16 16 0 0 0 6 6l1.26-1.26a2 2 0 0 1 2.11-.45c.9.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92Z"/></svg>
+            </button>
+          </div>
+        </div>
+
+        <div><label class="label" for="officeAddress">City / Office Address <span class="text-slate-600 normal-case font-medium">(Optional)</span></label><input class="input" id="officeAddress" name="officeAddress" type="text" placeholder="e.g. Business Bay, Dubai"></div>
+        <div><label class="label" for="licenseNumber">Trade License No. <span class="text-slate-600 normal-case font-medium">(Optional - add later for verified badge)</span></label><input class="input" id="licenseNumber" name="licenseNumber" type="text" placeholder="e.g. DED-123456"></div>
+
+        <div>
+          <label class="label">Roles You Recruit For *</label>
+          <p class="text-[10px] text-slate-500 -mt-1 mb-2">Select all that apply.</p>
+          <div class="grid grid-cols-2 gap-2" id="employerJobs">
+            <label class="cursor-pointer"><input type="checkbox" name="employerJobs" value="Caregiver" class="peer sr-only"><div class="rounded-xl bg-white/5 border border-white/10 py-2.5 px-3 text-center text-[12px] font-bold text-slate-300 peer-checked:bg-gold peer-checked:text-navy peer-checked:border-gold transition">Caregiver</div></label>
+            <label class="cursor-pointer"><input type="checkbox" name="employerJobs" value="Driver" class="peer sr-only"><div class="rounded-xl bg-white/5 border border-white/10 py-2.5 px-3 text-center text-[12px] font-bold text-slate-300 peer-checked:bg-gold peer-checked:text-navy peer-checked:border-gold transition">Driver</div></label>
+            <label class="cursor-pointer"><input type="checkbox" name="employerJobs" value="Security" class="peer sr-only"><div class="rounded-xl bg-white/5 border border-white/10 py-2.5 px-3 text-center text-[12px] font-bold text-slate-300 peer-checked:bg-gold peer-checked:text-navy peer-checked:border-gold transition">Security</div></label>
+            <label class="cursor-pointer"><input type="checkbox" name="employerJobs" value="Factory" class="peer sr-only"><div class="rounded-xl bg-white/5 border border-white/10 py-2.5 px-3 text-center text-[12px] font-bold text-slate-300 peer-checked:bg-gold peer-checked:text-navy peer-checked:border-gold transition">Factory</div></label>
+            <label class="cursor-pointer"><input type="checkbox" name="employerJobs" value="Warehouse" class="peer sr-only"><div class="rounded-xl bg-white/5 border border-white/10 py-2.5 px-3 text-center text-[12px] font-bold text-slate-300 peer-checked:bg-gold peer-checked:text-navy peer-checked:border-gold transition">Warehouse</div></label>
+            <label class="cursor-pointer"><input type="checkbox" name="employerJobs" value="Electrician" class="peer sr-only"><div class="rounded-xl bg-white/5 border border-white/10 py-2.5 px-3 text-center text-[12px] font-bold text-slate-300 peer-checked:bg-gold peer-checked:text-navy peer-checked:border-gold transition">Electrician</div></label>
+            <label class="cursor-pointer"><input type="checkbox" name="employerJobs" value="Plumber" class="peer sr-only"><div class="rounded-xl bg-white/5 border border-white/10 py-2.5 px-3 text-center text-[12px] font-bold text-slate-300 peer-checked:bg-gold peer-checked:text-navy peer-checked:border-gold transition">Plumber</div></label>
+            <label class="cursor-pointer"><input type="checkbox" name="employerJobs" value="Cleaner" class="peer sr-only"><div class="rounded-xl bg-white/5 border border-white/10 py-2.5 px-3 text-center text-[12px] font-bold text-slate-300 peer-checked:bg-gold peer-checked:text-navy peer-checked:border-gold transition">Cleaner</div></label>
+          </div>
+        </div>
+        <div id="employerError" class="hidden rounded-xl bg-red-500/10 border border-red-500/30 px-4 py-3"><p class="text-[11.5px] text-red-300 font-medium leading-relaxed" id="employerErrorText"></p></div>
+        <button id="employerSubmitBtn" type="submit" class="w-full rounded-2xl bg-gold text-navy font-extrabold text-[15px] py-4 shadow-xl shadow-gold/25 active:scale-[0.98] transition flex items-center justify-center gap-2.5 disabled:opacity-70 disabled:active:scale-100">
+          <span id="employerSpinner" class="spinner hidden"></span><span id="employerBtnText">Create Account & Get 1 Free Lead</span>
+        </button>
+        <p class="text-center text-[10px] text-slate-500 pb-2">We use these details to send you payment receipts and lead invoices.</p>
+      </form>
+    </div>
+  </section>
+
+  <!-- VIEW 6 — EMPLOYER DASHBOARD -->
+  <section id="view-employer-dash" class="view hidden">
+    <header class="sticky top-0 z-30 bg-navy/85 backdrop-blur-xl border-b border-white/10">
+      <div class="max-w-md mx-auto px-5 py-3 flex items-center justify-between gap-3">
+        <div class="flex items-center gap-2.5 min-w-0">
+          <div class="w-9 h-9 rounded-xl bg-gold flex items-center justify-center text-navy font-black text-lg shadow-lg shadow-gold/20 shrink-0">W</div>
+          <div class="leading-tight min-w-0">
+            <p class="font-extrabold tracking-tight text-[14px] truncate" id="dashCompany">Recruitment</p>
+            <p class="text-[9px] text-gold font-bold tracking-[0.16em] uppercase">Employer Panel</p>
+          </div>
+        </div>
+        <button type="button" data-switch-role class="text-[10px] font-extrabold px-2.5 py-1.5 rounded-full bg-white/5 border border-white/10 text-slate-300 active:scale-95 transition shrink-0">Switch</button>
+      </div>
+    </header>
+    <div class="max-w-md mx-auto px-5 pt-5 safe-bottom">
+      
+      <!-- Verification Banner -->
+      <div id="verificationBanner" class="card p-3 mb-4 border-gold/30 bg-gold/[0.05] hidden">
+        <div class="flex items-center justify-between gap-3">
+          <div>
+            <p class="text-[12px] font-extrabold text-gold">Get Verified Badge</p>
+            <p class="text-[10px] text-slate-400 mt-0.5">Upload Trade License for priority support.</p>
+          </div>
+          <button type="button" onclick="openVerifyModal()" class="text-[10px] font-extrabold bg-gold text-navy px-3 py-1.5 rounded-lg shrink-0 active:scale-95 transition">Add License</button>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-2 gap-3">
+        <div class="card p-4"><p class="text-[10px] font-bold uppercase tracking-wider text-slate-400">Credits</p><p class="mt-1 text-[26px] font-extrabold text-gold leading-none" id="dashCredits">0</p><p class="text-[10px] text-slate-500 mt-1">1 credit = 1 unlock</p></div>
+        <div class="card p-4"><p class="text-[10px] font-bold uppercase tracking-wider text-slate-400">Available Leads</p><p class="mt-1 text-[26px] font-extrabold text-white leading-none" id="dashCount">—</p><p class="text-[10px] text-slate-500 mt-1">Verified workers</p></div>
+      </div>
+      <button type="button" id="buyCreditsBtn" class="mt-3 w-full rounded-2xl bg-gold text-navy font-extrabold text-[13.5px] py-3.5 shadow-lg shadow-gold/20 active:scale-[0.98] transition">Buy Unlock Credits (USDT)</button>
+      <div id="hiringFocus" class="mt-3 card p-3 hidden">
+        <p class="text-[9px] font-bold uppercase tracking-wider text-slate-500">Your Hiring Focus</p>
+        <div id="hiringFocusChips" class="flex flex-wrap gap-1.5 mt-2"></div>
+      </div>
+      <div class="mt-6 flex items-center justify-between mb-3">
+        <h2 class="text-sm font-extrabold tracking-tight">Lead Preview</h2>
+        <span class="text-[10.5px] font-semibold text-gold">Masked · Pay to unlock</span>
+      </div>
+      <div id="leadsList" class="space-y-2.5"></div>
+      <p class="text-center text-[10px] text-slate-500 mt-6 pb-2 leading-relaxed">Contact details are masked until unlocked.<br>Payment is in USDT (TRC20). Credits never expire.</p>
+    </div>
+  </section>
+
+</div>
+
+<!-- USDT MODAL -->
+<div id="usdtModal" class="fixed inset-0 z-50 hidden">
+  <div class="absolute inset-0 bg-black/70 backdrop-blur-sm" data-close-modal></div>
+  <div class="absolute inset-x-0 bottom-0">
+    <div class="max-w-md mx-auto bg-navysoft border-t border-white/10 rounded-t-3xl p-6 safe-bottom fade-in">
+      <div class="w-10 h-1 rounded-full bg-white/20 mx-auto mb-5"></div>
+
+      <div id="stepPackages">
+        <div class="flex items-center gap-3">
+          <div class="w-11 h-11 rounded-xl bg-gold/15 border border-gold/25 flex items-center justify-center shrink-0 text-gold text-xl font-black">$</div>
+          <div><p class="font-extrabold text-[15px]">Buy Unlock Credits</p><p class="text-[11px] text-slate-400">Choose a package</p></div>
+        </div>
+        <div class="mt-4 space-y-2" id="packageList"></div>
+        <button type="button" data-close-modal class="mt-4 w-full rounded-2xl bg-white/5 border border-white/10 text-slate-300 font-bold text-[13px] py-3">Cancel</button>
+      </div>
+
+      <div id="stepPayment" class="hidden">
+        <div class="flex items-center gap-3">
+          <div class="w-11 h-11 rounded-xl bg-gold/15 border border-gold/25 flex items-center justify-center shrink-0 text-gold text-xl font-black">₮</div>
+          <div><p class="font-extrabold text-[15px]">Send USDT</p><p class="text-[11px] text-slate-400">TRC-20 network only</p></div>
+        </div>
+        <div class="mt-4 rounded-xl bg-white p-2 w-fit mx-auto">
+          <img id="qrImg" width="160" height="160" alt="QR">
+        </div>
+        <div class="mt-3 space-y-2">
+          <div class="rounded-xl bg-white/5 border border-white/10 p-3">
+            <p class="text-[9px] font-bold uppercase tracking-wider text-slate-500">Amount (exact)</p>
+            <div class="flex items-center gap-2 mt-1">
+              <p id="payAmount" class="text-[16px] font-extrabold text-gold flex-1">—</p>
+              <button id="copyAmount" class="text-[10px] font-bold px-2 py-1 rounded-lg bg-gold/15 text-gold">Copy</button>
+            </div>
+          </div>
+          <div class="rounded-xl bg-white/5 border border-white/10 p-3">
+            <p class="text-[9px] font-bold uppercase tracking-wider text-slate-500">Address (TRC-20)</p>
+            <div class="flex items-center gap-2 mt-1">
+              <p id="payAddress" class="text-[10.5px] font-mono text-slate-300 flex-1 break-all">—</p>
+              <button id="copyAddress" class="text-[10px] font-bold px-2 py-1 rounded-lg bg-gold/15 text-gold shrink-0">Copy</button>
+            </div>
+          </div>
+          <div class="rounded-xl bg-white/5 border border-white/10 p-3">
+            <p class="text-[9px] font-bold uppercase tracking-wider text-slate-500">Reference</p>
+            <p id="payRef" class="text-[14px] font-extrabold text-white mt-1 font-mono">—</p>
+          </div>
+        </div>
+        <p class="mt-3 text-[10.5px] text-slate-400 leading-relaxed">Send <span class="text-gold font-bold">the exact amount</span> shown. Then tap below.</p>
+        <button id="sentBtn" type="button" class="mt-4 w-full rounded-2xl bg-gold text-navy font-extrabold text-[14px] py-3.5 shadow-lg shadow-gold/20">I've Sent the Payment</button>
+        <button type="button" id="backToPackages" class="mt-2 w-full rounded-2xl bg-white/5 border border-white/10 text-slate-300 font-bold text-[13px] py-3">Back</button>
+      </div>
+
+      <div id="stepClaimed" class="hidden text-center py-2">
+        <div class="w-16 h-16 mx-auto rounded-full bg-gold/15 border border-gold/30 flex items-center justify-center text-gold text-2xl">⏳</div>
+        <p class="mt-4 font-extrabold text-[15px]">Payment Under Review</p>
+        <p class="mt-2 text-[11.5px] text-slate-400 leading-relaxed">Our team is verifying your payment. Credits appear in 10–30 minutes.</p>
+        <button type="button" data-close-modal class="mt-5 w-full rounded-2xl bg-gold text-navy font-extrabold text-[14px] py-3.5">Done</button>
+      </div>
+
     </div>
   </div>
+</div>
 
-  <div class="bottom-nav">
-    <div class="nav-item active" data-go="home">🏠<br>Home</div>
-    <div class="nav-item" data-go="mine">⛏️<br>Mine</div>
-    <div class="nav-item" data-go="referral">👥<br>Invite</div>
-    <div class="nav-item" data-go="airdrop">🪂<br>Airdrop</div>
+<!-- SCHEDULE INTERVIEW MODAL -->
+<div id="interviewModal" class="fixed inset-0 z-50 hidden">
+  <div class="absolute inset-0 bg-black/70 backdrop-blur-sm" data-close-int-modal></div>
+  <div class="absolute inset-x-0 bottom-0">
+    <div class="max-w-md mx-auto bg-navysoft border-t border-white/10 rounded-t-3xl p-6 safe-bottom fade-in">
+      <div class="w-10 h-1 rounded-full bg-white/20 mx-auto mb-5"></div>
+      <div class="flex items-center gap-3">
+        <div class="w-11 h-11 rounded-xl bg-gold/15 border border-gold/25 flex items-center justify-center shrink-0 text-gold text-xl font-black">📅</div>
+        <div><p class="font-extrabold text-[15px]">Schedule Interview</p><p class="text-[11px] text-slate-400">Send an invitation to this worker</p></div>
+      </div>
+      <div class="mt-4 space-y-3">
+        <div>
+          <label class="label" for="intDate">Interview Date & Time *</label>
+          <input type="datetime-local" id="intDate" class="input" required>
+        </div>
+        <div>
+          <label class="label" for="intMessage">Message (Optional)</label>
+          <input type="text" id="intMessage" class="input" placeholder="e.g. Please bring your original passport">
+        </div>
+      </div>
+      <button type="button" id="sendInterviewBtn" class="mt-5 w-full rounded-2xl bg-gold text-navy font-extrabold text-[14px] py-3.5 shadow-lg shadow-gold/20">Send Invitation (Free)</button>
+      <button type="button" data-close-int-modal class="mt-2 w-full rounded-2xl bg-white/5 border border-white/10 text-slate-300 font-bold text-[13px] py-3">Cancel</button>
+    </div>
   </div>
-  <div class="toast" id="toast"></div>
+</div>
+
+<!-- VERIFY LICENSE MODAL -->
+<div id="verifyModal" class="fixed inset-0 z-50 hidden">
+  <div class="absolute inset-0 bg-black/70 backdrop-blur-sm" data-close-verify-modal></div>
+  <div class="absolute inset-x-0 bottom-0">
+    <div class="max-w-md mx-auto bg-navysoft border-t border-white/10 rounded-t-3xl p-6 safe-bottom fade-in">
+      <div class="w-10 h-1 rounded-full bg-white/20 mx-auto mb-5"></div>
+      <div class="flex items-center gap-3">
+        <div class="w-11 h-11 rounded-xl bg-gold/15 border border-gold/25 flex items-center justify-center shrink-0 text-gold text-xl font-black">🛡️</div>
+        <div><p class="font-extrabold text-[15px]">Get Verified</p><p class="text-[11px] text-slate-400">Add Trade License for priority support</p></div>
+      </div>
+      <div class="mt-4 space-y-3">
+        <div>
+          <label class="label" for="verifyAddress">City / Office Address</label>
+          <input type="text" id="verifyAddress" class="input" placeholder="e.g. Business Bay, Dubai">
+        </div>
+        <div>
+          <label class="label" for="verifyLicense">Trade License Number *</label>
+          <input type="text" id="verifyLicense" class="input" placeholder="e.g. DED-123456">
+        </div>
+      </div>
+      <button type="button" id="saveVerifyBtn" class="mt-5 w-full rounded-2xl bg-gold text-navy font-extrabold text-[14px] py-3.5 shadow-lg shadow-gold/20">Save & Verify</button>
+      <button type="button" data-close-verify-modal class="mt-2 w-full rounded-2xl bg-white/5 border border-white/10 text-slate-300 font-bold text-[13px] py-3">Cancel</button>
+    </div>
+  </div>
 </div>
 
 <script>
-setTimeout(()=>{
-  const l=document.getElementById('loader'); 
-  if(l){l.classList.add('hide'); setTimeout(()=>{l.style.display='none';},800);}
-}, 2800);
+  /* ============ CONFIG ============ */
+  const SUPABASE_URL = "https://fnpccciwbwrragpnzyqc.supabase.co";
+  const SUPABASE_KEY = "sb_publishable_i1BSTJbZ1nWkMzxJ0NZj-g_mMRA6wvZ";
+  const ACCOUNTS_HANDLE = "WorldBridgeDesk";
+  const USDT_ADDRESS = "TNdv8vkaNdWYHPrHYuwuzjW6ivhHynr4vZ";
 
-const tg = window.Telegram && Telegram.WebApp;
-if(tg) { try { tg.ready(); tg.expand(); } catch(e) {} }
+  const PACKAGES = [
+    { id: 'p5',  credits: 5,  price: 80,  label: 'Starter',  desc: '5 worker contacts' },
+    { id: 'p10', credits: 10, price: 150, label: 'Standard', desc: '10 worker contacts' },
+    { id: 'p25', credits: 25, price: 350, label: 'Pro',      desc: '25 worker contacts' }
+  ];
+  let currentOrder = null;
+  let currentWorkerId = null; // For scheduling interviews
 
-const $ = id => document.getElementById(id);
-let UID = "583826997"; 
-if(tg && tg.initDataUnsafe && tg.initDataUnsafe.user && tg.initDataUnsafe.user.id) {
-  UID = String(tg.initDataUnsafe.user.id);
-}
-const TG_NAME = (tg && tg.initDataUnsafe && tg.initDataUnsafe.user && (tg.initDataUnsafe.user.username || tg.initDataUnsafe.user.first_name)) || ("User " + UID);
-const REF = (tg && tg.initDataUnsafe && tg.initDataUnsafe.start_param) || null;
-
-const SUPABASE_URL="https://tjlqyoktagopiaqlkszg.supabase.co";
-const SUPABASE_ANON_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRqbHF5b2t0YWdvcGlhcWxrc3pnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTI4NjQ1MTIsImV4cCI6MjEwODQ0MDUxMn0.-X0nIkyzZ5OXXZHA9XYZQ0Ecu9Bh8s9DuQn1cCeyeuE";
-const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
-let currentAd = null;
-let isProcessing = false;
-
-function initOnClickA() {
-  if (typeof window.initCdTma === 'function') {
-    window.initCdTma({ id: '6154747' }).then(show => window.showBlockA = show).catch(e => console.log('Block A error:', e));
-    window.initCdTma({ id: '6154746' }).then(show => window.showBlockB = show).catch(e => console.log('Block B error:', e));
-    window.initCdTma({ id: '6154745' }).then(show => window.showBlockC = show).catch(e => console.log('Block C error:', e));
-    window.initCdTma({ id: '6154714' }).then(show => window.showBlockD = show).catch(e => console.log('Block D error:', e));
-  } else {
-    setTimeout(initOnClickA, 500);
+  /* ============ TELEGRAM ============ */
+  const tg = (window.Telegram && window.Telegram.WebApp) ? window.Telegram.WebApp : null;
+  if (tg) {
+    try { tg.ready(); } catch (e) {}
+    try { tg.expand(); } catch (e) {}
+    try { tg.setHeaderColor('#0F172A'); } catch (e) {}
+    try { tg.setBackgroundColor('#0F172A'); } catch (e) {}
+    try { tg.disableVerticalSwipes && tg.disableVerticalSwipes(); } catch (e) {}
   }
-}
-initOnClickA();
+  const TG_USER_ID = (tg && tg.initDataUnsafe && tg.initDataUnsafe.user && tg.initDataUnsafe.user.id) ? tg.initDataUnsafe.user.id : null;
 
-function toast(m){
-  const t = $('toast'); t.textContent = m; t.classList.add('show');
-  clearTimeout(toast.h); toast.h = setTimeout(() => t.classList.remove('show'), 2500);
-}
-
-function showScreen(id){
-  document.querySelectorAll('.screen').forEach(e => e.classList.toggle('active', e.id === id));
-  document.querySelectorAll('.nav-item').forEach(e => e.classList.toggle('active', e.dataset.go === id));
-  window.scrollTo(0,0);
-  if(id === 'mine') loadNextAd();
-  if(id === 'home') fetchUser();
-}
-document.addEventListener('click', e => {
-  const go = e.target.closest('[data-go]');
-  if(go) showScreen(go.dataset.go);
-});
-
-const AIRDROP_DATE = new Date("2027-07-12T12:00:00Z").getTime();
-setInterval(() => {
-  const now = new Date().getTime();
-  const dist = AIRDROP_DATE - now;
-  if (dist < 0) {
-    $('airdropTimer').textContent = "Airdrop Processing...";
-    return;
-  }
-  const d = Math.floor(dist / (1000 * 60 * 60 * 24));
-  const h = Math.floor((dist % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-  const m = Math.floor((dist % (1000 * 60 * 60)) / (1000 * 60));
-  const s = Math.floor((dist % (1000 * 60)) / 1000);
-  $('airdropTimer').textContent = `${d}d ${h}h ${m}m ${s}s`;
-}, 1000);
-
-async function fetchUser() {
-  try {
-    const { data, error } = await sb.rpc('iwasp_get_user', { p_tg: UID, p_name: TG_NAME, p_ref: REF });
-    if(error) throw error;
-    
-    $('balHome').textContent = Number(data.balance).toLocaleString() + " IWASP";
-    $('tasksHome').textContent = data.offers_completed || 0;
-    $('streakHome').textContent = (data.streak || 0) + "/7";
-    $('uidText').textContent = "UID " + UID;
-    $('refLink').textContent = "https://t.me/Iwasp_bot?startapp=" + UID;
-    
-    if(data.ton_wallet) {
-      $('tonStatus').textContent = data.ton_wallet;
-      $('tonBtn').textContent = "Wallet Connected";
-      $('tonBtn').disabled = true;
+  /* ============ VIEWS ============ */
+  const VIEWS = ['view-role','view-welcome','view-form','view-success','view-worker-dash','view-employer-reg','view-employer-dash'];
+  function showView(id) {
+    VIEWS.forEach(function (v) {
+      const el = document.getElementById(v);
+      if (!el) return;
+      el.classList.toggle('hidden', v !== id);
+      if (v === id) { el.classList.remove('fade-in'); void el.offsetWidth; el.classList.add('fade-in'); }
+    });
+    window.scrollTo(0, 0);
+    if (tg && tg.BackButton) {
+      try {
+        if (id === 'view-role' || id === 'view-welcome' || id === 'view-success' || id === 'view-worker-dash' || id === 'view-employer-dash') tg.BackButton.hide();
+        else tg.BackButton.show();
+      } catch (e) {}
     }
+    if (id === 'view-employer-dash') { hydrateDashboardHeader(); loadLeads(); }
+    if (id === 'view-worker-dash') { loadWorkerDashboard(); }
+  }
 
-    const today = new Date().toISOString().split('T')[0];
-    const lastCheckin = data.last_checkin ? data.last_checkin.split('T')[0] : null;
-    const checkBtn = $('checkBtn');
-    if(lastCheckin === today) {
-      checkBtn.disabled = true;
-      checkBtn.textContent = "Checked in today";
+  /* ============ ELEMENTS ============ */
+  const form = document.getElementById('leadForm');
+  const startBtn = document.getElementById('startBtn');
+  const backBtns = document.querySelectorAll('[data-back]');
+  const startBtns = document.querySelectorAll('[data-start]');
+  const switchBtns = document.querySelectorAll('[data-switch-role]');
+  const closeBtn = document.getElementById('closeBtn');
+  const phoneInput = document.getElementById('phone');
+  const tgPhoneBtn = document.getElementById('tgPhoneBtn');
+  const passportWrap = document.getElementById('passportWrap');
+  const passportLast4 = document.getElementById('passportLast4');
+  const submitBtn = document.getElementById('submitBtn');
+  const btnSpinner = document.getElementById('btnSpinner');
+  const btnText = document.getElementById('btnText');
+  const formError = document.getElementById('formError');
+  const formErrorText = document.getElementById('formErrorText');
+  const roleWorker = document.getElementById('roleWorker');
+  const roleEmployer = document.getElementById('roleEmployer');
+  const backRoleBtns = document.querySelectorAll('[data-back-role]');
+  const employerForm = document.getElementById('employerForm');
+  const empPhoneInput = document.getElementById('employerPhone');
+  const tgPhoneEmp = document.getElementById('tgPhoneBtnEmployer');
+  const empSubmitBtn = document.getElementById('employerSubmitBtn');
+  const empSpinner = document.getElementById('employerSpinner');
+  const empBtnText = document.getElementById('employerBtnText');
+  const empError = document.getElementById('employerError');
+  const empErrorText = document.getElementById('employerErrorText');
+  const leadsList = document.getElementById('leadsList');
+  const dashCompany = document.getElementById('dashCompany');
+  const dashCredits = document.getElementById('dashCredits');
+  const dashCount = document.getElementById('dashCount');
+  const modalCredits = document.getElementById('modalCredits');
+  const usdtModal = document.getElementById('usdtModal');
+  const buyCreditsBtn = document.getElementById('buyCreditsBtn');
+  const hiringFocus = document.getElementById('hiringFocus');
+  const hiringChips = document.getElementById('hiringFocusChips');
+  const verificationBanner = document.getElementById('verificationBanner');
+  
+  // Worker Dashboard Elements
+  const workerInitial = document.getElementById('workerInitial');
+  const workerName = document.getElementById('workerName');
+  const workerJob = document.getElementById('workerJob');
+  const workerStatus = document.getElementById('workerStatus');
+  const updateCvLink = document.getElementById('updateCvLink');
+  const updateCvBtn = document.getElementById('updateCvBtn');
+  const cvStatus = document.getElementById('cvStatus');
+  const interviewsList = document.getElementById('interviewsList');
+
+  // Interview Modal Elements
+  const interviewModal = document.getElementById('interviewModal');
+  const intDate = document.getElementById('intDate');
+  const intMessage = document.getElementById('intMessage');
+  const sendInterviewBtn = document.getElementById('sendInterviewBtn');
+
+  // Verify Modal Elements
+  const verifyModal = document.getElementById('verifyModal');
+  const verifyAddress = document.getElementById('verifyAddress');
+  const verifyLicense = document.getElementById('verifyLicense');
+  const saveVerifyBtn = document.getElementById('saveVerifyBtn');
+
+  /* ============ STORAGE ============ */
+  function safeGet(k){try{return localStorage.getItem(k);}catch(e){return null;}}
+  function safeSet(k,v){try{localStorage.setItem(k,v);}catch(e){}}
+  function safeGetJSON(k){try{const r=localStorage.getItem(k);return r?JSON.parse(r):null;}catch(e){return null;}}
+  function safeSetJSON(k,v){try{localStorage.setItem(k,JSON.stringify(v));}catch(e){}}
+
+  /* ============ ROLE & INIT ============ */
+  roleWorker.addEventListener('click', async function(){ 
+    safeSet('wb_role','worker'); 
+    if (TG_USER_ID) {
+      try {
+        const res = await fetch(SUPABASE_URL + '/rest/v1/rpc/get_worker_profile', {
+          method: 'POST',
+          headers: { 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + SUPABASE_KEY, 'Content-Type': 'application/json' },
+          body: JSON.stringify({ tg_id: TG_USER_ID })
+        });
+        const profiles = await res.json();
+        if (profiles && profiles.length > 0) {
+          showView('view-worker-dash');
+          return;
+        }
+      } catch(e) { console.error(e); }
+    }
+    showView('view-welcome'); 
+  });
+
+  roleEmployer.addEventListener('click', function(){
+    safeSet('wb_role','employer');
+    if (safeGet('wb_employer_name')) showView('view-employer-dash');
+    else showView('view-employer-reg');
+  });
+  
+  backRoleBtns.forEach(b => b.addEventListener('click', () => showView('view-role')));
+  switchBtns.forEach(b => b.addEventListener('click', function(){
+    try{localStorage.removeItem('wb_role');}catch(e){}
+    showView('view-role');
+  }));
+
+  /* ============ NAV ============ */
+  startBtn.addEventListener('click', () => showView('view-form'));
+  startBtns.forEach(b => b.addEventListener('click', () => showView('view-form')));
+  backBtns.forEach(b => b.addEventListener('click', () => showView('view-welcome')));
+  closeBtn.addEventListener('click', function(){
+    if (tg && typeof tg.close === 'function') { try { tg.close(); return; } catch(e){} }
+    showView('view-role');
+  });
+  
+  if (tg && tg.BackButton) {
+    try {
+      tg.BackButton.onClick(function(){
+        const visible = VIEWS.find(v => { const el = document.getElementById(v); return el && !el.classList.contains('hidden'); });
+        if (visible === 'view-form') showView('view-welcome');
+        else if (visible === 'view-employer-reg') showView('view-role');
+        else showView('view-role');
+      });
+    } catch(e){}
+  }
+
+  /* ============ PHONE BUTTONS ============ */
+  function bindPhoneButton(btn, input){
+    btn.addEventListener('click', function(){
+      if (tg && typeof tg.requestContact === 'function') {
+        try {
+          tg.requestContact(function(shared, contact){
+            if (shared && contact && contact.phone_number) input.value = contact.phone_number;
+            else input.focus();
+          });
+          return;
+        } catch(e){}
+      }
+      const u = tg && tg.initDataUnsafe && tg.initDataUnsafe.user;
+      if (u && u.phone_number) input.value = u.phone_number;
+      else input.focus();
+    });
+  }
+  bindPhoneButton(tgPhoneBtn, phoneInput);
+  bindPhoneButton(tgPhoneEmp, empPhoneInput);
+
+  /* ============ PASSPORT TOGGLE ============ */
+  document.querySelectorAll('input[name="passport"]').forEach(function(radio){
+    radio.addEventListener('change', function(){
+      const hasPassport = document.querySelector('input[name="passport"]:checked')?.value === 'Yes';
+      passportWrap.classList.toggle('hidden', !hasPassport);
+      passportLast4.required = hasPassport;
+      if (!hasPassport) passportLast4.value = '';
+    });
+  });
+
+  /* ============ HELPERS ============ */
+  function setLoading(btn, spinner, label, state, idle, busy) {
+    btn.disabled = state;
+    spinner.classList.toggle('hidden', !state);
+    label.textContent = state ? busy : idle;
+  }
+  function showBox(box, textEl, msg){ textEl.textContent = msg; box.classList.remove('hidden'); box.scrollIntoView({behavior:'smooth',block:'center'}); }
+  function hideBox(box){ box.classList.add('hidden'); }
+  function val(fd, key){ const v = fd.get(key); if (v == null) return null; const s = String(v).trim(); return s === '' ? null : s; }
+
+  /* ============ WORKER SUBMIT ============ */
+  form.addEventListener('submit', async function(e){
+    e.preventDefault();
+    hideBox(formError);
+    if (!form.checkValidity()) { form.reportValidity(); return; }
+    const fd = new FormData(form);
+    const hasPassport = val(fd,'passport') === 'Yes';
+    const payload = {
+      name: val(fd,'name'), phone: val(fd,'phone'), email: val(fd,'email'),
+      location: val(fd,'location'), job: val(fd,'job'),
+      qualification: val(fd,'qualification'), experience: val(fd,'experience'),
+      passport: hasPassport, passport_last4: hasPassport ? val(fd,'passportLast4') : null,
+      ready: val(fd,'ready'), cv: val(fd,'cv'),
+      telegram_id: TG_USER_ID, status: 'active'
+    };
+    setLoading(submitBtn, btnSpinner, btnText, true, 'Submit Application', 'Submitting…');
+    try {
+      const res = await fetch(SUPABASE_URL + '/rest/v1/gulf_leads', {
+        method: 'POST',
+        headers: { 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + SUPABASE_KEY, 'Content-Type': 'application/json', 'Prefer': 'return=minimal' },
+        body: JSON.stringify(payload)
+      });
+      if (!res.ok) throw new Error(await res.text());
+      form.reset();
+      passportWrap.classList.add('hidden');
+      passportLast4.required = false;
+      setLoading(submitBtn, btnSpinner, btnText, false, 'Submit Application', 'Submitting…');
+      showView('view-success');
+    } catch(err) {
+      setLoading(submitBtn, btnSpinner, btnText, false, 'Submit Application', 'Submitting…');
+      showBox(formError, formErrorText, 'Could not submit your application. Please check your connection and try again.');
+      console.error('[WorldBridge] worker submit error:', err);
+    }
+  });
+
+  /* ============ WORKER DASHBOARD ============ */
+  async function loadWorkerDashboard() {
+    if (!TG_USER_ID) return;
+    try {
+      const res = await fetch(SUPABASE_URL + '/rest/v1/rpc/get_worker_profile', {
+        method: 'POST',
+        headers: { 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + SUPABASE_KEY, 'Content-Type': 'application/json' },
+        body: JSON.stringify({ tg_id: TG_USER_ID })
+      });
+      const profiles = await res.json();
+      if (profiles && profiles.length > 0) {
+        const p = profiles[0];
+        workerInitial.textContent = p.name.charAt(0).toUpperCase();
+        workerName.textContent = p.name;
+        workerJob.textContent = p.job + ' · ' + p.location;
+        workerStatus.textContent = p.status.toUpperCase();
+        if (p.cv) {
+          updateCvLink.value = p.cv;
+          cvStatus.innerHTML = '<a href="' + p.cv + '" target="_blank" class="text-gold underline">View Current CV</a>';
+        } else {
+          cvStatus.textContent = 'No CV uploaded yet.';
+        }
+      }
+    } catch(e) { console.error('Profile load error', e); }
+
+    loadWorkerInterviews();
+  }
+
+  async function loadWorkerInterviews() {
+    if (!TG_USER_ID) return;
+    try {
+      const res = await fetch(SUPABASE_URL + '/rest/v1/rpc/get_worker_interviews', {
+        method: 'POST',
+        headers: { 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + SUPABASE_KEY, 'Content-Type': 'application/json' },
+        body: JSON.stringify({ tg_id: TG_USER_ID })
+      });
+      const interviews = await res.json();
+      if (interviews && interviews.length > 0) {
+        interviewsList.innerHTML = interviews.map(i => {
+          const date = new Date(i.interview_date).toLocaleString();
+          return '<div class="card p-4 border-l-4 border-gold">' +
+            '<p class="text-[13px] font-extrabold text-gold">' + i.company_name + '</p>' +
+            '<p class="text-[11.5px] text-slate-300 mt-1">📅 ' + date + '</p>' +
+            (i.message ? '<p class="text-[10.5px] text-slate-400 mt-2 bg-white/5 p-2 rounded-lg">"' + i.message + '"</p>' : '') +
+          '</div>';
+        }).join('');
+      } else {
+        interviewsList.innerHTML = '<div class="card p-5 text-center"><p class="text-[11.5px] text-slate-400">No interview invitations yet.</p></div>';
+      }
+    } catch(e) { console.error('Interviews load error', e); }
+  }
+
+  updateCvBtn.addEventListener('click', async function() {
+    const newCv = updateCvLink.value.trim();
+    if (!newCv || !TG_USER_ID) return;
+    this.textContent = '...';
+    try {
+      await fetch(SUPABASE_URL + '/rest/v1/rpc/update_worker_cv', {
+        method: 'POST',
+        headers: { 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + SUPABASE_KEY, 'Content-Type': 'application/json' },
+        body: JSON.stringify({ tg_id: TG_USER_ID, new_cv: newCv })
+      });
+      this.textContent = 'Saved!';
+      cvStatus.innerHTML = '<a href="' + newCv + '" target="_blank" class="text-gold underline">View Current CV</a>';
+      setTimeout(() => this.textContent = 'Save', 2000);
+    } catch(e) {
+      this.textContent = 'Error';
+      setTimeout(() => this.textContent = 'Save', 2000);
+    }
+  });
+
+  /* ============ EMPLOYER REGISTER ============ */
+  employerForm.addEventListener('submit', async function(e){
+    e.preventDefault();
+    hideBox(empError);
+    if (!employerForm.checkValidity()) { employerForm.reportValidity(); return; }
+    const fd = new FormData(employerForm);
+    const companyName = val(fd,'companyName');
+    const licenseNumber = val(fd,'licenseNumber');
+    const officeAddress = val(fd,'officeAddress');
+    const email = val(fd,'employerEmail');
+    const phone = val(fd,'employerPhone');
+    const jobs = fd.getAll('employerJobs').map(j => String(j).trim()).filter(Boolean);
+    if (!jobs.length) { showBox(empError, empErrorText, 'Please select at least one role you recruit for.'); return; }
+    
+    // Give 1 Free Credit!
+    const payload = { 
+      company_name: companyName, 
+      license_number: licenseNumber,
+      office_address: officeAddress,
+      email, phone, jobs, 
+      telegram_id: TG_USER_ID, 
+      role: 'employer', 
+      credits: 1 
+    };
+    
+    setLoading(empSubmitBtn, empSpinner, empBtnText, true, 'Create Account & Get 1 Free Lead', 'Creating…');
+    try {
+      const res = await fetch(SUPABASE_URL + '/rest/v1/employer_registrations', {
+        method: 'POST',
+        headers: { 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + SUPABASE_KEY, 'Content-Type': 'application/json', 'Prefer': 'return=minimal' },
+        body: JSON.stringify(payload)
+      });
+      if (!res.ok) throw new Error(await res.text());
+      safeSet('wb_employer_name', companyName || 'Recruitment');
+      safeSet('wb_employer_email', email || '');
+      safeSetJSON('wb_employer_jobs', jobs);
+      safeSet('wb_has_license', licenseNumber ? 'yes' : 'no');
+      employerForm.reset();
+      setLoading(empSubmitBtn, empSpinner, empBtnText, false, 'Create Account & Get 1 Free Lead', 'Creating…');
+      showView('view-employer-dash');
+    } catch(err) {
+      setLoading(empSubmitBtn, empSpinner, empBtnText, false, 'Create Account & Get 1 Free Lead', 'Creating…');
+      showBox(empError, empErrorText, 'Could not create your account. Please check your connection and try again.');
+      console.error('[WorldBridge] employer reg error:', err);
+    }
+  });
+
+  /* ============ EMPLOYER DASHBOARD ============ */
+  async function hydrateDashboardHeader() {
+    dashCompany.textContent = safeGet('wb_employer_name') || 'Recruitment';
+    
+    // Check verification banner
+    if (safeGet('wb_has_license') === 'no' || safeGet('wb_has_license') === null) {
+      verificationBanner.classList.remove('hidden');
     } else {
-      checkBtn.disabled = false;
-      checkBtn.textContent = "Check in";
+      verificationBanner.classList.add('hidden');
     }
 
-    const dots = $('dots');
-    dots.innerHTML = Array.from({length: 7}, (_, i) => `<i class="dot ${i < (data.streak||0) ? 'on' : ''}"></i>`).join('');
-
-  } catch(e) { console.error("Error fetching user", e); }
-}
-
-$('checkBtn').onclick = async () => {
-  $('checkBtn').disabled = true;
-  $('checkBtn').textContent = "Processing...";
-  try {
-    const { data, error } = await sb.rpc('iwasp_daily_checkin', { p_tg: UID });
-    if(error) throw error;
-    if(data.error) { toast(data.error); fetchUser(); return; }
+    if (TG_USER_ID) {
+      try {
+        const res = await fetch(SUPABASE_URL + '/rest/v1/rpc/get_my_credits', {
+          method: 'POST',
+          headers: { 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + SUPABASE_KEY, 'Content-Type': 'application/json' },
+          body: JSON.stringify({ tg_id: TG_USER_ID })
+        });
+        if (res.ok) {
+          const credits = await res.json();
+          dashCredits.textContent = credits || 0;
+        }
+      } catch(e){}
+    }
     
-    toast(`+${data.reward} IWASP! Streak: ${data.new_streak}/7`);
-    fetchUser();
-  } catch(e) {
-    toast("Error checking in");
-    fetchUser();
+    const savedJobs = safeGetJSON('wb_employer_jobs');
+    hiringChips.innerHTML = '';
+    if (Array.isArray(savedJobs) && savedJobs.length) {
+      hiringFocus.classList.remove('hidden');
+      savedJobs.forEach(function(job){
+        const chip = document.createElement('span');
+        chip.className = 'text-[10px] font-extrabold px-2 py-1 rounded-full bg-gold/15 text-gold border border-gold/30';
+        chip.textContent = job;
+        hiringChips.appendChild(chip);
+      });
+    } else hiringFocus.classList.add('hidden');
   }
-};
 
-async function loadNextAd() {
-  const btn = $('watchBtn');
-  const dots = $('rotDots');
-  const label = $('rotLabel');
-  const hint = $('rotHint');
-  
-  btn.disabled = true;
-  btn.textContent = "Loading...";
-  $('tads-container').innerHTML = '';
-  $('tads-container').style.minHeight = '0';
-  
-  try {
-    const { data, error } = await sb.rpc('iwasp_next_ad', { p_tg: UID });
-    if(error) throw error;
-    
-    if(data.error === 'daily_cap_reached') {
-      label.textContent = "Daily Limit Reached";
-      btn.textContent = "Come Back Tomorrow";
-      hint.textContent = "You have mined 50 ads today.";
-      dots.innerHTML = '';
+  async function loadLeads() {
+    leadsList.innerHTML = '<p class="text-center text-slate-500 text-[11.5px] py-8">Loading leads…</p>';
+    dashCount.textContent = '—';
+    try {
+      const res = await fetch(SUPABASE_URL + '/rest/v1/employer_lead_preview?select=id,job,location,experience,qualification,ready,passport,name_masked,phone_masked,created_at&order=created_at.desc&limit=30', {
+        headers: { 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + SUPABASE_KEY }
+      });
+      if (!res.ok) throw new Error('Fetch failed (' + res.status + ')');
+      const leads = await res.json();
+      renderLeads(leads);
+    } catch(err) {
+      leadsList.innerHTML = '<div class="card p-5 text-center"><p class="text-[11.5px] text-slate-400">Could not load leads right now. Pull to refresh.</p></div>';
+      dashCount.textContent = '—';
+    }
+  }
+
+  function escapeHtml(str) {
+    if (str == null) return '—';
+    return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#039;');
+  }
+
+  function renderLeads(leads) {
+    dashCount.textContent = leads.length;
+    if (!leads.length) {
+      leadsList.innerHTML = '<div class="card p-6 text-center"><p class="text-[12px] text-slate-400">No leads available right now.</p><p class="text-[10.5px] text-slate-500 mt-1">New applications appear here automatically.</p></div>';
       return;
     }
+    leadsList.innerHTML = leads.map(function(lead){
+      const badge = lead.passport
+        ? '<span class="text-[9.5px] font-extrabold px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-300 border border-emerald-500/25">PASSPORT ✓</span>'
+        : '<span class="text-[9.5px] font-extrabold px-2 py-0.5 rounded-full bg-white/5 text-slate-400 border border-white/10">NO PASSPORT</span>';
+      return '<div class="card p-4">' +
+        '<div class="flex items-start justify-between gap-3"><div class="min-w-0"><p class="text-[13.5px] font-extrabold leading-tight truncate">' + escapeHtml(lead.name_masked) + '</p><p class="text-[11px] text-slate-400 mt-0.5 truncate">' + escapeHtml(lead.job) + ' · ' + escapeHtml(lead.location) + '</p></div>' + badge + '</div>' +
+        '<div class="mt-3 grid grid-cols-2 gap-2">' +
+          '<div class="rounded-lg bg-white/5 px-2.5 py-2"><p class="text-[9px] font-bold uppercase tracking-wider text-slate-500">Phone</p><p class="text-[11.5px] font-bold text-slate-300 mt-0.5">' + escapeHtml(lead.phone_masked) + '</p></div>' +
+          '<div class="rounded-lg bg-white/5 px-2.5 py-2"><p class="text-[9px] font-bold uppercase tracking-wider text-slate-500">Experience</p><p class="text-[11.5px] font-bold text-slate-300 mt-0.5 truncate">' + escapeHtml(lead.experience) + '</p></div>' +
+          '<div class="rounded-lg bg-white/5 px-2.5 py-2"><p class="text-[9px] font-bold uppercase tracking-wider text-slate-500">Qualification</p><p class="text-[11.5px] font-bold text-slate-300 mt-0.5 truncate">' + escapeHtml(lead.qualification) + '</p></div>' +
+          '<div class="rounded-lg bg-white/5 px-2.5 py-2"><p class="text-[9px] font-bold uppercase tracking-wider text-slate-500">Ready</p><p class="text-[11.5px] font-bold text-slate-300 mt-0.5 truncate">' + escapeHtml(lead.ready) + '</p></div>' +
+        '</div>' +
+        '<div class="mt-3 flex gap-2">' +
+          '<button type="button" class="flex-1 rounded-xl bg-gold/15 border border-gold/30 text-gold font-extrabold text-[12px] py-2.5 active:scale-[0.98] transition" data-unlock="' + escapeHtml(lead.id) + '">Unlock Details</button>' +
+          '<button type="button" class="flex-1 rounded-xl bg-emerald-500/15 border border-emerald-500/30 text-emerald-300 font-extrabold text-[12px] py-2.5 active:scale-[0.98] transition" data-interview="' + escapeHtml(lead.id) + '">Schedule Interview</button>' +
+        '</div>' +
+      '</div>';
+    }).join('');
     
-    currentAd = data;
-    dots.innerHTML = Array.from({length: data.total}, (_, i) => 
-      `<i class="dot ${i < data.step ? 'on' : ''}" ${i === data.step ? 'style="background:var(--gold);opacity:.5"' : ''}></i>`
-    ).join('');
-    
-    label.textContent = `Step ${data.step + 1} of ${data.total} — ${data.network.toUpperCase()}`;
-    btn.textContent = `Watch Ad (+${data.reward} IWASP)`;
-    btn.disabled = false;
-    hint.textContent = "";
-    btn.onclick = () => watchAd(currentAd);
-
-    if(data.network === 'tads') {
-       window.renderTadsWidget({
-          id: '13094',
-          type: 'static',
-          container: $('tads-container'),
-          debug: false,
-          onClickReward: function() {
-             btn.textContent = "Processing Webhook...";
-             btn.disabled = true;
-             hint.textContent = "Waiting for TADS to confirm the click...";
-             waitForWebhookCredit();
-          }
-       });
-       $('tads-container').style.minHeight = '100px';
-       btn.textContent = "Click the ad above to mine";
-       btn.disabled = true;
-    }
-
-  } catch(e) {
-    console.error(e);
-    label.textContent = "Connection Error";
-    btn.textContent = "Retry";
-    btn.disabled = false;
-    btn.onclick = loadNextAd;
+    leadsList.querySelectorAll('[data-unlock]').forEach(btn => btn.addEventListener('click', openUsdtModal));
+    leadsList.querySelectorAll('[data-interview]').forEach(btn => btn.addEventListener('click', () => openInterviewModal(btn.dataset.interview)));
   }
-}
 
-async function watchAd(ad) {
-  if(isProcessing) return;
-  isProcessing = true;
-  const btn = $('watchBtn');
-  btn.disabled = true;
-  
-  try {
-    if(ad.network === 'onclicka') {
-      btn.textContent = "Watching Ad...";
-      if(ad.zone === '6154747') await window.showBlockA();
-      else if(ad.zone === '6154746') await window.showBlockB();
-      else if(ad.zone === '6154745') await window.showBlockC();
-      else if(ad.zone === '6154714') await window.showBlockD();
+  /* ============ VERIFY LICENSE ============ */
+  window.openVerifyModal = function() {
+    verifyModal.classList.remove('hidden');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeVerifyModal() {
+    verifyModal.classList.add('hidden');
+    document.body.style.overflow = '';
+  }
+
+  verifyModal.querySelectorAll('[data-close-verify-modal]').forEach(el => el.addEventListener('click', closeVerifyModal));
+
+  saveVerifyBtn.addEventListener('click', async function() {
+    const lic = verifyLicense.value.trim();
+    const addr = verifyAddress.value.trim();
+    if (!lic) return alert('Please enter your Trade License Number');
+    this.textContent = 'Saving...';
+    this.disabled = true;
+
+    try {
+      const res = await fetch(SUPABASE_URL + '/rest/v1/rpc/update_employer_license', {
+        method: 'POST',
+        headers: { 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + SUPABASE_KEY, 'Content-Type': 'application/json' },
+        body: JSON.stringify({ tg_id: TG_USER_ID, new_license: lic, new_address: addr })
+      });
+      if (!res.ok) throw new Error(await res.text());
       
-      btn.textContent = "Verifying 15s timer...";
-      const { data, error } = await sb.rpc('iwasp_complete_ad', { p_tg: UID, p_step: ad.step });
-      if(error) throw error;
-      if(data.error === 'too_fast') {
-         toast("Ad skipped too quickly!");
-         loadNextAd();
-      } else {
-         toast(`+${data.reward} IWASP Mined!`);
-         fetchUser(); loadNextAd();
-      }
-    } 
-    else if (ad.network === 'monetag') {
-      btn.textContent = "Watching Ad...";
-      await window.show_12129098();
-      btn.textContent = "Processing Webhook...";
-      $('rotHint').textContent = "Waiting for Monetag to confirm the view...";
-      waitForWebhookCredit();
+      safeSet('wb_has_license', 'yes');
+      this.textContent = 'Verified!';
+      setTimeout(() => {
+        closeVerifyModal();
+        this.textContent = 'Save & Verify';
+        this.disabled = false;
+        verificationBanner.classList.add('hidden');
+        alert('Trade License submitted! You now have the Verified Badge.');
+      }, 1000);
+
+    } catch(e) {
+      console.error(e);
+      this.textContent = 'Error';
+      setTimeout(() => {
+        this.textContent = 'Save & Verify';
+        this.disabled = false;
+      }, 2000);
     }
-  } catch(e) {
-    console.error(e);
-    toast("Ad failed to load or was skipped.");
-    loadNextAd();
-  } finally {
-    isProcessing = false;
+  });
+
+  /* ============ SCHEDULE INTERVIEW ============ */
+  function openInterviewModal(id) {
+    currentWorkerId = id;
+    interviewModal.classList.remove('hidden');
+    document.body.style.overflow = 'hidden';
+    const tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    tomorrow.setHours(10, 0, 0, 0);
+    intDate.value = tomorrow.toISOString().slice(0, 16);
   }
-}
 
-function waitForWebhookCredit() {
-  let checks = 0;
-  const interval = setInterval(async () => {
-    checks++;
-    const { data } = await sb.rpc('iwasp_get_user', { p_tg: UID, p_name: TG_NAME, p_ref: REF });
-    if(data) {
-       $('balHome').textContent = Number(data.balance).toLocaleString() + " IWASP";
-       if(data.current_step !== currentAd.step) { 
-          clearInterval(interval);
-          toast(`+${currentAd.reward} IWASP Mined!`);
-          loadNextAd();
-       }
+  function closeInterviewModal() {
+    interviewModal.classList.add('hidden');
+    document.body.style.overflow = '';
+    currentWorkerId = null;
+  }
+
+  interviewModal.querySelectorAll('[data-close-int-modal]').forEach(el => el.addEventListener('click', closeInterviewModal));
+
+  sendInterviewBtn.addEventListener('click', async function() {
+    if (!currentWorkerId || !intDate.value) return;
+    this.textContent = 'Sending...';
+    this.disabled = true;
+
+    try {
+      const res = await fetch(SUPABASE_URL + '/rest/v1/rpc/schedule_interview', {
+        method: 'POST',
+        headers: { 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + SUPABASE_KEY, 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          worker_id: currentWorkerId,
+          emp_tg_id: TG_USER_ID,
+          emp_name: safeGet('wb_employer_name') || 'Recruitment Office',
+          int_date: new Date(intDate.value).toISOString(),
+          msg: intMessage.value.trim() || null
+        })
+      });
+      if (!res.ok) throw new Error(await res.text());
+      
+      this.textContent = 'Sent!';
+      setTimeout(() => {
+        closeInterviewModal();
+        this.textContent = 'Send Invitation (Free)';
+        this.disabled = false;
+        alert('Interview invitation sent to the worker successfully!');
+      }, 1000);
+
+    } catch(e) {
+      console.error(e);
+      this.textContent = 'Error';
+      setTimeout(() => {
+        this.textContent = 'Send Invitation (Free)';
+        this.disabled = false;
+      }, 2000);
     }
-    if(checks > 20) {
-       clearInterval(interval);
-       toast("Webhook delayed. Check back in a minute.");
-       loadNextAd();
+  });
+
+  /* ============ USDT MODAL ============ */
+  function openUsdtModal() {
+    usdtModal.classList.remove('hidden');
+    document.body.style.overflow = 'hidden';
+    showModalStep('packages');
+    renderPackages();
+    if (tg && tg.HapticFeedback) { try { tg.HapticFeedback.impactOccurred('light'); } catch(e){} }
+  }
+  function closeUsdtModal() {
+    usdtModal.classList.add('hidden');
+    document.body.style.overflow = '';
+  }
+  function showModalStep(step) {
+    document.getElementById('stepPackages').classList.toggle('hidden', step !== 'packages');
+    document.getElementById('stepPayment').classList.toggle('hidden', step !== 'payment');
+    document.getElementById('stepClaimed').classList.toggle('hidden', step !== 'claimed');
+  }
+  function renderPackages() {
+    const list = document.getElementById('packageList');
+    list.innerHTML = PACKAGES.map(p =>
+      '<button type="button" class="w-full text-left rounded-xl bg-white/5 border border-white/10 p-3 flex items-center gap-3 active:scale-[0.98] transition" data-pkg="' + p.id + '">' +
+        '<div class="w-10 h-10 rounded-lg bg-gold/15 border border-gold/25 flex items-center justify-center shrink-0"><span class="font-extrabold text-gold text-[13px]">' + p.credits + '</span></div>' +
+        '<div class="flex-1"><p class="text-[13px] font-extrabold">' + p.label + ' · $' + p.price + '</p><p class="text-[10.5px] text-slate-400">' + p.desc + '</p></div>' +
+        '<span class="text-slate-500">›</span>' +
+      '</button>'
+    ).join('');
+    list.querySelectorAll('[data-pkg]').forEach(b => b.addEventListener('click', () => {
+      const pkg = PACKAGES.find(p => p.id === b.dataset.pkg);
+      if (pkg) createOrder(pkg);
+    }));
+  }
+  function generateReference() {
+    const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+    let r = 'WB-';
+    for (let i = 0; i < 6; i++) r += chars[Math.floor(Math.random() * chars.length)];
+    return r;
+  }
+  function generateUniqueAmount(base) {
+    const tail = Math.floor(Math.random() * 9000) + 1000;
+    return (base + tail / 10000).toFixed(4);
+  }
+  async function createOrder(pkg) {
+    const ref = generateReference();
+    const amount = generateUniqueAmount(pkg.price);
+    const payload = {
+      telegram_id: TG_USER_ID,
+      company_name: safeGet('wb_employer_name') || 'Recruitment',
+      package_id: pkg.id,
+      credits: pkg.credits,
+      amount_usdt: parseFloat(amount),
+      reference: ref,
+      status: 'pending'
+    };
+    try {
+      const res = await fetch(SUPABASE_URL + '/rest/v1/payment_orders', {
+        method: 'POST',
+        headers: { 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + SUPABASE_KEY, 'Content-Type': 'application/json', 'Prefer': 'return=representation' },
+        body: JSON.stringify(payload)
+      });
+      if (!res.ok) throw new Error(await res.text());
+      const rows = await res.json();
+      currentOrder = rows[0];
+      document.getElementById('payAmount').textContent = amount + ' USDT';
+      document.getElementById('payAddress').textContent = USDT_ADDRESS;
+      document.getElementById('payRef').textContent = ref;
+      document.getElementById('qrImg').src = 'https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=' + encodeURIComponent(USDT_ADDRESS);
+      showModalStep('payment');
+    } catch(err) {
+      console.error('Order creation failed:', err);
+      alert('Could not create order. Please try again.');
     }
-  }, 3000);
-}
+  }
+  async function claimPayment() {
+    if (!currentOrder) return;
+    try {
+      const res = await fetch(SUPABASE_URL + '/rest/v1/payment_orders?id=eq.' + currentOrder.id, {
+        method: 'PATCH',
+        headers: { 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + SUPABASE_KEY, 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status: 'claimed', claimed_at: new Date().toISOString() })
+      });
+      if (!res.ok) throw new Error(await res.text());
+      showModalStep('claimed');
+    } catch(err) {
+      console.error('Claim failed:', err);
+      alert('Could not submit. Please try again.');
+    }
+  }
 
-$('copyBtn').onclick = async () => {
-  const link = $('refLink').textContent;
-  try { await navigator.clipboard.writeText(link); toast("Link copied"); } catch(e) {}
-};
+  buyCreditsBtn.addEventListener('click', openUsdtModal);
+  usdtModal.querySelectorAll('[data-close-modal]').forEach(el => el.addEventListener('click', closeUsdtModal));
+  document.getElementById('sentBtn').addEventListener('click', claimPayment);
+  document.getElementById('backToPackages').addEventListener('click', () => showModalStep('packages'));
+  document.getElementById('copyAmount').addEventListener('click', function(){
+    navigator.clipboard.writeText(document.getElementById('payAmount').textContent.replace(' USDT',''));
+    this.textContent = 'Copied'; setTimeout(() => this.textContent = 'Copy', 1500);
+  });
+  document.getElementById('copyAddress').addEventListener('click', function(){
+    navigator.clipboard.writeText(USDT_ADDRESS);
+    this.textContent = 'Copied'; setTimeout(() => this.textContent = 'Copy', 1500);
+  });
 
-$('tonBtn').onclick = () => {
-  toast("TON Connect integration coming soon.");
-};
-
-fetchUser();
-loadNextAd();
+  /* ============ INIT ============ */
+  (function init(){
+    const savedRole = safeGet('wb_role');
+    if (savedRole === 'worker') {
+      if (TG_USER_ID) {
+        fetch(SUPABASE_URL + '/rest/v1/rpc/get_worker_profile', {
+          method: 'POST',
+          headers: { 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + SUPABASE_KEY, 'Content-Type': 'application/json' },
+          body: JSON.stringify({ tg_id: TG_USER_ID })
+        }).then(res => res.json()).then(profiles => {
+          if (profiles && profiles.length > 0) showView('view-worker-dash');
+          else showView('view-welcome');
+        }).catch(() => showView('view-welcome'));
+      } else {
+        showView('view-welcome');
+      }
+    } else if (savedRole === 'employer') {
+      if (safeGet('wb_employer_name')) showView('view-employer-dash');
+      else showView('view-employer-reg');
+    } else {
+      showView('view-role');
+    }
+  })();
 </script>
 </body>
 </html>
