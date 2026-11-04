@@ -3,224 +3,410 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>IWASP</title>
-<script src='//libtl.com/sdk.js' data-zone='12129098' data-sdk='show_12129098'></script>
+<title>Iwasp</title>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<!-- Ad Networks SDKs -->
+<script src="https://js.onclckvd.com/in-stream-ad-admanager/tma.js"></script>
+<script src="//libtl.com/sdk.js" data-zone="12129098" data-sdk="show_12129098"></script>
+<script type="module">
+  import { renderTadsWidget } from 'https://cdn.jsdelivr.net/npm/react-tads-widget/+esm';
+  window.renderTadsWidget = renderTadsWidget;
+</script>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Instrument+Serif&display=swap" rel="stylesheet">
 <style>
 :root{--ink:#0B0A08;--panel:#14120E;--panel2:#1A1712;--line:rgba(212,167,44,.16);--hair:rgba(237,230,211,.07);--gold:#D4A72C;--bone:#EDE6D3;--mute:#8A8374;--red:#D9776B;--green:#8FBF8A;--serif:'Instrument Serif',serif}
 *{margin:0;padding:0;box-sizing:border-box;font-family:Inter,sans-serif;-webkit-tap-highlight-color:transparent}
 body{background:#000;display:flex;justify-content:center;color:var(--bone)}
 .app{width:100%;max-width:430px;min-height:100vh;background:var(--ink);position:relative;padding-bottom:120px}
-#loader{position:fixed;inset:0;background:var(--ink);z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;transition:opacity .8s}
-#loader.hide{opacity:0;pointer-events:none}
-.wasp-wrap{position:relative;width:200px;height:270px}
-.wasp{width:100%;height:100%}
-.loader-title{margin-top:26px;font-family:var(--serif);color:var(--bone);font-size:38px;letter-spacing:14px;padding-left:14px}
-.loader-sub{color:var(--mute);font-size:12px;margin-top:10px}
-.bar{width:120px;height:1px;background:var(--hair);margin-top:30px;overflow:hidden}
-.bar-fill{height:100%;width:0;background:var(--gold);animation:fill 2.6s forwards}
-@keyframes fill{to{width:100%}}
 .header{padding:20px;display:flex;gap:12px;align-items:center;position:sticky;top:0;background:rgba(11,10,8,.94);z-index:10;border-bottom:1px solid var(--hair)}
-.logo-box{width:34px;height:44px}
 .iwasp-text{font-family:var(--serif);font-size:24px;letter-spacing:6px;color:var(--bone)}
 .uid-text{color:var(--mute);font-size:11px;margin-top:5px}
 .screen{display:none;padding:0 20px}.screen.active{display:block}
 .card{border:1px solid var(--line);background:linear-gradient(180deg,var(--panel2),var(--panel));border-radius:16px;padding:22px 20px;margin-top:18px}
 .label{color:var(--mute);font-size:12px}
-.amount{font-family:var(--serif);color:var(--bone);font-size:58px;margin:16px 0 10px}
+.amount{font-family:var(--serif);color:var(--bone);font-size:58px;margin:10px 0}
 .meta{color:var(--mute);font-size:11px;line-height:1.5}
 .grid2{display:grid;grid-template-columns:1fr 1fr;margin-top:20px;border-top:1px solid var(--hair);padding-top:16px}
 .stat+.stat{border-left:1px solid var(--hair);padding-left:18px}
 .stat-label{color:var(--mute);font-size:11px}
 .stat-value{font-family:var(--serif);color:var(--bone);font-size:28px;margin-top:2px}
-.payday{margin-top:12px;display:flex;gap:10px;align-items:center;color:var(--mute);font-size:12px;padding:12px 4px}
-.trending{display:flex;gap:14px;align-items:center;padding:14px 16px;border:1px solid var(--hair);border-left:2px solid var(--gold);border-radius:12px;background:var(--panel);cursor:pointer}
-.earn-title{font-family:var(--serif);color:var(--bone);margin:30px 0 14px;font-size:22px}
-.tasks-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
-.task-item{text-align:center;cursor:pointer;background:var(--panel);border:1px solid var(--hair);border-radius:14px;padding:18px 6px 14px}
-.task-name{margin-top:10px;color:var(--bone);font-size:12px;font-weight:600}
-.task-sub{color:var(--mute);font-size:10px;margin-top:2px}
-.row{margin-top:10px;background:var(--panel);border:1px solid var(--hair);border-radius:12px;padding:14px;display:flex;justify-content:space-between;align-items:center}
-.input{width:100%;margin-top:12px;background:var(--ink);border:1px solid var(--hair);padding:14px;border-radius:10px;color:var(--bone);font-size:14px}
-.input:focus{outline:none;border-color:var(--gold)}
 .btn{width:100%;margin-top:16px;background:var(--gold);color:#16110A;border:none;padding:15px;border-radius:12px;font-weight:700;font-size:14px;cursor:pointer}
 .btn.ghost{background:transparent;color:var(--gold);border:1px solid var(--line)}
-.btn:disabled{background:var(--panel2);color:var(--mute)}
-.warn{margin-top:14px;background:rgba(217,119,107,.07);border:1px solid rgba(217,119,107,.18);color:var(--red);padding:11px 12px;border-radius:10px;font-size:11px}
-.badge{padding:5px 11px;border-radius:20px;font-size:11px;font-weight:600}
-.badge-pending{border:1px solid var(--line);color:var(--gold)}
-.badge-approved{color:var(--green);border:1px solid rgba(143,191,138,.25)}
+.btn:disabled{background:var(--panel2);color:var(--mute);cursor:not-allowed}
 .h{font-family:var(--serif);color:var(--bone);font-size:30px;margin:26px 0 4px}
 .sub{color:var(--mute);font-size:12px;margin-bottom:6px}
-.ref-link{margin-top:14px;background:var(--ink);border:1px solid var(--hair);border-radius:10px;padding:12px;font-size:12px;color:var(--mute);word-break:break-all}
 .bottom-nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:430px;background:rgba(14,12,9,.96);border-top:1px solid var(--hair);display:grid;grid-template-columns:repeat(4,1fr);padding:10px 0 14px;z-index:20}
 .nav-item{text-align:center;color:#6A6458;font-size:10px;cursor:pointer}
 .nav-item.active{color:var(--gold)}
 .toast{position:fixed;left:50%;bottom:104px;transform:translateX(-50%);background:var(--bone);color:#16110A;font-weight:600;font-size:12px;padding:10px 16px;border-radius:10px;z-index:50;opacity:0;pointer-events:none;transition:opacity .25s}
 .toast.show{opacity:1}
 .dots{display:flex;gap:6px;margin:14px 0 2px}.dot{flex:1;height:6px;border-radius:3px;background:var(--hair)}.dot.on{background:var(--gold)}
-.wall{width:100%;height:calc(100vh - 250px);min-height:600px;border:1px solid var(--hair);border-radius:12px;background:var(--panel);margin-top:12px}
-.progress{height:4px;background:var(--hair);border-radius:2px;margin-top:14px;overflow:hidden}.progress i{display:block;height:100%;width:0;background:var(--gold);transition:width .6s}
-#msgDot{display:none;position:absolute;top:-2px;right:-4px;width:10px;height:10px;border-radius:50%;background:var(--red)}
-.otab{flex:1;text-align:center;padding:12px;border-radius:12px;border:1px solid var(--hair);background:var(--panel);color:var(--mute);font-size:14px;font-weight:600;cursor:pointer}.otab.on{background:var(--gold);color:#16110A;border-color:var(--gold)}
+/* Rotating Coin Animation */
+.coin-wrap{display:flex;justify-content:center;align-items:center;height:120px;margin-top:10px}
+.coin{width:80px;height:80px;animation:spin 4s linear infinite;filter:drop-shadow(0 0 15px rgba(212,167,44,0.4))}
+@keyframes spin{100%{transform:rotateY(360deg)}}
+.countdown-box{background:rgba(212,167,44,0.1);border:1px dashed var(--gold);border-radius:10px;padding:10px;text-align:center;margin-top:15px}
+.countdown-timer{font-family:monospace;font-size:16px;color:var(--gold);font-weight:bold;margin-top:4px}
 </style>
 </head>
 <body>
 <div class="app">
-<div id="loader"><div class="wasp-wrap"><svg viewBox="0 0 200 270"><defs><radialGradient id="gY" cx="40%" cy="30%" r="80%"><stop offset="0" stop-color="#F6D75A"/><stop offset=".55" stop-color="#D9A514"/><stop offset="1" stop-color="#7A5307"/></radialGradient><radialGradient id="gK" cx="40%" cy="28%" r="80%"><stop offset="0" stop-color="#40382A"/><stop offset="1" stop-color="#0A0907"/></radialGradient><radialGradient id="gE" cx="35%" cy="30%" r="75%"><stop offset="0" stop-color="#6A5630"/><stop offset=".5" stop-color="#17110A"/><stop offset="1" stop-color="#000"/></radialGradient><linearGradient id="gW" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#F3E7C4" stop-opacity=".6"/><stop offset="1" stop-color="#9C8F6A" stop-opacity=".12"/></linearGradient><clipPath id="ab"><path d="M100 140C78 152 70 192 100 248C130 192 122 152 100 140Z"/></clipPath><g id="wingL"><ellipse cx="58" cy="116" rx="46" ry="13" transform="rotate(-12 58 116)" fill="url(#gW)" opacity=".7" stroke="#CDBB86" stroke-opacity=".4" stroke-width=".8"/><ellipse cx="54" cy="106" rx="52" ry="17" transform="rotate(-24 54 106)" fill="url(#gW)" stroke="#CDBB86" stroke-opacity=".55" stroke-width=".8"/></g><g id="legL" fill="none" stroke="#1B160C" stroke-width="2.2" stroke-linecap="round"><path d="M88 96L68 86L50 100"/><path d="M86 106L58 112L44 136"/><path d="M90 116L72 134L64 162"/></g></defs><use href="#wingL"/><use href="#wingL" transform="matrix(-1 0 0 1 200 0)"/><use href="#legL"/><use href="#legL" transform="matrix(-1 0 0 1 200 0)"/><g clip-path="url(#ab)"><rect x="60" y="130" width="80" height="130" fill="url(#gY)"/><path d="M60 160Q100 172 140 160V174Q100 186 60 174Z" fill="#0C0A07"/><path d="M60 188Q100 200 140 188V202Q100 214 60 202Z" fill="#0C0A07"/><path d="M60 216Q100 228 140 216V232Q100 244 60 232Z" fill="#0C0A07"/></g><ellipse cx="100" cy="106" rx="21" ry="26" fill="url(#gK)"/><ellipse cx="100" cy="60" rx="21" ry="18" fill="url(#gY)"/><ellipse cx="84" cy="56" rx="7.5" ry="11" fill="url(#gE)"/><ellipse cx="116" cy="56" rx="7.5" ry="11" fill="url(#gE)"/></svg></div><div class="loader-title">IWASP</div><div class="loader-sub">Earn on your own time</div><div class="bar"><div class="bar-fill"></div></div></div>
-<div class="header"><div class="logo-box"><svg viewBox="0 0 200 270" style="width:100%;height:100%"><use href="#wingL"/><use href="#wingL" transform="matrix(-1 0 0 1 200 0)"/><g clip-path="url(#ab)"><rect x="60" y="130" width="80" height="130" fill="url(#gY)"/></g></svg></div><div><div class="iwasp-text">IWASP</div><div class="uid-text" id="uidText">UID — • Profile</div></div><div id="msgBtn" style="margin-left:auto;position:relative;cursor:pointer;font-size:24px;padding:4px">✉️<b id="msgDot"></b></div></div>
-<div id="home" class="screen active"><div class="card"><div style="display:flex;justify-content:space-between;align-items:center"><div class="label">Total balance</div><div class="label" style="border:1px solid var(--line);color:var(--gold);padding:5px 11px;border-radius:20px">7-day streak +10 WASP</div></div><div class="amount" id="balHome">0 WASP</div><div class="meta" id="payHint">Loading…</div><div class="meta" id="adsHome" style="margin-top:6px"></div><div class="grid2"><div class="stat"><div class="stat-label">Offers completed</div><div class="stat-value" id="tasksHome">0</div></div><div class="stat"><div class="stat-label">Check-in streak</div><div class="stat-value" id="streakHome">0/7</div></div></div></div><div class="payday"><span id="paydayHome">Calculating payday…</span></div><div class="card"><div class="label">Daily check-in</div><div class="dots" id="dots"></div><p class="meta" style="margin-top:10px">Check in 7 days in a row to earn 10 WASP. Miss a day and your streak goes back to 0.</p><button class="btn" id="checkBtn">Check in</button></div><div class="trending" data-go="offers" style="margin-top:14px"><div><b>Watch ads and earn coins</b><p style="color:var(--mute);font-size:12px">20 coins for every ad you watch to the end</p></div></div></div>
+  <div class="header">
+    <div>
+      <div class="iwasp-text">IWASP</div>
+      <div class="uid-text" id="uidText">UID — Profile</div>
+    </div>
+  </div>
 
-<!-- MINE TAB -->
-<div id="offers" class="screen"><div class="h">Mine</div><div class="sub">Watch ads and earn coins.</div>
-<div class="card"><div class="label">Watch &amp; earn</div>
-<ol style="margin:10px 0 0 18px;color:var(--bone);font-size:13px;line-height:1.7"><li>Tap <b>Watch an ad</b>.</li><li>Watch the ad <b>to the very end</b>. If you close it early, you get no coins.</li><li>Coins are added after at least 15 seconds.</li></ol>
-<div class="meta" id="mineMsg" style="margin-top:12px;min-height:18px"></div>
-<button class="btn" id="watchBtn">Watch an ad: +20 coins</button>
-<p class="meta" style="margin-top:10px">Limit: 20 ads, then a 30-minute break.</p></div>
+  <!-- HOME SCREEN -->
+  <div id="home" class="screen active">
+    <div class="card" style="text-align:center;">
+      <div class="label">Your Mining Balance</div>
+      <div class="coin-wrap">
+        <!-- Reusing the bee SVG from your original code -->
+        <svg class="coin" viewBox="0 0 200 270">
+          <defs>
+            <radialGradient id="gY" cx="40%" cy="30%" r="80%"><stop offset="0" stop-color="#F6D75A"/><stop offset=".55" stop-color="#D9A514"/><stop offset="1" stop-color="#7A5307"/></radialGradient>
+            <radialGradient id="gK" cx="40%" cy="28%" r="80%"><stop offset="0" stop-color="#40382A"/><stop offset="1" stop-color="#0A0907"/></radialGradient>
+            <clipPath id="ab"><path d="M100 140C78 152 70 192 100 248C130 192 122 152 100 140Z"/></clipPath>
+          </defs>
+          <g clip-path="url(#ab)"><rect x="60" y="130" width="80" height="130" fill="url(#gY)"/><path d="M60 160Q100 172 140 160V174Q100 186 60 174Z" fill="#0C0A07"/><path d="M60 188Q100 200 140 188V202Q100 214 60 202Z" fill="#0C0A07"/></g>
+          <ellipse cx="100" cy="106" rx="21" ry="26" fill="url(#gK)"/><ellipse cx="100" cy="60" rx="21" ry="18" fill="url(#gY)"/>
+        </svg>
+      </div>
+      <div class="amount" id="balHome">0 IWASP</div>
+      
+      <div class="countdown-box">
+        <div class="label">WASP Airdrop Countdown</div>
+        <div class="countdown-timer" id="airdropTimer">Loading...</div>
+      </div>
+
+      <div class="grid2">
+        <div class="stat"><div class="stat-label">Ads Mined</div><div class="stat-value" id="tasksHome">0</div></div>
+        <div class="stat"><div class="stat-label">Streak</div><div class="stat-value" id="streakHome">0/7</div></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="label">Daily Check-in</div>
+      <div class="dots" id="dots"></div>
+      <p class="meta" style="margin-top:10px">Check in daily for 10 IWASP. Hit 7 days for a 500 IWASP bonus!</p>
+      <button class="btn" id="checkBtn">Check in</button>
+    </div>
+  </div>
+
+  <!-- MINE SCREEN -->
+  <div id="mine" class="screen">
+    <div class="h">Mining Hub</div>
+    <div class="sub">Watch ads to mine IWASP. 50 Ads/day limit.</div>
+    
+    <div class="card" id="miningCard">
+      <div class="label">Current Rotation Progress</div>
+      <div class="dots" id="rotDots"></div>
+      <div class="meta" id="rotLabel" style="margin-top:10px; font-weight:bold; color:var(--bone);">Loading...</div>
+      
+      <!-- Container for TGB widget -->
+      <div id="tads-container" style="margin-top:15px; min-height:0;"></div>
+
+      <button class="btn" id="watchBtn" disabled>Loading...</button>
+      <div class="meta" id="rotHint" style="margin-top:10px; text-align:center;"></div>
+    </div>
+  </div>
+
+  <!-- REFERRAL SCREEN -->
+  <div id="referral" class="screen">
+    <div class="h">Invite</div>
+    <div class="sub" id="refSub">Earn 100 IWASP when your invitee mines 20 ads.</div>
+    <div class="card">
+      <div class="label">Your link</div>
+      <div class="ref-link" id="refLink" style="margin-top:14px;background:var(--ink);border:1px solid var(--hair);border-radius:10px;padding:12px;font-size:12px;color:var(--mute);word-break:break-all;">...</div>
+      <button class="btn" id="copyBtn">Copy link</button>
+      <div class="grid2">
+        <div class="stat"><div class="stat-label">Invited</div><div class="stat-value" id="refCount">0</div></div>
+        <div class="stat"><div class="stat-label">Earned</div><div class="stat-value" id="refEarn">0 IWASP</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- AIRDROP / WALLET SCREEN -->
+  <div id="airdrop" class="screen">
+    <div class="h">Airdrop</div>
+    <div class="sub">Connect your TON wallet to receive your WASP tokens on July 12, 2027.</div>
+    <div class="card">
+      <div class="label">TON Wallet Status</div>
+      <div class="row" style="margin-top:10px;background:var(--ink);border:1px solid var(--hair);border-radius:12px;padding:14px;display:flex;justify-content:space-between;align-items:center;">
+        <span class="meta" id="tonStatus">Not Connected</span>
+      </div>
+      <button class="btn" id="tonBtn">Connect TON Wallet</button>
+      <div class="warn" style="margin-top:14px;font-size:11px;color:var(--mute);">WASP tokens are not live yet. By connecting your wallet, you reserve your airdrop spot.</div>
+    </div>
+  </div>
+
+  <!-- BOTTOM NAV -->
+  <div class="bottom-nav">
+    <div class="nav-item active" data-go="home">🏠<br>Home</div>
+    <div class="nav-item" data-go="mine">⛏️<br>Mine</div>
+    <div class="nav-item" data-go="referral">👥<br>Invite</div>
+    <div class="nav-item" data-go="airdrop">🪂<br>Airdrop</div>
+  </div>
+  <div class="toast" id="toast"></div>
 </div>
 
-<div id="referral" class="screen"><div class="h">Invite people</div><div class="sub" id="refSub">Earn $0.10 (10 WASP) for every person you invite. It stays pending until they earn $2 (200 WASP), then it is added to your balance.</div><div class="card"><div class="label">Your link</div><div class="ref-link" id="refLink">…</div><button class="btn" id="copyBtn">Copy link</button><div class="grid2"><div class="stat"><div class="stat-label">Invited</div><div class="stat-value" id="refCount">0</div></div><div class="stat"><div class="stat-label">Earned</div><div class="stat-value" id="refEarn">0 WASP</div></div></div></div><div class="card"><div class="grid2" style="margin-top:0;border-top:none;padding-top:0"><div class="stat"><div class="stat-label">Pending bonus</div><div class="stat-value" id="refPendAmt">0 WASP</div></div><div class="stat"><div class="stat-label">Approved bonus</div><div class="stat-value" id="refApprAmt">0 WASP</div></div></div><div class="meta" id="refPending" style="margin-top:14px"></div></div><div class="h" style="font-size:22px;margin-top:28px">Your referrals</div><div id="refList" style="margin-top:6px"></div><div></div></div>
-<div id="wallet" class="screen"><div class="h">Wallet</div><div class="sub">Paid on the 1st and 15th of every month, 12 PM WAT, in USDT on Solana, once you reach 200 WASP ($2). Under 200 WASP rolls over. 100 WASP = $1.</div><div class="card"><div class="label">Balance</div><div class="amount" id="balWallet" style="font-size:44px">0 WASP</div><div class="meta" id="balUsd">≈ $0.00</div><div class="progress"><i id="bar"></i></div><input class="input" id="wAddr" placeholder="Solana wallet address"><button class="btn" id="walletBtn">Save wallet</button><div class="warn">Double-check your address. Payments sent to wrong address can't be recovered.</div></div><div class="h" style="font-size:22px;margin-top:28px">Payout history</div><div id="hist"></div></div>
-<div id="profile" class="screen"><div class="h">Profile</div><div class="card"><div class="row" style="margin:0"><span class="meta">User</span><b id="pName">—</b></div><div class="row"><span class="meta">UID</span><b id="pUid">—</b></div><div class="row"><span class="meta">Offers completed</span><b id="pTasks">0</b></div></div></div>
-</div>
-<div class="bottom-nav"><div class="nav-item active" data-go="home">🏠<br>Home</div><div class="nav-item" data-go="offers">⛏️<br>Mine</div><div class="nav-item" data-go="referral">👥<br>Invite</div><div class="nav-item" data-go="wallet">👛<br>Wallet</div></div>
-<div id="msgModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:100;justify-content:center;align-items:flex-start;padding:70px 16px"><div class="card" style="max-width:400px;width:100%;max-height:75vh;overflow:auto;margin:0"><div style="display:flex;justify-content:space-between;align-items:center"><div class="h" style="margin:0;font-size:24px">Messages</div><div id="msgClose" style="cursor:pointer;font-size:22px;padding:4px 8px">✕</div></div><div id="msgBox"></div></div></div>
-<div class="toast" id="toast"></div>
 <script>
-const tg=window.Telegram&&Telegram.WebApp; if(tg){try{tg.ready();tg.expand();}catch(e){}}
-const $=id=>document.getElementById(id);
-let UID="0"; if(tg&&tg.initDataUnsafe&&tg.initDataUnsafe.user&&tg.initDataUnsafe.user.id){UID=String(tg.initDataUnsafe.user.id);}
-const TG_NAME=(tg&&tg.initDataUnsafe&&tg.initDataUnsafe.user&&(tg.initDataUnsafe.user.username||tg.initDataUnsafe.user.first_name))||("User "+UID);
+const tg = window.Telegram && Telegram.WebApp;
+if(tg) { try { tg.ready(); tg.expand(); } catch(e) {} }
 
-// Secure door: every private request is verified by Telegram signature
-const API="https://tjlqyoktagopiaqlkszg.supabase.co/functions/v1/smooth-api";
-async function api(action,extra){
- const r=await fetch(API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(Object.assign({action,initData:(tg&&tg.initData)||''},extra||{}))});
- let d={}; try{d=await r.json();}catch(e){}
- if(!r.ok) throw new Error(d.error||('Error '+r.status));
- return d;
+const $ = id => document.getElementById(id);
+let UID = "583826997"; 
+if(tg && tg.initDataUnsafe && tg.initDataUnsafe.user && tg.initDataUnsafe.user.id) {
+  UID = String(tg.initDataUnsafe.user.id);
 }
-const REF=(tg&&tg.initDataUnsafe&&tg.initDataUnsafe.start_param)||null;
-let REFS={invited:0,approved:0,pending:0}; let REFLIST=[]; let ACT={offers:0,ads:0};
-let SYNC_ERR=''; let SERVER_COINS=0; // WASP coin balance from Supabase
+const TG_NAME = (tg && tg.initDataUnsafe && tg.initDataUnsafe.user && (tg.initDataUnsafe.user.username || tg.initDataUnsafe.user.first_name)) || ("User " + UID);
+const REF = (tg && tg.initDataUnsafe && tg.initDataUnsafe.start_param) || null;
 
+// Supabase Setup
+const SUPABASE_URL="https://tjlqyoktagopiaqlkszg.supabase.co";
+const SUPABASE_ANON_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRqbHF5b2t0YWdvcGlhcWxrc3pnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTI4NjQ1MTIsImV4cCI6MjEwODQ0MDUxMn0.-X0nIkyzZ5OXXZHA9XYZQ0Ecu9Bh8s9DuQn1cCeyeuE";
+const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-const WALLET_KEY="iwasp_wallet_"+UID, STATS_KEY="iwasp_stats_"+UID, HIST_KEY="iwasp_hist_"+UID;
-function getStats(){try{return JSON.parse(localStorage.getItem(STATS_KEY)||'{"earned":0,"tasks":0,"streak":0,"checked":false}')}catch(e){return{earned:0,tasks:0,streak:0,checked:false}}}
-function saveStats(s){localStorage.setItem(STATS_KEY,JSON.stringify(s));}
-function todayStr(){return new Date().toDateString();}
-function yestStr(){const d=new Date();d.setDate(d.getDate()-1);return d.toDateString();}
-function toast(m){const t=$('toast');t.textContent=m;t.classList.add('show');clearTimeout(toast.h);toast.h=setTimeout(()=>t.classList.remove('show'),2200);}
-function showScreen(id){document.querySelectorAll('.screen').forEach(e=>e.classList.toggle('active',e.id===id)); document.querySelectorAll('.nav-item').forEach(e=>e.classList.toggle('active',e.dataset.go===id)); window.scrollTo(0,0); fetchBalance();}
-function isValidSol(a){if(!a) return false; if(a.length<32||a.length>44) return false; return /^[1-9A-HJ-NP-Za-km-z]+$/.test(a);}
-const fmt=n=>Number(n).toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:4});
-let MSGS=[]; const SEEN_KEY="iwasp_msg_seen_"+UID;
-function maxMsgId(){return MSGS.reduce((m,x)=>Math.max(m,x.id),0);}
-function updateDot(){const seen=parseInt(localStorage.getItem(SEEN_KEY)||"0"); $('msgDot').style.display=maxMsgId()>seen?'block':'none';}
-async function fetchMsgs(){}
-function openMsgs(){
- const box=$('msgBox'); box.textContent='';
- if(!MSGS.length){const e=document.createElement('div'); e.className='meta'; e.style.marginTop='12px'; e.textContent='No messages yet.'; box.appendChild(e);}
- MSGS.forEach(m=>{const d=document.createElement('div'); d.className='row'; d.style.display='block'; const t=document.createElement('b'); t.textContent=m.title||'Message'; const x=document.createElement('div'); x.className='meta'; x.style.whiteSpace='pre-wrap'; x.style.marginTop='6px'; x.textContent=m.body; const dt=document.createElement('div'); dt.className='meta'; dt.style.marginTop='6px'; dt.textContent=new Date(m.created_at).toLocaleDateString(); d.append(t,x,dt); box.appendChild(d);});
- $('msgModal').style.display='flex';
- localStorage.setItem(SEEN_KEY,String(maxMsgId())); updateDot();
+let currentAd = null;
+let isProcessing = false;
+
+// Initialize OnClickA Blocks
+window.initCdTma({ id: '6154747' }).then(show => window.showBlockA = show).catch(e => console.log(e));
+window.initCdTma({ id: '6154746' }).then(show => window.showBlockB = show).catch(e => console.log(e));
+window.initCdTma({ id: '6154745' }).then(show => window.showBlockC = show).catch(e => console.log(e));
+window.initCdTma({ id: '6154714' }).then(show => window.showBlockD = show).catch(e => console.log(e));
+
+function toast(m){
+  const t = $('toast'); t.textContent = m; t.classList.add('show');
+  clearTimeout(toast.h); toast.h = setTimeout(() => t.classList.remove('show'), 2500);
 }
-$('msgBtn').onclick=openMsgs;
-$('msgClose').onclick=()=>{$('msgModal').style.display='none';};
-$('msgModal').onclick=e=>{if(e.target===$('msgModal'))$('msgModal').style.display='none';};
-async function fetchAct(){}
-async function fetchRefs(){}
-async function fetchBalance(){
- if(!(tg&&tg.initData)) return;
- try{
-  const d=await api('sync',{ref:REF});
-  SERVER_COINS=Number(d.balance)||0;
-  if(d.refs) REFS=d.refs;
-  if(Array.isArray(d.reflist)) REFLIST=d.reflist;
-  if(Array.isArray(d.messages)){MSGS=d.messages; updateDot();}
-  if(d.activity) ACT=d.activity;
-  SYNC_ERR=''; render();
- }catch(e){console.error(e); SYNC_ERR='Connection problem: '+e.message; render();}
+
+function showScreen(id){
+  document.querySelectorAll('.screen').forEach(e => e.classList.toggle('active', e.id === id));
+  document.querySelectorAll('.nav-item').forEach(e => e.classList.toggle('active', e.dataset.go === id));
+  window.scrollTo(0,0);
+  if(id === 'mine') loadNextAd();
+  if(id === 'home') fetchUser();
 }
-function render(){
- const s=getStats();
- if(s.last&&s.last!==todayStr()&&s.last!==yestStr()&&s.streak>0){s.streak=0;saveStats(s);}
- const done=s.last===todayStr();
- const coins=SERVER_COINS+Math.round(s.earned*100);
- const bal=coins/100; // dollars (100 WASP = $1)
- $('balHome').textContent=fmt(coins)+" WASP"; $('balWallet').textContent=fmt(coins)+" WASP"; $('balUsd').textContent="≈ $"+bal.toFixed(2);
- $('bar').style.width=Math.min(100,bal/2*100)+"%";
- $('tasksHome').textContent=ACT.offers||0; $('pTasks').textContent=ACT.offers||0; $('adsHome').textContent=SYNC_ERR||('Ads watched: '+(ACT.ads||0)); $('streakHome').textContent=s.streak+"/7";
- $('dots').innerHTML=Array.from({length:7},(_,i)=>'<i class="dot'+(i<s.streak?' on':'')+'"></i>').join('');
- const c=$('checkBtn'); c.disabled=done; c.textContent=done?"Checked in today":"Check in";
- $('uidText').textContent="UID "+UID+" • Profile"; $('pName').textContent=TG_NAME; $('pUid').textContent=UID;
- $('refLink').textContent="https://t.me/Iwasp_bot?startapp="+UID;
- $('refPendAmt').textContent=fmt(REFS.pending_coins||0)+" WASP"; $('refApprAmt').textContent=fmt(REFS.approved_coins||0)+" WASP"; $('refCount').textContent=REFS.invited||0; $('refEarn').textContent=fmt(REFS.approved_coins||0)+" WASP"; $('refPending').textContent=(REFS.pending||0)>0?(REFS.pending+" referral(s) pending: "+fmt(REFS.pending_coins||0)+" WASP waiting until each earns 200 WASP"):"Each person you invite adds $2 (200 WASP) as pending. It is approved and added to your balance once that person earns $2 (200 WASP).";
- $('refSub').textContent=REFS.tier==='NONE'?'':'Earn $0.10 (10 WASP) for every person you invite. It stays pending until they earn $2 (200 WASP), then it is added to your balance.';
- const L=$('refList'); L.textContent=''; REFLIST.forEach(r=>{const d=document.createElement('div'); d.className='row'; const n=document.createElement('span'); n.className='meta'; n.textContent=r.name+' ••'+r.id; const b=document.createElement('span'); b.className='badge '+(r.approved?'badge-approved':'badge-pending'); b.textContent=r.approved?'APPROVED +'+(r.bonus||10)+' WASP':'PENDING +'+(r.bonus||200)+' WASP'; d.appendChild(n); d.appendChild(b); L.appendChild(d);});
- if(!REFLIST.length){const e=document.createElement('div'); e.className='meta'; e.style.marginTop='10px'; e.textContent='No referrals yet. Share your link to invite people.'; L.appendChild(e);}
- const w=localStorage.getItem(WALLET_KEY)||""; $('wAddr').value=w;
- const need=Math.max(0,200-coins);
- if(need>0){$('payHint').textContent=fmt(need)+" WASP more to qualify for the next payout. Under 200 WASP rolls over."} else {$('payHint').textContent=w?"You qualify for the next payout.":"You qualify. Add your wallet to get paid."}
- const now=new Date(); const y=now.getFullYear(), m=now.getMonth(); const nextPay=[new Date(y,m,1,12),new Date(y,m,15,12),new Date(y,m+1,1,12)].find(d=>d>now); const diff=Math.ceil((nextPay-now)/(1000*60*60*24));
- let txt="Next payday "+nextPay.toLocaleDateString(undefined,{day:'numeric',month:'short'})+", 12 PM WAT • "+diff+" days left"; if(coins<200) txt+=" • Under 200 WASP rolls over"; $('paydayHome').textContent=txt;
- const hist=JSON.parse(localStorage.getItem(HIST_KEY)||"[]");
- const histEl=$('hist'); if(hist.length==0){histEl.innerHTML='<div class="card"><div class="meta">No payouts yet. Paid on the 1st and 15th of every month once you reach 200 WASP.</div></div>'} else {histEl.innerHTML=hist.map(h=>'<div class="card" style="margin-top:10px"><div style="display:flex;justify-content:space-between"><span class="meta">'+h.text+'</span><span class="badge '+(h.status=='PENDING'?'badge-pending':'badge-approved')+'">'+h.status+'</span></div></div>').join('')}
-}
-$('checkBtn').onclick=()=>{
- const s=getStats();
- if(s.last===todayStr()){toast("Already checked in today");return;}
- let st=(s.last===yestStr())?s.streak:0; // missed a day = back to 0
- if(st>=7) st=0;
- st+=1; s.streak=st; s.last=todayStr(); s.checked=true;
- if(st===7){
-  s.earned+=0.1; // 10 WASP, only on day 7
-  const hist=JSON.parse(localStorage.getItem(HIST_KEY)||"[]"); hist.unshift({text:"7-day streak bonus 10 WASP",status:"APPROVED"}); localStorage.setItem(HIST_KEY,JSON.stringify(hist));
-  toast("7-day streak! +10 WASP");
- } else { toast("Day "+st+" of 7 ✅"); }
- saveStats(s); render();
-};
-$('walletBtn').onclick=()=>{
- const addr=$('wAddr').value.trim(); if(!isValidSol(addr)){toast("Invalid Solana address");return;}
- localStorage.setItem(WALLET_KEY,addr); toast("Wallet saved ✅"); render();
-};
-$('copyBtn').onclick=async()=>{
- const link=$('refLink').textContent; try{await navigator.clipboard.writeText(link);}catch(e){} toast("Link copied");
-};
-document.addEventListener('click',e=>{const go=e.target.closest('[data-go]'); if(go){showScreen(go.dataset.go);}});
-setTimeout(()=>{const l=$('loader'); if(l){l.classList.add('hide'); setTimeout(()=>{l.style.display='none';},800);}},2800);
-setTimeout(()=>{const l=$('loader'); if(l) l.style.display='none';},4500);
-const sleep=ms=>new Promise(r=>setTimeout(r,ms));
-let mining=false;
-$('watchBtn').onclick=async()=>{
- if(mining) return; mining=true;
- const btn=$('watchBtn'), say=t=>{$('mineMsg').textContent=t;}; btn.disabled=true;
- try{
-  if(typeof window.show_12129098!=='function'){say('Ads are not available here. Open the app from Telegram.');return;}
-  const st=await api('ad_start');
-  if(!st.ok){say(st.error||'Try again soon.');return;}
-  const t0=Date.now();
-  say('Watch the ad to the end...');
-  try{await window.show_12129098({ymid:st.id});}catch(e){say('No ad available right now. Try again soon.');return;}
-  for(let i=0;i<25;i++){
-   const left=Math.ceil((15000-(Date.now()-t0))/1000);
-   if(left>0){say('Almost done... '+left+'s');await sleep(1000);continue;}
-   say('Adding your coins...');
-   const c=await api('ad_claim',{id:st.id});
-   if(c.ok){say('+'+c.coins+' coins added!');toast('+'+c.coins+' coins');await fetchBalance();return;}
-   if(c.retry){await sleep(2000);continue;}
-   say(c.error||'No coins this time.');return;
+document.addEventListener('click', e => {
+  const go = e.target.closest('[data-go]');
+  if(go) showScreen(go.dataset.go);
+});
+
+// --- COUNTDOWN TIMER ---
+const AIRDROP_DATE = new Date("2027-07-12T12:00:00Z").getTime();
+setInterval(() => {
+  const now = new Date().getTime();
+  const dist = AIRDROP_DATE - now;
+  if (dist < 0) {
+    $('airdropTimer').textContent = "Airdrop Processing...";
+    return;
   }
-  say('The ad was not confirmed, so no coins were added.');
- }catch(e){say(e.message);}
- finally{mining=false;btn.disabled=false;}
-};
-render(); fetchBalance(); setInterval(fetchBalance,20000);
+  const d = Math.floor(dist / (1000 * 60 * 60 * 24));
+  const h = Math.floor((dist % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+  const m = Math.floor((dist % (1000 * 60 * 60)) / (1000 * 60));
+  const s = Math.floor((dist % (1000 * 60)) / 1000);
+  $('airdropTimer').textContent = `${d}d ${h}h ${m}m ${s}s`;
+}, 1000);
 
-document.addEventListener('visibilitychange',()=>{if(!document.hidden)fetchBalance();});
-if(tg&&tg.onEvent){try{tg.onEvent('activated',fetchBalance);}catch(e){}}
+// --- FETCH USER DATA ---
+async function fetchUser() {
+  try {
+    const { data, error } = await sb.rpc('iwasp_get_user', { p_tg: UID, p_name: TG_NAME, p_ref: REF });
+    if(error) throw error;
+    
+    $('balHome').textContent = Number(data.balance).toLocaleString() + " IWASP";
+    $('tasksHome').textContent = data.offers_completed || 0;
+    $('streakHome').textContent = (data.streak || 0) + "/7";
+    $('uidText').textContent = "UID " + UID;
+    $('refLink').textContent = "https://t.me/Iwasp_bot?startapp=" + UID;
+    
+    if(data.ton_wallet) {
+      $('tonStatus').textContent = data.ton_wallet;
+      $('tonBtn').textContent = "Wallet Connected";
+      $('tonBtn').disabled = true;
+    }
+
+    // Check-in logic
+    const today = new Date().toISOString().split('T')[0];
+    const lastCheckin = data.last_checkin ? data.last_checkin.split('T')[0] : null;
+    const checkBtn = $('checkBtn');
+    if(lastCheckin === today) {
+      checkBtn.disabled = true;
+      checkBtn.textContent = "Checked in today";
+    } else {
+      checkBtn.disabled = false;
+      checkBtn.textContent = "Check in";
+    }
+
+    // Draw dots
+    const dots = $('dots');
+    dots.innerHTML = Array.from({length: 7}, (_, i) => `<i class="dot ${i < (data.streak||0) ? 'on' : ''}"></i>`).join('');
+
+  } catch(e) { console.error("Error fetching user", e); }
+}
+
+// --- DAILY CHECK-IN ---
+$('checkBtn').onclick = async () => {
+  $('checkBtn').disabled = true;
+  $('checkBtn').textContent = "Processing...";
+  try {
+    const { data, error } = await sb.rpc('iwasp_daily_checkin', { p_tg: UID });
+    if(error) throw error;
+    if(data.error) { toast(data.error); fetchUser(); return; }
+    
+    toast(`+${data.reward} IWASP! Streak: ${data.new_streak}/7`);
+    fetchUser();
+  } catch(e) {
+    toast("Error checking in");
+    fetchUser();
+  }
+};
+
+// --- MINING ENGINE ---
+async function loadNextAd() {
+  const btn = $('watchBtn');
+  const dots = $('rotDots');
+  const label = $('rotLabel');
+  const hint = $('rotHint');
+  
+  btn.disabled = true;
+  btn.textContent = "Loading...";
+  $('tads-container').innerHTML = ''; // Clear TGB
+  $('tads-container').style.minHeight = '0';
+  
+  try {
+    const { data, error } = await sb.rpc('iwasp_next_ad', { p_tg: UID });
+    if(error) throw error;
+    
+    if(data.error === 'daily_cap_reached') {
+      label.textContent = "Daily Limit Reached";
+      btn.textContent = "Come Back Tomorrow";
+      hint.textContent = "You have mined 50 ads today.";
+      dots.innerHTML = '';
+      return;
+    }
+    
+    currentAd = data;
+    dots.innerHTML = Array.from({length: data.total}, (_, i) => 
+      `<i class="dot ${i < data.step ? 'on' : ''}" ${i === data.step ? 'style="background:var(--gold);opacity:.5"' : ''}></i>`
+    ).join('');
+    
+    label.textContent = `Step ${data.step + 1} of ${data.total} — ${data.network.toUpperCase()}`;
+    btn.textContent = `Watch Ad (+${data.reward} IWASP)`;
+    btn.disabled = false;
+    hint.textContent = "";
+    btn.onclick = () => watchAd(currentAd);
+
+    // If it's TADS, we render the TGB widget immediately
+    if(data.network === 'tads') {
+       window.renderTadsWidget({
+          id: '13094',
+          type: 'static',
+          container: $('tads-container'),
+          debug: false,
+          onClickReward: function() {
+             btn.textContent = "Processing Webhook...";
+             btn.disabled = true;
+             hint.textContent = "Waiting for TADS to confirm the click...";
+             waitForWebhookCredit();
+          }
+       });
+       $('tads-container').style.minHeight = '100px';
+       btn.textContent = "Click the ad above to mine";
+       btn.disabled = true; // Must click the ad, not the button
+    }
+
+  } catch(e) {
+    console.error(e);
+    label.textContent = "Connection Error";
+    btn.textContent = "Retry";
+    btn.disabled = false;
+    btn.onclick = loadNextAd;
+  }
+}
+
+async function watchAd(ad) {
+  if(isProcessing) return;
+  isProcessing = true;
+  const btn = $('watchBtn');
+  btn.disabled = true;
+  
+  try {
+    if(ad.network === 'onclicka') {
+      btn.textContent = "Watching Ad...";
+      if(ad.zone === '6154747') await window.showBlockA();
+      else if(ad.zone === '6154746') await window.showBlockB();
+      else if(ad.zone === '6154745') await window.showBlockC();
+      else if(ad.zone === '6154714') await window.showBlockD();
+      
+      btn.textContent = "Verifying 15s timer...";
+      const { data, error } = await sb.rpc('iwasp_complete_ad', { p_tg: UID, p_step: ad.step });
+      if(error) throw error;
+      if(data.error === 'too_fast') {
+         toast("Ad skipped too quickly!");
+         loadNextAd();
+      } else {
+         toast(`+${data.reward} IWASP Mined!`);
+         fetchUser(); loadNextAd();
+      }
+    } 
+    else if (ad.network === 'monetag') {
+      btn.textContent = "Watching Ad...";
+      await window.show_12129098();
+      btn.textContent = "Processing Webhook...";
+      $('rotHint').textContent = "Waiting for Monetag to confirm the view...";
+      waitForWebhookCredit();
+    }
+  } catch(e) {
+    console.error(e);
+    toast("Ad failed to load or was skipped.");
+    loadNextAd();
+  } finally {
+    isProcessing = false;
+  }
+}
+
+// Since TADS and Monetag use webhooks, we poll the DB to see when the step advances
+function waitForWebhookCredit() {
+  let checks = 0;
+  const interval = setInterval(async () => {
+    checks++;
+    const { data } = await sb.rpc('iwasp_get_user', { p_tg: UID, p_name: TG_NAME, p_ref: REF });
+    if(data) {
+       $('balHome').textContent = Number(data.balance).toLocaleString() + " IWASP";
+       // If offers_completed increased, the webhook hit!
+       if(data.current_step !== currentAd.step) { 
+          clearInterval(interval);
+          toast(`+${currentAd.reward} IWASP Mined!`);
+          loadNextAd();
+       }
+    }
+    if(checks > 20) { // 60 seconds timeout
+       clearInterval(interval);
+       toast("Webhook delayed. Check back in a minute.");
+       loadNextAd();
+    }
+  }, 3000);
+}
+
+// --- COPY REFERRAL ---
+$('copyBtn').onclick = async () => {
+  const link = $('refLink').textContent;
+  try { await navigator.clipboard.writeText(link); toast("Link copied"); } catch(e) {}
+};
+
+// --- TON CONNECT PLACEHOLDER ---
+$('tonBtn').onclick = () => {
+  toast("TON Connect integration coming soon.");
+};
+
+// Init
+fetchUser();
+loadNextAd();
 </script>
 </body>
 </html>
