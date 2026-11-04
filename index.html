@@ -56,25 +56,23 @@ body{background:#000;display:flex;justify-content:center;color:var(--bone)}
 .bar-fill{height:100%;width:0;background:var(--gold);animation:fill 2.6s forwards}
 @keyframes fill{to{width:100%}}
 
-/* --- NEW 3D COIN CSS --- */
-.coin-container { perspective: 1000px; display: flex; justify-content: center; align-items: center; height: 130px; margin: 15px 0; }
+/* --- NEW PREMIUM COIN CSS (2D SPIN) --- */
+.coin-container { display: flex; justify-content: center; align-items: center; height: 140px; margin: 15px 0; }
 .coin {
-    width: 100px; height: 100px; border-radius: 50%;
-    background: linear-gradient(135deg, #F6D75A, #D9A514, #7A5307);
-    border: 4px solid #F6D75A;
-    box-shadow: inset 0 0 15px rgba(0,0,0,0.6), 0 0 25px rgba(212,167,44,0.4);
+    width: 120px; height: 120px; border-radius: 50%;
+    background: radial-gradient(circle at 30% 30%, #F6D75A 0%, #D9A514 50%, #7A5307 100%);
+    border: 5px solid #FFEAA7;
+    box-shadow: inset 0 0 15px rgba(0,0,0,0.6), 0 10px 25px rgba(0,0,0,0.8), 0 0 30px rgba(212,167,44,0.3);
     display: flex; justify-content: center; align-items: center;
-    animation: spinCoin 4s linear infinite;
+    animation: spinCoin 6s linear infinite;
     position: relative;
-    transform-style: preserve-3d;
 }
-.coin-inner {
-    width: 100%; height: 100%; border-radius: 50%;
-    display: flex; justify-content: center; align-items: center;
-    background: radial-gradient(circle, rgba(0,0,0,0.05) 0%, rgba(0,0,0,0.5) 100%);
+.coin::before {
+    content: ''; position: absolute; inset: 5px;
+    border-radius: 50%; border: 2px dashed rgba(255,255,255,0.3);
 }
-.coin-svg { width: 60px; height: 81px; transform: translateZ(1px); }
-@keyframes spinCoin { 0% { transform: rotateY(0deg); } 100% { transform: rotateY(360deg); } }
+.coin-svg { width: 70px; height: 94px; z-index: 2; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.6)); }
+@keyframes spinCoin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 </style>
 </head>
 <body>
@@ -116,16 +114,14 @@ body{background:#000;display:flex;justify-content:center;color:var(--bone)}
     <div class="card" style="text-align:center;">
       <div class="label">Your Mining Balance</div>
       
-      <!-- NEW 3D COIN CONTAINER -->
+      <!-- NEW PREMIUM 2D COIN -->
       <div class="coin-container">
         <div class="coin">
-          <div class="coin-inner">
-            <svg viewBox="0 0 200 270" class="coin-svg">
-              <use href="#wingL"/><use href="#wingL" transform="matrix(-1 0 0 1 200 0)"/>
-              <g clip-path="url(#ab)"><rect x="60" y="130" width="80" height="130" fill="url(#gY)"/><path d="M60 160Q100 172 140 160V174Q100 186 60 174Z" fill="#0C0A07"/><path d="M60 188Q100 200 140 188V202Q100 214 60 202Z" fill="#0C0A07"/><path d="M60 216Q100 228 140 216V232Q100 244 60 232Z" fill="#0C0A07"/></g>
-              <ellipse cx="100" cy="106" rx="21" ry="26" fill="url(#gK)"/><ellipse cx="100" cy="60" rx="21" ry="18" fill="url(#gY)"/><ellipse cx="84" cy="56" rx="7.5" ry="11" fill="url(#gE)"/><ellipse cx="116" cy="56" rx="7.5" ry="11" fill="url(#gE)"/>
-            </svg>
-          </div>
+          <svg viewBox="0 0 200 270" class="coin-svg">
+            <use href="#wingL"/><use href="#wingL" transform="matrix(-1 0 0 1 200 0)"/>
+            <g clip-path="url(#ab)"><rect x="60" y="130" width="80" height="130" fill="url(#gY)"/><path d="M60 160Q100 172 140 160V174Q100 186 60 174Z" fill="#0C0A07"/><path d="M60 188Q100 200 140 188V202Q100 214 60 202Z" fill="#0C0A07"/><path d="M60 216Q100 228 140 216V232Q100 244 60 232Z" fill="#0C0A07"/></g>
+            <ellipse cx="100" cy="106" rx="21" ry="26" fill="url(#gK)"/><ellipse cx="100" cy="60" rx="21" ry="18" fill="url(#gY)"/><ellipse cx="84" cy="56" rx="7.5" ry="11" fill="url(#gE)"/><ellipse cx="116" cy="56" rx="7.5" ry="11" fill="url(#gE)"/>
+          </svg>
         </div>
       </div>
       
@@ -233,11 +229,20 @@ const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 let currentAd = null;
 let isProcessing = false;
 
-// Initialize OnClickA Blocks
-window.initCdTma({ id: '6154747' }).then(show => window.showBlockA = show).catch(e => console.log(e));
-window.initCdTma({ id: '6154746' }).then(show => window.showBlockB = show).catch(e => console.log(e));
-window.initCdTma({ id: '6154745' }).then(show => window.showBlockC = show).catch(e => console.log(e));
-window.initCdTma({ id: '6154714' }).then(show => window.showBlockD = show).catch(e => console.log(e));
+// --- FIXED AD INITIALIZATION ---
+// Wait for the OnClickA SDK to load before trying to initialize the blocks
+function initOnClickA() {
+  if (typeof window.initCdTma === 'function') {
+    window.initCdTma({ id: '6154747' }).then(show => window.showBlockA = show).catch(e => console.log('Block A error:', e));
+    window.initCdTma({ id: '6154746' }).then(show => window.showBlockB = show).catch(e => console.log('Block B error:', e));
+    window.initCdTma({ id: '6154745' }).then(show => window.showBlockC = show).catch(e => console.log('Block C error:', e));
+    window.initCdTma({ id: '6154714' }).then(show => window.showBlockD = show).catch(e => console.log('Block D error:', e));
+  } else {
+    // If the script isn't ready, try again in 500ms
+    setTimeout(initOnClickA, 500);
+  }
+}
+initOnClickA();
 
 function toast(m){
   const t = $('toast'); t.textContent = m; t.classList.add('show');
@@ -344,129 +349,4 @@ async function loadNextAd() {
     
     if(data.error === 'daily_cap_reached') {
       label.textContent = "Daily Limit Reached";
-      btn.textContent = "Come Back Tomorrow";
-      hint.textContent = "You have mined 50 ads today.";
-      dots.innerHTML = '';
-      return;
-    }
-    
-    currentAd = data;
-    dots.innerHTML = Array.from({length: data.total}, (_, i) => 
-      `<i class="dot ${i < data.step ? 'on' : ''}" ${i === data.step ? 'style="background:var(--gold);opacity:.5"' : ''}></i>`
-    ).join('');
-    
-    label.textContent = `Step ${data.step + 1} of ${data.total} — ${data.network.toUpperCase()}`;
-    btn.textContent = `Watch Ad (+${data.reward} IWASP)`;
-    btn.disabled = false;
-    hint.textContent = "";
-    btn.onclick = () => watchAd(currentAd);
-
-    // If it's TADS, we render the TGB widget immediately
-    if(data.network === 'tads') {
-       window.renderTadsWidget({
-          id: '13094',
-          type: 'static',
-          container: $('tads-container'),
-          debug: false,
-          onClickReward: function() {
-             btn.textContent = "Processing Webhook...";
-             btn.disabled = true;
-             hint.textContent = "Waiting for TADS to confirm the click...";
-             waitForWebhookCredit();
-          }
-       });
-       $('tads-container').style.minHeight = '100px';
-       btn.textContent = "Click the ad above to mine";
-       btn.disabled = true; // Must click the ad, not the button
-    }
-
-  } catch(e) {
-    console.error(e);
-    label.textContent = "Connection Error";
-    btn.textContent = "Retry";
-    btn.disabled = false;
-    btn.onclick = loadNextAd;
-  }
-}
-
-async function watchAd(ad) {
-  if(isProcessing) return;
-  isProcessing = true;
-  const btn = $('watchBtn');
-  btn.disabled = true;
-  
-  try {
-    if(ad.network === 'onclicka') {
-      btn.textContent = "Watching Ad...";
-      if(ad.zone === '6154747') await window.showBlockA();
-      else if(ad.zone === '6154746') await window.showBlockB();
-      else if(ad.zone === '6154745') await window.showBlockC();
-      else if(ad.zone === '6154714') await window.showBlockD();
-      
-      btn.textContent = "Verifying 15s timer...";
-      const { data, error } = await sb.rpc('iwasp_complete_ad', { p_tg: UID, p_step: ad.step });
-      if(error) throw error;
-      if(data.error === 'too_fast') {
-         toast("Ad skipped too quickly!");
-         loadNextAd();
-      } else {
-         toast(`+${data.reward} IWASP Mined!`);
-         fetchUser(); loadNextAd();
-      }
-    } 
-    else if (ad.network === 'monetag') {
-      btn.textContent = "Watching Ad...";
-      await window.show_12129098();
-      btn.textContent = "Processing Webhook...";
-      $('rotHint').textContent = "Waiting for Monetag to confirm the view...";
-      waitForWebhookCredit();
-    }
-  } catch(e) {
-    console.error(e);
-    toast("Ad failed to load or was skipped.");
-    loadNextAd();
-  } finally {
-    isProcessing = false;
-  }
-}
-
-// Since TADS and Monetag use webhooks, we poll the DB to see when the step advances
-function waitForWebhookCredit() {
-  let checks = 0;
-  const interval = setInterval(async () => {
-    checks++;
-    const { data } = await sb.rpc('iwasp_get_user', { p_tg: UID, p_name: TG_NAME, p_ref: REF });
-    if(data) {
-       $('balHome').textContent = Number(data.balance).toLocaleString() + " IWASP";
-       // If step advanced, the webhook hit!
-       if(data.current_step !== currentAd.step) { 
-          clearInterval(interval);
-          toast(`+${currentAd.reward} IWASP Mined!`);
-          loadNextAd();
-       }
-    }
-    if(checks > 20) { // 60 seconds timeout
-       clearInterval(interval);
-       toast("Webhook delayed. Check back in a minute.");
-       loadNextAd();
-    }
-  }, 3000);
-}
-
-// --- COPY REFERRAL ---
-$('copyBtn').onclick = async () => {
-  const link = $('refLink').textContent;
-  try { await navigator.clipboard.writeText(link); toast("Link copied"); } catch(e) {}
-};
-
-// --- TON CONNECT PLACEHOLDER ---
-$('tonBtn').onclick = () => {
-  toast("TON Connect integration coming soon.");
-};
-
-// Init
-fetchUser();
-loadNextAd();
-</script>
-</body>
-</html>
+      btn.text
