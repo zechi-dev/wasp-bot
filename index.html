@@ -9,7 +9,7 @@
 <!-- Ad Networks SDKs -->
 <script src="https://js.onclckvd.com/in-stream-ad-admanager/tma.js"></script>
 <script src="//libtl.com/sdk.js" data-zone="12129098" data-sdk="show_12129098"></script>
-<!-- TADS Official SDK -->
+<!-- TADS SDK -->
 <script src="https://tads.me/widget.js"></script>
 
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Instrument+Serif&display=swap" rel="stylesheet">
@@ -137,10 +137,7 @@ body{background:#000;display:flex;justify-content:center;color:var(--bone)}
       <div class="label">Current Rotation Progress</div>
       <div class="dots" id="rotDots"></div>
       <div class="meta" id="rotLabel" style="margin-top:10px; font-weight:bold; color:var(--bone);">Loading...</div>
-      
-      <!-- TADS Container -->
       <div id="tads-container" style="margin-top:15px; min-height:0;"></div>
-      
       <button class="btn" id="watchBtn" disabled>Loading...</button>
       <div class="meta" id="rotHint" style="margin-top:10px; text-align:center;"></div>
     </div>
@@ -206,7 +203,6 @@ const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 let currentAd = null;
 let isProcessing = false;
 
-// Initialize OnClickA Blocks (with retry logic)
 function initOnClickA() {
   if (typeof window.initCdTma === 'function') {
     window.initCdTma({ id: '6154747' }).then(show => window.showBlockA = show).catch(e => console.log('Block A error:', e));
@@ -301,6 +297,20 @@ $('checkBtn').onclick = async () => {
   }
 };
 
+// --- NEW: SILENT SKIP FUNCTION ---
+async function skipCurrentAd() {
+  const btn = $('watchBtn');
+  btn.textContent = "Loading next...";
+  btn.disabled = true;
+  $('rotHint').textContent = "Connecting...";
+  
+  // Tell the server to move to the next step without paying
+  await sb.rpc('iwasp_skip_ad', { p_tg: UID });
+  
+  // Immediately load the next step
+  loadNextAd();
+}
+
 async function loadNextAd() {
   const btn = $('watchBtn');
   const dots = $('rotDots');
@@ -309,6 +319,7 @@ async function loadNextAd() {
   
   btn.disabled = true;
   btn.textContent = "Loading...";
+  hint.textContent = "";
   $('tads-container').innerHTML = '';
   $('tads-container').style.minHeight = '0';
   
@@ -332,48 +343,63 @@ async function loadNextAd() {
     label.textContent = `Step ${data.step + 1} of ${data.total} — ${data.network.toUpperCase()}`;
     btn.textContent = `Watch Ad (+${data.reward} IWASP)`;
     btn.disabled = false;
-    hint.textContent = "";
     btn.onclick = () => watchAd(currentAd);
 
+    // TADS Logic with Auto-Skip
     if(data.network === 'tads') {
-       btn.textContent = "Loading TADS Widget...";
+       btn.textContent = "Loading TADS...";
        btn.disabled = true;
-       
-       // Native TADS integration
-       if (typeof window.renderTadsWidget === 'function') {
-           window.renderTadsWidget({
-              id: '13094',
-              type: 'static',
-              debug: false,
-              onClickReward: function() {
-                 btn.textContent = "Processing Webhook...";
-                 hint.textContent = "Waiting for TADS to confirm the click...";
-                 waitForWebhookCredit();
-              }
-           });
-           $('tads-container').style.minHeight = '100px';
-           btn.textContent = "Click the ad above to mine";
-       } else if (typeof window.tads !== 'undefined' && typeof window.tads.init === 'function') {
-           window.tads.init({
-              id: '13094',
-              type: 'static',
-              onClickReward: function() {
-                 btn.textContent = "Processing Webhook...";
-                 hint.textContent = "Waiting for TADS to confirm the click...";
-                 waitForWebhookCredit();
-              }
-           });
-           $('tads-container').style.minHeight = '100px';
-           btn.textContent = "Click the ad above to mine";
-       } else {
-           btn.textContent = "TADS SDK failed. Retry.";
-           btn.disabled = false;
-           btn.onclick = loadNextAd;
+       let tadsLoaded = false;
+
+       try {
+           if (typeof window.renderTadsWidget === 'function') {
+               tadsLoaded = true;
+               window.renderTadsWidget({
+                  id: '13094',
+                  type: 'static',
+                  debug: false,
+                  onClickReward: function() {
+                     btn.textContent = "Processing Webhook...";
+                     hint.textContent = "Waiting for TADS to confirm the click...";
+                     waitForWebhookCredit();
+                  },
+                  onAdsNotFound: function() {
+                     // If TADS says no ads, skip it!
+                     skipCurrentAd();
+                  }
+               });
+               $('tads-container').style.minHeight = '100px';
+               btn.textContent = "Click the ad above to mine";
+           } else if (typeof window.tads !== 'undefined' && typeof window.tads.init === 'function') {
+               tadsLoaded = true;
+               window.tads.init({
+                  id: '13094',
+                  type: 'static',
+                  onClickReward: function() {
+                     btn.textContent = "Processing Webhook...";
+                     hint.textContent = "Waiting for TADS to confirm the click...";
+                     waitForWebhookCredit();
+                  },
+                  onAdsNotFound: function() {
+                     skipCurrentAd();
+                  }
+               });
+               $('tads-container').style.minHeight = '100px';
+               btn.textContent = "Click the ad above to mine";
+           }
+       } catch(e) {
+           console.log("TADS Error:", e);
+           tadsLoaded = false;
+       }
+
+       // If the SDK didn't load at all, wait 2 seconds then silently skip
+       if (!tadsLoaded) {
+           setTimeout(skipCurrentAd, 2000);
        }
     }
-
   } catch(e) {
     console.error(e);
+    // If we can't even reach Supabase, just show an error
     label.textContent = "Connection Error";
     btn.textContent = "Retry";
     btn.disabled = false;
