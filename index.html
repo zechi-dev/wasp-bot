@@ -6,12 +6,9 @@
 <title>Iwasp</title>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<!-- Ad Networks SDKs -->
 <script src="https://js.onclckvd.com/in-stream-ad-admanager/tma.js"></script>
 <script src="//libtl.com/sdk.js" data-zone="12129098" data-sdk="show_12129098"></script>
-<!-- TADS SDK -->
 <script src="https://tads.me/widget.js"></script>
-
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Instrument+Serif&display=swap" rel="stylesheet">
 <style>
 :root{--ink:#0B0A08;--panel:#14120E;--panel2:#1A1712;--line:rgba(212,167,44,.16);--hair:rgba(237,230,211,.07);--gold:#D4A72C;--bone:#EDE6D3;--mute:#8A8374;--red:#D9776B;--green:#8FBF8A;--serif:'Instrument Serif',serif}
@@ -297,17 +294,12 @@ $('checkBtn').onclick = async () => {
   }
 };
 
-// --- NEW: SILENT SKIP FUNCTION ---
 async function skipCurrentAd() {
   const btn = $('watchBtn');
   btn.textContent = "Loading next...";
   btn.disabled = true;
   $('rotHint').textContent = "Connecting...";
-  
-  // Tell the server to move to the next step without paying
   await sb.rpc('iwasp_skip_ad', { p_tg: UID });
-  
-  // Immediately load the next step
   loadNextAd();
 }
 
@@ -345,7 +337,6 @@ async function loadNextAd() {
     btn.disabled = false;
     btn.onclick = () => watchAd(currentAd);
 
-    // TADS Logic with Auto-Skip
     if(data.network === 'tads') {
        btn.textContent = "Loading TADS...";
        btn.disabled = true;
@@ -364,7 +355,6 @@ async function loadNextAd() {
                      waitForWebhookCredit();
                   },
                   onAdsNotFound: function() {
-                     // If TADS says no ads, skip it!
                      skipCurrentAd();
                   }
                });
@@ -392,14 +382,12 @@ async function loadNextAd() {
            tadsLoaded = false;
        }
 
-       // If the SDK didn't load at all, wait 2 seconds then silently skip
        if (!tadsLoaded) {
            setTimeout(skipCurrentAd, 2000);
        }
     }
   } catch(e) {
     console.error(e);
-    // If we can't even reach Supabase, just show an error
     label.textContent = "Connection Error";
     btn.textContent = "Retry";
     btn.disabled = false;
@@ -462,23 +450,32 @@ async function watchAd(ad) {
   }
 }
 
+// --- FIXED POLLING FUNCTION ---
 function waitForWebhookCredit() {
   let checks = 0;
+  const btn = $('watchBtn');
   const interval = setInterval(async () => {
     checks++;
     const { data } = await sb.rpc('iwasp_get_user', { p_tg: UID, p_name: TG_NAME, p_ref: REF });
     if(data) {
        $('balHome').textContent = Number(data.balance).toLocaleString() + " IWASP";
-       if(data.current_step !== currentAd.step) { 
+       
+       // If current_step is no longer the step we are on, webhook hit!
+       if(Number(data.current_step) !== currentAd.step) { 
           clearInterval(interval);
           toast(`+${currentAd.reward} IWASP Mined!`);
           loadNextAd();
        }
     }
+    
+    // If 60 seconds pass without a webhook, let them skip to avoid getting stuck
     if(checks > 20) {
        clearInterval(interval);
-       toast("Webhook delayed. Check back in a minute.");
-       loadNextAd();
+       toast("Webhook delayed.");
+       $('rotHint').textContent = "Server didn't confirm. You can try the next ad.";
+       btn.textContent = "Skip Ad / Try Next";
+       btn.disabled = false;
+       btn.onclick = skipCurrentAd;
     }
   }, 3000);
 }
